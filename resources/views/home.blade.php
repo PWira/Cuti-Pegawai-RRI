@@ -24,7 +24,7 @@
       <div class="container-fluid"> <!--begin::Row-->
           <div class="row"> <!--begin::Col-->
               <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 1-->
-                  <div class="small-box text-bg-primary">
+                  <div class="small-box text-bg-success">
                       <div class="inner">
                           <h3>150</h3>
                           <p>Pekerja Aktif</p>
@@ -35,7 +35,7 @@
                   </div> <!--end::Small Box Widget 1-->
               </div> <!--end::Col-->
               <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 2-->
-                  <div class="small-box text-bg-info">
+                  <div class="small-box text-bg-primary">
                       <div class="inner">
                           <h3>53<!--<sup class="fs-5">%</sup>--></h3>
                           <p>Pekerja Cuti</p>
@@ -46,14 +46,14 @@
                   </div> <!--end::Small Box Widget 2-->
               </div> <!--end::Col-->
               <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 3-->
-                  <div class="small-box text-bg-success">
+                  <div class="small-box text-bg-info">
                       <div class="inner">
-                          <h3>44</h3>
-                          <p>Cuti Diterima</p>
-                      </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <h3>45</h3>
+                            <p>Cuti Diterima</p>
+                        </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                           <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
-                      </svg> <a href="#" class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover">
-                          More info <i class="bi bi-link-45deg"></i> </a>
+                      </svg> <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+                          Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                   </div> <!--end::Small Box Widget 3-->
               </div> <!--end::Col-->
               <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 4-->
@@ -64,10 +64,10 @@
                       </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                           <path d="M3 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H3zm0 2h18v12H3V6zm2 2v2h14V8H5zm0 4v2h14v-2H5zm0 4v2h14v-2H5z"></path>
                       </svg> <a href="#" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-                          More info <i class="bi bi-link-45deg"></i> </a>
+                          Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                   </div> <!--end::Small Box Widget 4-->
               </div> <!--end::Col-->
-              <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 4-->
+              <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 5-->
                   <div class="small-box text-bg-danger">
                       <div class="inner">
                           <h3>65</h3>
@@ -80,71 +80,16 @@
               </div> <!--end::Col-->
           </div> <!--end::Row--> <!--begin::Row-->
           <div class="row"> <!-- Start col -->
-              <div class="col-lg-7 connectedSortable">
+              <div class=" connectedSortable">
                   <div class="card mb-4">
                       <div class="card-header">
-                          <h3 class="card-title">Sales Value</h3>
+                          <h3 class="card-title">Angka Pegawai Aktif dan Cuti</h3>
                       </div>
                       <div class="card-body">
                           <div id="revenue-chart"></div>
                       </div>
                   </div> <!-- /.card --> <!-- DIRECT CHAT -->
               </div> <!-- /.Start col --> <!-- Start col -->
-              <div class="col-lg-5 connectedSortable"> <!-- USERS LIST -->
-                  <div class="card">
-                      <div class="card-header">
-                          <h3 class="card-title">Latest Members</h3>
-                          <div class="card-tools"> <span class="badge text-bg-danger">
-                                  8 New Members
-                              </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
-                      </div> <!-- /.card-header -->
-                      {{-- <div class="card-body p-0">
-                          <div class="row text-center m-1">
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user1-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Alexander Pierce
-                                  </a>
-                                  <div class="fs-8">Today</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user1-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Norman
-                                  </a>
-                                  <div class="fs-8">Yesterday</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user7-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Jane
-                                  </a>
-                                  <div class="fs-8">12 Jan</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user6-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      John
-                                  </a>
-                                  <div class="fs-8">12 Jan</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user2-160x160.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Alexander
-                                  </a>
-                                  <div class="fs-8">13 Jan</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user5-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Sarah
-                                  </a>
-                                  <div class="fs-8">14 Jan</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user4-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Nora
-                                  </a>
-                                  <div class="fs-8">15 Jan</div>
-                              </div>
-                              <div class="col-3 p-2"> <img class="img-fluid rounded-circle" src="../../dist/assets/img/user3-128x128.jpg" alt="User Image"> <a class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0" href="#">
-                                      Nadia
-                                  </a>
-                                  <div class="fs-8">15 Jan</div>
-                              </div>
-                          </div> <!-- /.users-list -->
-                      </div> <!-- /.card-body --> --}}
-                      <div class="card-footer text-center"> <a href="javascript:" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">View All Users</a> </div> <!-- /.card-footer -->
-                  </div> <!-- /.card -->
-              </div> <!-- /.col -->
           </div> <!-- /.row (main row) -->
       </div> <!--end::Container-->
   </div> <!--end::App Content-->

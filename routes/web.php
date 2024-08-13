@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,5 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/', function () {
+        return view('home');
+    });
+
+    Route::get('home', [HomeController::class, 'index'])->name('home');
+
+    Route::get('form', function () {
+        return view('pages.form');
+    });
+    
+    Route::get('table', function () {
+        return view('pages.table');
+    });    
+    
+    Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
+});

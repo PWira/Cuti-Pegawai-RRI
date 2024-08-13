@@ -15,9 +15,9 @@ class CreateDataPegawaiTable extends Migration
             $table->id();
             $table->string('nama');
             $table->string('nip')->unique();
-            // $table->timestamp('email_verified_at')->nullable();
             $table->string('jabatan');
-            $table->string('divisi');
+            $table->string('unit_kerja');
+            $table->integer('masa_kerja');
         });
     }
 
