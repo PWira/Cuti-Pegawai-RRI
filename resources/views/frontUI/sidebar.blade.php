@@ -17,7 +17,7 @@
                     <p>Tables</p>
                     </a>
                 </li>
-                @else<br>
+                @else
                 @endif
             {{-- <li class="nav-header">LABELS</li>
             <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-circle text-danger"></i>
