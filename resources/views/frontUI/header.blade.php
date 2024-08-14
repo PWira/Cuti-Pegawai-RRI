@@ -26,19 +26,21 @@
             </li>
         </ul> --}}
         <ul class="navbar-nav ms-auto">
+            @auth
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     <img src="{{ asset('/assets/img/avatar5.png') }}" class="user-image rounded-circle shadow" alt="User Image">
-                    <span class="d-none d-md-inline">Admin</span>
+                    <span class="d-none d-md-inline">{{$name}}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <li class="user-header text-bg-primary">
                         <img src="{{ asset('/assets/img/avatar5.png') }}" class="rounded-circle shadow" alt="User Image">
                         <p>
-                            Admin
+                            {{$name}}
                             <!-- <small>Member since Nov. 2023</small> -->
                         </p>
                     </li>
+                    @endauth
                     <!-- <li class="user-body">
                         <div class="row">
                             <div class="col-4 text-center">

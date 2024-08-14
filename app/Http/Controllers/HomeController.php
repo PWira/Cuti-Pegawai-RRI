@@ -19,6 +19,15 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    // public function showUserInfo()
+    // {
+    //     $username = Auth::user()->name;
+    //     $email = Auth::user()->email;
+    //     $role = Auth::user()->role; // Assuming the role is stored in the 'role' column
+
+    //     return view('user.info', compact('username', 'email', 'role'));
+    // }
+
     public function kirimPengajuan(Request $req){
         $pengajuan = DB::table("pengajuan")->insert([
 
@@ -45,14 +54,20 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function dashboard()
-    {
-        if (Auth::user()->role == 'admin') {
-            return view('admin-dashboard');
-        } else {
-            return view('user-dashboard');
-        }
-    }
+    // public function dashboard()
+    // {
+    //     if (condition) {
+    //         # code...
+    //     }
+    //     elseif (Auth::user()->role == 'admin') {
+    //         return view('admin.home');
+    //     } else {
+    //         Auth::logout();
+    //         $request->session()->invalidate();
+    //         $request->session()->regenerateToken();
+    //         return redirect()->route('login')->with('error', 'Unauthorized access. Please log in with the correct credentials.');
+    //     }
+    // }
 
     public function index()
     {
