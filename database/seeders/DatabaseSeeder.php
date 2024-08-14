@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,8 +13,25 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
+    public function run(){
+        $this->call(KeymasterUserSeeder::class);
+    }
+}
+
+class KeymasterUserSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        User::create([
+            'name' => 'Keymaster',
+            'email' => 'keymaster@placeholder.null',
+            'password' => Hash::make('12345678'),
+            'role' => 'keymaster',
+        ]);
     }
 }

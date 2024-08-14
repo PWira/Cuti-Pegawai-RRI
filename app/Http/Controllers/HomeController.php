@@ -44,6 +44,16 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    public function dashboard()
+    {
+        if (Auth::user()->role == 'admin') {
+            return view('admin-dashboard');
+        } else {
+            return view('user-dashboard');
+        }
+    }
+
     public function index()
     {
         return view('home');
