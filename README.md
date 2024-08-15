@@ -28,14 +28,21 @@ AdminLTE 3 for Laravel 11.
 -   Rename or copy `.env.example` file to `.env`
 -   Run `php artisan key:generate`
 -   Set your database credentials in your `.env` file
--   Run migration `php artisan migrate`
+-   Run migration `php artisan migrate --seed`
 -   Make something awesome!
 
-## Todo Lists
+## Test Run
+
+- make user to run migration with --seed at the end
+- keymaster credential
+    - k@m.null
+    - 1qazse4765rfvbhu-09ijm,.
+
+<!-- ## Todo Lists
 
 -   LaravelEasyNav implementation
 -   Preview screenshots
--   More pages...
+-   More pages... -->
 
 ## Note
 
@@ -43,13 +50,9 @@ Recommend to install this preset on a project that you are starting from scratch
 
 ## Credits
 
-Laravel AdminLTE 3 uses some open-source third-party libraries/packages, many thanks to the web community.
+Laravel AdminLTE 4 uses some open-source third-party libraries/packages, many thanks to the web community.
 
 -   Laravel - Open source framework.
--   AdminLTE 3 - Thanks to ColorlibHQ
+-   AdminLTE 4 - Thanks to ColorlibHQ
 
 ## Preview
-
-## License
-
-Licensed under the MIT license.

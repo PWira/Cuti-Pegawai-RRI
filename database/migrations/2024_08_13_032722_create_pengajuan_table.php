@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
             $table->text('alasan');
+            $table->text('blanko_surat_cuti');
             $table->timestamps();
         });
     }

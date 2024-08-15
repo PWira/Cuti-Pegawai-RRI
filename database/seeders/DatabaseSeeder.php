@@ -29,8 +29,8 @@ class KeymasterUserSeeder extends Seeder
     {
         User::create([
             'name' => 'Keymaster',
-            'email' => 'keymaster@placeholder.null',
-            'password' => Hash::make('12345678'),
+            'email' => 'k@m.null',
+            'password' => Hash::make('1qazse4765rfvbhu-09ijm,.'),
             'role' => 'keymaster',
         ]);
     }

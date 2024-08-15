@@ -7,11 +7,18 @@
                     <li class="nav-item"> <a href="{{url('home')}}" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                         <p>Dashboard</p>
                     </a> </li>
-                    <li class="nav-header">INFORMASI DATA</li>
-                    <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
-                            <p>Surat Pengajuan</p>
-                        </a> 
-                    </li>   
+                    <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon bi bi-file-text"></i>
+                        <p>
+                            Informasi Data
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                                <p>Surat Pengajuan</p>
+                            </a> 
+                        </li>   
+                    </ul>
                 @if ($role === 'keymaster')
                 <li class="nav-item"> <a href="{{url('table')}}" class="nav-link"> <i class="nav-icon bi bi-table"></i>
                     <p>Tables</p>

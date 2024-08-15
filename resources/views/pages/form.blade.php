@@ -1,33 +1,58 @@
 @extends('adminlte.layouts.app')
 
 @section('content')
+
+
 <body>
-    <div class="card card-info card-outline mb-4"> <!--begin::Header-->
+    <div class="card card-info card-outline mb-4">
         <div class="card-header" style="text-align:center;">
             <h3 class="">Surat Pengantar Cuti</h3>
-        </div> <!--end::Header--> <!--begin::Form-->
-        <!-- <p></p> -->
+        </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         <div class="letter-container">
-            <form method="post" action="/kirim-pengajuan" class="needs-validation"> <!--begin::Body-->
+            <form method="post" action="/kirim-pengajuan" class="needs-validation" enctype="multipart/form-data">
                 @csrf
                 <p>Yang bertanda tangan di bawah ini:</p>
-                <div class="card-body"> <!--begin::Row-->
-                    <div class="row g-2"> <!--begin::Col-->
-                        <div class="col-md-6"> <label for="nama" class="form-label">Nama Lengkap</label> <input type="text" class="form-control" name="nama_pekerja" id="nama_pekerja" placeholder="Nama Lengkap" required>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" name="nama_pekerja" id="nama_pekerja" placeholder="Nama Lengkap" required>
                             <div class="valid-feedback"></div>
-                        </div> <!--end::Col--> <!--begin::Col-->
-                        <div class="col-md-6"> <label for="nip" class="form-label">NIP</label> <input type="text" class="form-control" name="nip" id="nip" placeholder="Nomor Induk Pekerja" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" name="nip" id="nip" placeholder="Nomor Induk Pekerja" required>
                             <div class="valid-feedback"></div>
-                        </div> <!--end::Col--> <!--begin::Col-->
-                        <div class="col-md-6"> <label for="jabatan" class="form-label">Jabatan</label> <input type="text" class="form-control" name="jabatan" id="jabatan" placeholder="Jabatan" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="jabatan" class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" name="jabatan" id="jabatan" placeholder="Jabatan" required>
                             <div class="valid-feedback"></div>
-                        </div> <!--end::Col--> <!--begin::Col-->
-                        <div class="col-md-6"> <label for="unit_kerja" class="form-label">Unit Kerja</label> <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="departemen" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="unit_kerja" class="form-label">Unit Kerja</label>
+                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="departemen" required>
                             <div class="valid-feedback"></div>
-                        </div> <!--end::Col--> <!--begin::Col-->
-                        <div class="col-md-6"> <label for="masa_kerja" class="form-label">Masa Kerja</label> <input type="int" class="form-control" name="masa_kerja" id="masa_kerja" placeholder="Cukup angka Dalam bulan. Contoh : 13" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tahun_kerja" class="form-label">Masa Kerja : Tahun</label>
+                            <input type="int" class="form-control" name="tahun_kerja" id="tahun_kerja" placeholder="Tanpa Tulisan. Contoh : 2" required>
                             <div class="valid-feedback"></div>
-                        </div> <!--end::Col--> <!--begin::Col-->
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bulan_kerja" class="form-label">Masa Kerja : Bulan</label>
+                            <input type="int" class="form-control" name="bulan_kerja" id="bulan_kerja" placeholder="Tanpa Tulisan. Contoh : 5" required>
+                            <div class="valid-feedback"></div>
+                        </div>
                         <p class="mt-2">Dengan ini mengajukan cuti dengan rincian sebagai berikut:</p>
                         <div class="row g-2">
                             <div class="col-md-6">
@@ -54,12 +79,38 @@
                             <label for="alasan" class="form-label">Alasan Cuti</label>
                             <textarea class="form-control" id="alasan" name="alasan" rows="2" required></textarea>
                         </div>
+                        <div class="mt-2">
+                            <label for="blanko" class="form-label">PDF Blanko Surat Cuti</label>
+                            <input type="file" class="form-control" id="blanko" name="blanko" accept="application/pdf" required>
+                            <div class="progress" style="display: none;">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-info" type="submit">Submit form</button>
+                </div>
+            </form>
+            <script>
+                document.getElementById('blanko').addEventListener('change', function() {
+                    var formData = new FormData(this.form);
+                    var xhr = new XMLHttpRequest();
 
-                    </div> <!--end::Row-->
-                </div> <!--end::Body--> <!--begin::Footer-->
-                <div class="card-footer"> <button class="btn btn-info" type="submit">Submit form</button> </div> <!--end::Footer-->
-            </form> <!--end::Form--> <!--begin::JavaScript-->
+                    xhr.open('POST', '/kirim-pengajuan');
+                    xhr.upload.addEventListener('progress', function(event) {
+                        var percent = Math.round((event.loaded / event.total) * 100);
+                        document.querySelector('.progress').style.display = 'block';
+                        document.querySelector('.progress-bar').style.width = percent + '%';
+                        document.querySelector('.progress-bar').setAttribute('aria-valuenow', percent);
+                    });
+                    xhr.onload = function() {
+                        // Handle the response from the server
+                    };
+                    xhr.send(formData);
+                });
+            </script>
         </div>
-    </div> <!--end::Form Validation-->
+    </div>
 </body>
 @endsection

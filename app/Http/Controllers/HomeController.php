@@ -19,31 +19,42 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    // public function showUserInfo()
-    // {
-    //     $username = Auth::user()->name;
-    //     $email = Auth::user()->email;
-    //     $role = Auth::user()->role; // Assuming the role is stored in the 'role' column
-
-    //     return view('user.info', compact('username', 'email', 'role'));
-    // }
-
     public function kirimPengajuan(Request $req){
-        $pengajuan = DB::table("pengajuan")->insert([
 
-            "nama_pekerja" => $req->nama_pekerja,
-            "nip" => $req->nip,
-            "jabatan" => $req->jabatan,
-            "unit_kerja" => $req->unit_kerja,
-            "masa_kerja" => $req->masa_kerja,
-            "jenis_cuti" => $req->jenis_cuti,
-            "mulai_cuti" => $req->mulai_cuti,
-            "selesai_cuti" => $req->selesai_cuti,
-            "alasan" => $req->alasan,
-            "created_at" => now()
-        ]);
-        return redirect('form')->with('success', 'Pengajuan berhasil dikirim.');
-    }    
+        if ($req->hasFile('blanko')) {
+            $file = $req->file('blanko');
+    
+            // Replace white spaces with underscores in the file name
+            $filename = str_replace(' ', '_', $file->getClientOriginalName());
+
+            // Store the file in the 'public/blanko_surat_cuti' directory with the original file name
+            $path = $file->storeAs('public/blanko_surat_cuti', $filename);
+
+            $tahun_kerja = $req->tahun_kerja;
+            $bulan_kerja = $req->bulan_kerja;
+
+            $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
+
+            $pengajuan = DB::table("pengajuan")->insert([
+
+                "nama_pekerja" => $req->nama_pekerja,
+                "nip" => $req->nip,
+                "jabatan" => $req->jabatan,
+                "unit_kerja" => $req->unit_kerja,
+                "masa_kerja" => $total_bulan_kerja,
+                "jenis_cuti" => $req->jenis_cuti,
+                "mulai_cuti" => $req->mulai_cuti,
+                "selesai_cuti" => $req->selesai_cuti,
+                "alasan" => $req->alasan,
+                "blanko_surat_cuti" => $path,
+                "created_at" => now()
+            ]);
+            return redirect('form')->with('success', 'Pengajuan berhasil dikirim.');
+        }else {
+            // Handle the case where no file was uploaded
+            return redirect('form')->with('error', 'No file was uploaded.');
+        } 
+    }
 
     public function table(){
         return view ('table');
@@ -53,21 +64,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-
-    // public function dashboard()
-    // {
-    //     if (condition) {
-    //         # code...
-    //     }
-    //     elseif (Auth::user()->role == 'admin') {
-    //         return view('admin.home');
-    //     } else {
-    //         Auth::logout();
-    //         $request->session()->invalidate();
-    //         $request->session()->regenerateToken();
-    //         return redirect()->route('login')->with('error', 'Unauthorized access. Please log in with the correct credentials.');
-    //     }
-    // }
 
     public function index()
     {
