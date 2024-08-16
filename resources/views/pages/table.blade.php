@@ -162,7 +162,11 @@
                                     </ul>
                                 </div>
                             </div> <!-- /.card -->
-                            {{-- <iframe src="{{ $fileUrl }}" width="100%" height="500px"></iframe> --}}
+                            @forelse ($blanko as $view)
+                            <iframe src="{{ $view->blanko }}" width="100%" height="100%"></iframe>
+                            @empty
+                                <br>
+                            @endforelse
                         </div> <!-- /.col -->
                     </div> <!--end::Row-->
                 </div> <!--end::Container-->

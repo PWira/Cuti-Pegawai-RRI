@@ -92,24 +92,6 @@
                     <button class="btn btn-info" type="submit">Submit form</button>
                 </div>
             </form>
-            <script>
-                document.getElementById('blanko').addEventListener('change', function() {
-                    var formData = new FormData(this.form);
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', '/kirim-pengajuan');
-                    xhr.upload.addEventListener('progress', function(event) {
-                        var percent = Math.round((event.loaded / event.total) * 100);
-                        document.querySelector('.progress').style.display = 'block';
-                        document.querySelector('.progress-bar').style.width = percent + '%';
-                        document.querySelector('.progress-bar').setAttribute('aria-valuenow', percent);
-                    });
-                    xhr.onload = function() {
-                        // Handle the response from the server
-                    };
-                    xhr.send(formData);
-                });
-            </script>
         </div>
     </div>
 </body>

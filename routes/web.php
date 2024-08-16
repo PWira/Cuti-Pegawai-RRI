@@ -32,4 +32,5 @@ Route::middleware(['auth'])->group(function () {
     });    
     
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
+    Route::get('table',[HomeController::class, 'lihatFile']);
 });
