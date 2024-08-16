@@ -43,6 +43,14 @@
                 @enderror
               </div>
               <div class="input-group mb-3">
+                <select class="form-select" id="role" name="role" required>
+                  <option value="">Hak Akses Website</option>
+                  <option value="admin">admin</option>
+                  <option value="super_user_plg">Kepala Palembang</option>
+                  <option value="user_plg">SDM Palembang</option>
+                </select>
+              </div>
+              <div class="input-group mb-3">
                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
                 <div class="input-group-append">
                   <div class="input-group-text">

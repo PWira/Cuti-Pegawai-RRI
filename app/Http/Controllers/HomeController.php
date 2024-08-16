@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\File;
 
 class HomeController extends Controller
 {
+
+    // public function showFile($id)
+    // {
+    //     // Retrieve the file path from the database
+    //     $filePath = DB::table('pengajuan')->where('id', $id)->value('blanko_surat_cuti');
+
+    //     // Generate the URL to the file
+    //     $fileUrl = asset('blanko_surat_cuti/' . $filePath);
+
+    //     // Pass the file URL to the view
+    //     return view('table', ['fileUrl' => $fileUrl]);
+    // }
+
     /**
      * Create a new controller instance.
      *
@@ -28,7 +41,7 @@ class HomeController extends Controller
             $filename = str_replace(' ', '_', $file->getClientOriginalName());
 
             // Store the file in the 'public/blanko_surat_cuti' directory with the original file name
-            $path = $file->storeAs('public/blanko_surat_cuti', $filename);
+            $path = $file->storeAs('blanko_surat_cuti', $filename);
 
             $tahun_kerja = $req->tahun_kerja;
             $bulan_kerja = $req->bulan_kerja;
@@ -56,9 +69,25 @@ class HomeController extends Controller
         } 
     }
 
-    public function table(){
-        return view ('table');
+    public function showTable()
+    {
+        // Retrieve the file path from the database
+        $filePath = DB::table('pengajuan')->where('id', $id)->value('blanko_surat_cuti');
+
+        // Check if the file exists
+        if (Storage::disk('public')->exists('blanko_surat_cuti/' . $filePath)) {
+            // Generate the URL to the file
+            $fileUrl = asset('storage/blanko_surat_cuti/' . $filePath);
+        } else {
+            // Display a default image or message
+            $fileUrl = asset('storage/blanko_surat_cuti/UAS_PTI.pdf');
+        }
+
+        // Pass the data to the view
+        return view('table', ['fileUrl' => $fileUrl]);
     }
+
+
     /**
      * Show the application dashboard.
      *

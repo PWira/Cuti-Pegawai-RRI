@@ -162,7 +162,7 @@
                                     </ul>
                                 </div>
                             </div> <!-- /.card -->
-                            <iframe src="{{ asset('storage/blanko_surat_cuti/UAS_PTI.pdf') }}" width="100%" height="500px"></iframe>
+                            {{-- <iframe src="{{ $fileUrl }}" width="100%" height="500px"></iframe> --}}
                         </div> <!-- /.col -->
                     </div> <!--end::Row-->
                 </div> <!--end::Container-->

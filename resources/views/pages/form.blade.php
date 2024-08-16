@@ -39,8 +39,8 @@
                             <div class="valid-feedback"></div>
                         </div>
                         <div class="col-md-6">
-                            <label for="unit_kerja" class="form-label">Unit Kerja</label>
-                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="departemen" required>
+                            <label for="unit_kerja" class="form-label">Unit Kerja RRI</label>
+                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="Contoh : Palembang" required>
                             <div class="valid-feedback"></div>
                         </div>
                         <div class="col-md-6">
