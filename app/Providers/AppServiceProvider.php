@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('name', Auth::user()->name);
                 $view->with('email', Auth::user()->email);
                 $view->with('role', Auth::user()->role);
+                $view->with('asal', Auth::user()->asal);
             }
         });
     }

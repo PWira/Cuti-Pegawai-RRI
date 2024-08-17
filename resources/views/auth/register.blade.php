@@ -43,11 +43,17 @@
                 @enderror
               </div>
               <div class="input-group mb-3">
+                <select class="form-select" id="asal" name="asal" required>
+                  <option value="">Unit Kerja</option>
+                  <option value="jakarta">Jakarta</option>
+                  <option value="palembang">Palembang</option>
+                </select>
+              </div>
+              <div class="input-group mb-3">
                 <select class="form-select" id="role" name="role" required>
                   <option value="">Hak Akses Website</option>
-                  <option value="admin">admin</option>
-                  <option value="super_user_plg">Kepala Palembang</option>
-                  <option value="user_plg">SDM Palembang</option>
+                  <option value="superuser">Kepala Direktur</option>
+                  <option value="user">SDM</option>
                 </select>
               </div>
               <div class="input-group mb-3">
@@ -71,21 +77,9 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-8">
-                  <div class="icheck-primary">
-                    <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                    <label for="agreeTerms">
-                    I agree to the <a href="#">terms</a>
-                    </label>
-                  </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-4">
+                <div class="mb-3 text-center">
                   <button type="submit" class="btn btn-primary btn-block">{{ __('Register') }}</button>
                 </div>
-                <!-- /.col -->
-              </div>
             </form>
 
             @if (Route::has('login'))

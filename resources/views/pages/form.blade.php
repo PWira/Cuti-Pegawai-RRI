@@ -77,8 +77,10 @@
                         </div>
                         <div class="mt-2">
                             <label for="alasan" class="form-label">Alasan Cuti</label>
-                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required></textarea>
-                        </div>
+                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="200"></textarea>
+                            <small id="alasan-help" class="form-text text-muted">Maximum 200 characters</small>
+                            <small id="alasan-warning" class="form-text text-danger d-none">Exceeded maximum character limit</small>
+                        </div>                        
                         <div class="mt-2">
                             <label for="blanko" class="form-label">PDF Blanko Surat Cuti</label>
                             <input type="file" class="form-control" id="blanko" name="blanko" accept="application/pdf" required>
@@ -94,5 +96,21 @@
             </form>
         </div>
     </div>
+    <script>
+        const alasanTextarea = document.getElementById('alasan');
+        const alasanHelp = document.getElementById('alasan-help');
+        const alasanWarning = document.getElementById('alasan-warning');
+    
+        alasanTextarea.addEventListener('input', function () {
+            const characterCount = alasanTextarea.value.length;
+            alasanHelp.textContent = `Maximum 200 characters (${characterCount}/200)`;
+    
+            if (characterCount > 200) {
+                alasanWarning.classList.remove('d-none');
+            } else {
+                alasanWarning.classList.add('d-none');
+            }
+        });
+    </script>    
 </body>
 @endsection

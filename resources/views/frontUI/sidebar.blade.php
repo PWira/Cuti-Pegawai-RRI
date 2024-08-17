@@ -12,20 +12,20 @@
                             Informasi Data
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
-                    </a>
+                    </a>    
                     <ul class="nav nav-treeview">
                         <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                                 <p>Surat Pengajuan</p>
                             </a> 
                         </li>   
                     </ul>
-                @if ($role === 'keymaster')
+                {{-- @if ($role === 'admin' || $role === 'superuser') --}}
                 <li class="nav-item"> <a href="{{url('table')}}" class="nav-link"> <i class="nav-icon bi bi-table"></i>
                     <p>Tables</p>
                     </a>
                 </li>
-                @else
-                @endif
+                {{-- @else
+                @endif --}}
             {{-- <li class="nav-header">LABELS</li>
             <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-circle text-danger"></i>
                 <p class="text">Important</p>

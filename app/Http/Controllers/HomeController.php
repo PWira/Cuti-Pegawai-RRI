@@ -7,17 +7,22 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
 
     public function lihatFile()
     {
-        // Retrieve the file path from the database
-        $blanko = DB::table('pengajuan')->get();
-        // Generate the URL to the file
-        // Redirect the user to the file URL
-        return view('pages.table')->with('blanko',$blanko);
+        $user = Auth::user();
+
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->get();
+        $admin_blanko = DB::table('pengajuan')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        // ->with()
+        ;
     }
 
     /**
@@ -81,6 +86,7 @@ class HomeController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         return view('home');
     }
 
