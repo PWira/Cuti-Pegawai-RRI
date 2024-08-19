@@ -49,6 +49,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/bootstrap-5/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
+    <script src="{{ asset('assets/js/addOn.js') }}"></script>
     <script>
         const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
         const Default = {
@@ -197,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 });
             }
         });
-    </script> <!--end::OverlayScrollbars Configure--> <!--end::Script-->
+    </script> <!--end::OverlayScrollbars Configure--> <!--end::Script-->    
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
 </body>

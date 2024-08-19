@@ -77,20 +77,23 @@
                         </div>
                         <div class="mt-2">
                             <label for="alasan" class="form-label">Alasan Cuti</label>
-                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="200"></textarea>
-                            <small id="alasan-help" class="form-text text-muted">Maximum 200 characters</small>
-                            <small id="alasan-warning" class="form-text text-danger d-none">Exceeded maximum character limit</small>
+                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="50"></textarea>
+                            <small id="alasan-help" class="form-text text-muted">Maksimum 50 karakter</small>
+                            <small id="alasan-warning" class="form-text text-danger d-none">Batas maksimun karakter</small>
                         </div>                        
                         <div class="mt-2">
-                            <label for="blanko" class="form-label">PDF Blanko Surat Cuti</label>
-                            <input type="file" class="form-control" id="blanko" name="blanko" accept="application/pdf" required>
-                            <div class="progress" style="display: none;">
+                            <label for="blanko_ditangguhkan" class="form-label">PDF Blanko Surat Cuti</label>
+                            <input type="file" class="form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
+                            {{-- <div class="progress" style="display: none;">
                                 <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                            </div> --}}
+                        </div>
+                        <div class="mt-2" style="visibility:hidden">
+                            <input type="text" class="form-control" id="konfirmasi" name="konfirmasi" value="ditangguhkan" required>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer" style="text-align: center">
                     <button class="btn btn-info" type="submit">Submit form</button>
                 </div>
             </form>
@@ -103,9 +106,9 @@
     
         alasanTextarea.addEventListener('input', function () {
             const characterCount = alasanTextarea.value.length;
-            alasanHelp.textContent = `Maximum 200 characters (${characterCount}/200)`;
+            alasanHelp.textContent = `Maximum 50 characters (${characterCount}/50)`;
     
-            if (characterCount > 200) {
+            if (characterCount > 50) {
                 alasanWarning.classList.remove('d-none');
             } else {
                 alasanWarning.classList.add('d-none');

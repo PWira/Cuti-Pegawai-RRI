@@ -12,19 +12,6 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
 
-    public function lihatFile()
-    {
-        $user = Auth::user();
-
-        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->get();
-        $admin_blanko = DB::table('pengajuan')->get();
-
-        return view('pages.table', compact('blanko'))
-        ->with('admin_blanko',$admin_blanko)
-        // ->with()
-        ;
-    }
-
     /**
      * Create a new controller instance.
      *
@@ -35,12 +22,87 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function pengajuanCuti()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditangguhkan')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
+
+    public function cutiDitolak()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditolak')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
+
+    public function cutiDiterima()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','diterima')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
+
+    public function pegawaiAktif()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pegawai')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pegawai')->paginate(15);
+        $konfirmasi = DB::table('pegawai')->where('status','aktif')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
+
+    public function pegawaiCuti()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pegawai')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pegawai')->paginate(15);
+        $konfirmasi = DB::table('pegawai')->where('status','cuti')->get();
+
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
+
     public function kirimPengajuan(Request $req){
 
-        if ($req->hasFile('blanko')) {
-            $file = $req->file('blanko');
+        if ($req->hasFile('blanko_ditangguhkan')) {
+            $file = $req->file('blanko_ditangguhkan');
             $fileName = time() . '_' . Str::slug($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-            $path = public_path('blanko');
+            $path = public_path('blanko_ditangguhkan');
     
             // Pastikan direktori ada
             if (!File::isDirectory($path)) {
@@ -48,8 +110,8 @@ class HomeController extends Controller
             }
     
             // Pindahkan file
-            $file->move($path, $fileName);
-            $filePath = 'blanko/' . $fileName;
+            $file->move($path.'/ditangguhkan', $fileName);
+            $filePath = 'blanko/ditangguhkan/' . $fileName;
     
             $tahun_kerja = $req->tahun_kerja;
             $bulan_kerja = $req->bulan_kerja;
@@ -67,11 +129,11 @@ class HomeController extends Controller
                 "mulai_cuti" => $req->mulai_cuti,
                 "selesai_cuti" => $req->selesai_cuti,
                 "alasan" => $req->alasan,
-                "blanko" => $filePath,
+                "blanko_ditangguhkan" => $filePath,
                 "created_at" => now()
             ]);
     
-            return redirect('form')->with('success', 'Pengajuan berhasil dikirim.');
+            return redirect('table-pengajuan')->with('success', 'Pengajuan berhasil dikirim.');
         } else {
             return redirect('form')->with('error', 'File blanko harus diunggah.');
         }
@@ -90,4 +152,9 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function hapusPengajuan($id){
+        DB::table("pengajuan")->where('id','=',$id)->delete();
+
+        return redirect('table-pengajuan');
+    }
 }

@@ -21,7 +21,10 @@ return new class extends Migration
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
             $table->text('alasan');
-            $table->text('blanko');
+            $table->string('blanko_ditangguhkan');
+            $table->text('blanko_diterima')->nullable();
+            $table->text('blanko_ditolak')->nullable();
+            $table->enum('konfirmasi',['ditangguhkan','diterima','ditolak']);
             $table->timestamps();
         });
     }

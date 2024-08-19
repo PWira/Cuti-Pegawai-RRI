@@ -7,6 +7,12 @@
                     <li class="nav-item"> <a href="{{url('home')}}" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                         <p>Dashboard</p>
                     </a> </li>
+                    <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                        <p>Form Pengajuan</p>
+                    </a> </li>  
+                    <li class="nav-item"> <a href="{{url('pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                        <p>Isi Data Pegawai</p>
+                    </a> </li> 
                     <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon bi bi-file-text"></i>
                         <p>
                             Informasi Data
@@ -14,16 +20,48 @@
                         </p>
                     </a>    
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
-                                <p>Surat Pengajuan</p>
-                            </a> 
+                        <li class="nav-item"> <a href="{{url('pegawai-aktif')}}" class="nav-link"> <i class="nav-icon bi bi-table text-success"></i>
+                            <p>Pegawai Aktif</p>
+                        </a> 
                         </li>   
                     </ul>
-                {{-- @if ($role === 'admin' || $role === 'superuser') --}}
-                <li class="nav-item"> <a href="{{url('table')}}" class="nav-link"> <i class="nav-icon bi bi-table"></i>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> <a href="{{url('pegawai-cuti')}}" class="nav-link"> <i class="nav-icon bi bi-table text-primary"></i>
+                            <p>Pegawai Cuti</p>
+                        </a> 
+                    </li>   
+                </ul>
+            </li>
+            <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon bi bi-file-text"></i>
+                <p>
+                    Pengajuan
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+            </a>    
+            <ul class="nav nav-treeview">
+                <li class="nav-item"> <a href="{{url('table-pengajuan')}}" class="nav-link"> <i class="nav-icon bi bi-table text-warning"></i>
+                        <p>Pengajuan Cuti</p>
+                    </a> 
+                </li>   
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"> <a href="{{url('table-ditolak')}}" class="nav-link"> <i class="nav-icon bi bi-table text-info"></i>
+                        <p>Cuti Diterima</p>
+                    </a> 
+                </li>   
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"> <a href="{{url('table-diterima')}}" class="nav-link"> <i class="nav-icon bi bi-table text-danger"></i>
+                        <p>Cuti Ditolak</p>
+                    </a> 
+                </li>   
+            </ul>
+            </li>
+            {{-- @if ($role === 'admin' || $role === 'superuser') --}}
+                {{-- <li class="nav-item"> <a href="{{url('table')}}" class="nav-link"> <i class="nav-icon bi bi-table"></i>
                     <p>Tables</p>
                     </a>
-                </li>
+                </li> --}}
                 {{-- @else
                 @endif --}}
             {{-- <li class="nav-header">LABELS</li>
