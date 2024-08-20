@@ -3,6 +3,8 @@
 @section('content')
 
 @auth
+@foreach ($konfirmasi as $tabel)
+
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
@@ -27,7 +29,6 @@
             <div class="row">
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
-                        @forelse ($konfirmasi as $tabel)
                             @switch($tabel->status)
                                 @case('aktif')
                                     <div class="card-header">
@@ -44,11 +45,6 @@
                                         <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
                                     </div> <!-- /.card-header -->
                             @endswitch
-                        @empty
-                        <div class="card-header">
-                            <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
-                        </div> <!-- /.card-header -->
-                        @endforelse
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
@@ -69,8 +65,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($konfirmasi as $halaman)
-                                    @switch($halaman->status)
+                                    @switch($tabel->status)
                                         @case('aktif')
                                             <tr class="align-middle">
                                                 @php $rowNumber = 1; @endphp
@@ -94,35 +89,13 @@
                                                         Selengkapnya <i class="bi bi-arrow-down"></i>
                                                     </button>
                                                 </td>
-                                            </tr>
-                                            {{-- <tr>
-                                                <td colspan="9">
-                                                    <div class="collapse" id="collapse{{ $view->id }}">
-                                                        <div class="card card-body">
-                                                            <p>Mulai Cuti: {{ $view->mulai_cuti }}</p>
-                                                            <p>Selesai Cuti: {{ $view->selesai_cuti }}</p>
-                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
-                                                            <p>Alasan: {{ $view->alasan }}</p>
-                                                            <p class="d-flex justify-content-between">
-                                                                <span>
-                                                                    <input type="file" class="form-control" id="blanko" name="blanko" accept="application/pdf" required style="display: none;">
-                                                                    <a class="btn btn-primary" href="#" onclick="document.getElementById('blanko').click(); return false;">Upload File <i class="bi bi-upload"></i></a>
-                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
-                                                                </span>
-                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                            </p>
-                                                            
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr> --}}
+                                                </tr>
                                                 @empty
                                                     <tr class="text-center">
                                                         <td colspan="9">No data available</td>
                                                     </tr>
                                                 @endforelse
-                                            @else
+                                            @elseif($role === 'user' || $role === 'superuser')
                                                 @forelse ($blanko as $view)
                                                 <td>{{ $rowNumber++ }}</td>
                                                 <td>{{$view->nama}}</td>
@@ -137,12 +110,12 @@
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
                                                 <td>{{$view->status}}</td>
-                                            </tr>
-                                            @empty
-                                                <tr class="text-center">
-                                                    <td colspan="9">No data available</td>
                                                 </tr>
-                                            @endforelse
+                                                @empty
+                                                    <tr class="text-center">
+                                                        <td colspan="9">No data available</td>
+                                                    </tr>
+                                                @endforelse
                                             @endif
                                         @break
                                         @case('cuti')
@@ -163,17 +136,14 @@
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
                                                 <td>{{$view->status}}</td>
-                                                @if ($view->status=='cuti')
                                                 <td>{{$view->cuti_hari}}</td>
-                                                @else
-                                                @endif
-                                            </tr>
-                                            @empty
-                                                <tr class="text-center">
-                                                    <td colspan="9">No data available</td>
                                                 </tr>
-                                            @endforelse
-                                            @else
+                                                @empty
+                                                    <tr class="text-center">
+                                                        <td colspan="9">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            @elseif($role === 'user' || $role === 'superuser')
                                                 @forelse ($blanko as $view)
                                                 <td>{{ $rowNumber++ }}</td>
                                                 <td>{{$view->nama}}</td>
@@ -188,16 +158,13 @@
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
                                                 <td>{{$view->status}}</td>
-                                                @if ($view->status=='cuti')
                                                 <td>{{$view->cuti_hari}}</td>
-                                                @else
-                                                @endif
-                                            </tr>
-                                            @empty
-                                                <tr class="text-center">
-                                                    <td colspan="9">No data available</td>
                                                 </tr>
-                                            @endforelse
+                                                @empty
+                                                    <tr class="text-center">
+                                                        <td colspan="9">No data available</td>
+                                                    </tr>
+                                                @endforelse
                                             @endif
                                         @break
                                     @default
@@ -205,12 +172,6 @@
                                             <td colspan="9">No data available</td>
                                         </tr>
                                     @endswitch
-                                    @empty
-                                        <tr class="text-center">
-                                            <td colspan="9">No data available</td>
-                                        </tr>
-                                    @endforelse
-                                    @endauth
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->
@@ -228,5 +189,8 @@
         </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
+
+@endforeach
+@endauth
 
 @endsection

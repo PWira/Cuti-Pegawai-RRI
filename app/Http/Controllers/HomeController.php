@@ -116,7 +116,7 @@ class HomeController extends Controller
             "created_at" => now()
         ]);
 
-        return redirect('table-pengajuan')->with('success', 'Pengajuan berhasil dikirim.');
+        return redirect('pegawai-aktif')->with('success', 'Pengajuan berhasil dikirim.');
     }
 
     public function kirimPengajuan(Request $req){

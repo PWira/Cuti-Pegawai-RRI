@@ -2,6 +2,8 @@
 
 @section('content')
 
+@auth
+@foreach ($konfirmasi as $item)
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
@@ -26,33 +28,27 @@
             <div class="row">
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
-                        @forelse ($konfirmasi as $tabel)
-                            @switch($tabel->konfirmasi)
-                                @case('ditangguhkan')
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Pengajuan Cuti</h3>
-                                    </div> <!-- /.card-header -->
-                                    @break
-                                @case('diterima')
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Cuti Diterima</h3>
-                                    </div> <!-- /.card-header -->
-                                    @break
-                                @case('ditolak')
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Cuti Ditolak</h3>
-                                    </div> <!-- /.card-header -->
-                                    @break
-                                @default
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
-                                    </div> <!-- /.card-header -->
-                            @endswitch
-                        @empty
-                        <div class="card-header">
-                            <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
-                        </div> <!-- /.card-header -->
-                        @endforelse
+                        @switch($item->konfirmasi)
+                            @case('ditangguhkan')
+                                <div class="card-header">
+                                    <h3 style="font-weight: bold" class="card-title">Pengajuan Cuti</h3>
+                                </div> <!-- /.card-header -->
+                                @break
+                            @case('diterima')
+                                <div class="card-header">
+                                    <h3 style="font-weight: bold" class="card-title">Cuti Diterima</h3>
+                                </div> <!-- /.card-header -->
+                                @break
+                            @case('ditolak')
+                                <div class="card-header">
+                                    <h3 style="font-weight: bold" class="card-title">Cuti Ditolak</h3>
+                                </div> <!-- /.card-header -->
+                                @break
+                            @default
+                                <div class="card-header">
+                                    <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
+                                </div> <!-- /.card-header -->
+                        @endswitch
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
@@ -69,9 +65,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @auth
-                                    @forelse ($konfirmasi as $halaman)
-                                    @switch($halaman->konfirmasi)
+                                    @switch($item->konfirmasi)
                                         @case('ditangguhkan')
                                             <tr class="align-middle">
                                                 @php $rowNumber = 1; @endphp
@@ -175,7 +169,7 @@
                                                         <td colspan="9">No data available</td>
                                                     </tr>
                                                 @endforelse
-                                                @endif
+                                            @endif
                                         @break
                                         @case('diterima')
                                             <tr class="align-middle">
@@ -279,27 +273,115 @@
                                                 </tr>
                                             @endforelse
                                             @endif
-                                        @break
+                                            @break
                                         @case('ditolak')
-                                            
-                                            @break
-                                        @case('aktif')
-                                            
-                                            @break
-                                        @case('cuti')
-                                            
+                                            <tr class="align-middle">
+                                                @php $rowNumber = 1; @endphp
+                                            @if ($role === 'admin')
+                                                @forelse ($admin_blanko as $view)
+                                                <td>{{ $rowNumber++ }}</td>
+                                                <td>{{$view->nama_pekerja}}</td>
+                                                <td>{{$view->nip}}</td>
+                                                <td>{{$view->jabatan}}</td>
+                                                <td>{{$view->unit_kerja}}</td>
+                                                <td>
+                                                    @php
+                                                        $years = floor($view->masa_kerja / 12);
+                                                        $months = $view->masa_kerja % 12;
+                                                    @endphp
+                                                    {{ $years }} tahun {{ $months }} bulan
+                                                </td>
+                                                <td>{{$view->jenis_cuti}}</td>
+                                                <td>
+                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
+                                                        Selengkapnya <i class="bi bi-arrow-down"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <div class="collapse" id="collapse{{ $view->id }}">
+                                                        <div class="card card-body">
+                                                            <p>Mulai Cuti: {{ $view->mulai_cuti }}</p>
+                                                            <p>Selesai Cuti: {{ $view->selesai_cuti }}</p>
+                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                            <p>Alasan: {{ $view->alasan }}</p>
+                                                            <p class="d-flex justify-content-between">
+                                                                <span>
+                                                                    <a class="btn btn-primary" href="#">Upload File <i class="bi bi-upload"></i></a>
+                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
+                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
+                                                                </span>
+                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                            </p>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                                <tr class="text-center">
+                                                    <td colspan="9">No data available</td>
+                                                </tr>
+                                            @endforelse
+                                            @else
+                                                @forelse ($blanko as $view)
+                                                <td>{{ $rowNumber++ }}</td>
+                                                <td>{{$view->nama_pekerja}}</td>
+                                                <td>{{$view->nip}}</td>
+                                                <td>{{$view->jabatan}}</td>
+                                                <td>{{$view->unit_kerja}}</td>
+                                                <td>
+                                                    @php
+                                                        $years = floor($view->masa_kerja / 12);
+                                                        $months = $view->masa_kerja % 12;
+                                                    @endphp
+                                                    {{ $years }} tahun {{ $months }} bulan
+                                                </td>
+                                                <td>{{$view->jenis_cuti}}</td>
+                                                <td>
+                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
+                                                        Selengkapnya <i class="bi bi-arrow-down"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <div class="collapse" id="collapse{{ $view->id }}">
+                                                        <div class="card card-body">
+                                                            <p>Mulai Cuti: {{ $view->mulai_cuti }}</p>
+                                                            <p>Selesai Cuti: {{ $view->selesai_cuti }}</p>
+                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                            <p>Alasan: {{ $view->alasan }}</p>
+                                                            <p class="d-flex justify-content-between">
+                                                                <span>
+                                                                    <a class="btn btn-primary" href="#">Upload File <i class="bi bi-upload"></i></a>
+                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
+                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                                <tr class="text-center">
+                                                    <td colspan="9">No data available</td>
+                                                </tr>
+                                            @endforelse
+                                            @endif
                                             @break
                                     @default
                                         <tr class="text-center">
                                             <td colspan="9">No data available</td>
                                         </tr>
                                     @endswitch
-                                    @empty
-                                        <tr class="text-center">
-                                            <td colspan="9">No data available</td>
-                                        </tr>
-                                    @endforelse
-                                    @endauth
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->
@@ -317,5 +399,6 @@
         </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
-
+@endforeach
+@endauth
 @endsection
