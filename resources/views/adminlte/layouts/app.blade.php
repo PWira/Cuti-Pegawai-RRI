@@ -94,36 +94,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script> <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
     <script>
-
-        const sales_chart_options = {
-            series: [{
-                    name: "Pegawai Aktif",
-                    data: pegawai.map(p => p.aktif),
-                },
-                {
-                    name: "Pegawai Cuti",
-                    data: pegawai.map(p => p.cuti),
-                },
-            ],
-            chart: {
-                type: "bar",
-                height: 200,
-            },
-            // ... rest of the options ...
-            xaxis: {
-                categories: pegawai.map(p => p.unit_kerja),
-            },
-            // ... rest of the options ...
-        };
-
-        const sales_chart = new ApexCharts(
-            document.querySelector("#sales-chart"),
-            sales_chart_options
-        );
-        sales_chart.render();
-
-    </script> <!-- jsvectormap -->
-    <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (() => {
             "use strict";

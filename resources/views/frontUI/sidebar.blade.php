@@ -11,7 +11,7 @@
                     <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                         <p>Form Pengajuan</p>
                     </a> </li>  
-                    <li class="nav-item"> <a href="{{url('pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                    <li class="nav-item"> <a href="{{url('data-pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                         <p>Isi Data Pegawai</p>
                     </a> </li> 
                     <hr class="" style="color: aliceblue">
@@ -22,17 +22,17 @@
                         </p>
                     </a>    
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"> <a href="{{url('pegawai-aktif')}}" class="nav-link"> <i class="nav-icon bi bi-table text-success"></i>
-                            <p>Pegawai Aktif</p>
+                        <li class="nav-item"> <a href="{{url('pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-table text-success"></i>
+                            <p>Data Pegawai</p>
                         </a> 
                         </li>   
                     </ul>
-                    <ul class="nav nav-treeview">
+                    {{-- <ul class="nav nav-treeview">
                         <li class="nav-item"> <a href="{{url('pegawai-cuti')}}" class="nav-link"> <i class="nav-icon bi bi-table text-primary"></i>
                             <p>Pegawai Cuti</p>
                         </a> 
                         </li>   
-                    </ul>
+                    </ul> --}}
                 </li>
                 <hr style="color: aliceblue">
                 <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon bi bi-file-text"></i>

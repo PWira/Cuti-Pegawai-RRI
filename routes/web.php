@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('form', function () {
         return view('pages.form');
     });
-    Route::get('pegawai', function () {
+    Route::get('data-pegawai', function () {
         return view('pages.pegawai');
     });
     
@@ -40,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('table-pengajuan',[HomeController::class, 'pengajuanCuti']);
     Route::get('table-ditolak',[HomeController::class, 'cutiDitolak']);
     Route::get('table-diterima',[HomeController::class, 'cutiDiterima']);
-    Route::get('pegawai-aktif',[HomeController::class, 'pegawaiAktif']);
-    Route::get('pegawai-cuti',[HomeController::class, 'pegawaiCuti']);
+    Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
 });

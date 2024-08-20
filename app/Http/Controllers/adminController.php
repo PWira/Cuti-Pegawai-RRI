@@ -3,13 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class adminController extends Controller
 {
 
     /**
@@ -25,71 +20,80 @@ class HomeController extends Controller
     public function pengajuanCuti()
     {
         $user = Auth::user();
-        $role = $user->role;
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditangguhkan')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
     }
 
     public function cutiDitolak()
     {
         $user = Auth::user();
-        $role = $user->role;
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditolak')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
     }
 
     public function cutiDiterima()
     {
         $user = Auth::user();
-        $role = $user->role;
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
+        $blanko = DB::table('pengajuan')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pengajuan')->paginate(15);
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi','diterima')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.table', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
     }
 
-    public function pegawai()
+    public function pegawaiAktif()
     {
         $user = Auth::user();
         $role = $user->role;
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pegawai')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
-        // $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
+        // if ($role === 'admin') {
+        //     $blanko = DB::table('pegawai')->paginate(15);
+        // } elseif ($role === 'user' || $role === 'superuser') {
+        //     $blanko = DB::table('pegawai')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        // } else {
+        //     $blanko = collect(); // Return an empty collection if the role is not recognized
+        // }
+        $blanko = DB::table('pegawai')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $konfirmasi = DB::table('pegawai')->where('status','aktif')->get();
 
-        return view('pages.tabel_pegawai', compact('blanko' ,'role'));
+        return view('pages.pegawai_aktif', compact('blanko', 'admin_blanko', 'konfirmasi', 'role'));
     }
 
+    public function pegawaiCuti()
+    {
+        $user = Auth::user();
+
+        $blanko = DB::table('pegawai')->where('unit_kerja', $user->unit_kerja)->paginate(15);
+        $admin_blanko = DB::table('pegawai')->paginate(15);
+        $konfirmasi = DB::table('pegawai')->where('status','cuti')->get();
+
+        return view('pages.tabel_pegawai', compact('blanko'))
+        ->with('admin_blanko',$admin_blanko)
+        ->with('konfirmasi',$konfirmasi)
+        // ->with()
+        ;
+    }
 
     public function daftarPegawai(Request $req)
     {
@@ -106,10 +110,11 @@ class HomeController extends Controller
             "jabatan" => $req->jabatan,
             "unit_kerja" => $unitcase,
             "masa_kerja" => $total_bulan_kerja,
+            "status" => $req->status,
             "created_at" => now()
         ]);
 
-        return redirect('pegawai')->with('success', 'Pengajuan berhasil dikirim.');
+        return redirect('pegawai-aktif')->with('success', 'Pengajuan berhasil dikirim.');
     }
 
     public function kirimPengajuan(Request $req){

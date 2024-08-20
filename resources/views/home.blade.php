@@ -23,18 +23,18 @@
   <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="row"> <!--begin::Col-->
-            <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 1-->
+            <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 1-->
                 <div class="small-box text-bg-success">
                     <div class="inner">
                         <h3>{{ $pegawai->where('status', 'aktif')->first()->total ?? 0 }}</h3>
-                        <p>Pekerja Aktif</p>
+                        <p>Jumlah Pegawai</p>
                     </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                           <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122z"></path>
                       </svg> <a href="{{url('pegawai-aktif')}}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                           Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                   </div> <!--end::Small Box Widget 1-->
               </div> <!--end::Col-->
-              <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 2-->
+              {{-- <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 2-->
                 <div class="small-box text-bg-primary">
                     <div class="inner">
                         <h3>{{ $pegawai->where('status', 'cuti')->first()->total ?? 0}}</h3>
@@ -44,8 +44,8 @@
                     </svg> <a href="{{url('pegawai-cuti')}}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                         Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                     </div> <!--end::Small Box Widget 2-->
-                </div> <!--end::Col-->
-                <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 4-->
+                </div> <!--end::Col--> --}}
+                <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 4-->
                     <div class="small-box text-bg-warning">
                         <div class="inner">
                         <h3>{{ $surat->where('konfirmasi', 'ditangguhkan')->first()->total ?? 0}}</h3>
@@ -56,7 +56,7 @@
                         Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                     </div> <!--end::Small Box Widget 4-->
                 </div> <!--end::Col-->
-              <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 3-->
+              <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 3-->
                 <div class="small-box text-bg-info">
                     <div class="inner">
                             <h3>{{ $surat->where('konfirmasi', 'diterima')->first()->total ?? 0}}</h3>
@@ -67,7 +67,7 @@
                           Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                   </div> <!--end::Small Box Widget 3-->
               </div> <!--end::Col-->
-              <div class="col-lg-3 col-5"> <!--begin::Small Box Widget 5-->
+              <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 5-->
                   <div class="small-box text-bg-danger">
                       <div class="inner">
                           <h3>{{ $surat->where('konfirmasi', 'ditolak')->first()->total ?? 0 }}</h3>
@@ -79,27 +79,8 @@
                         </div> <!--end::Small Box Widget 4-->
                     </div> <!--end::Col-->
                 </div> <!--end::Row--> <!--begin::Row-->
-                <div class="card mb-4">
-                    <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="card-title">Chart Pegawai Aktif dan Cuti</h3> <a href="javascript:void(0);" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">View Report</a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="position-relative mb-4">
-                            <div id="sales-chart"></div>
-                        </div>
-                        <div class="d-flex flex-row justify-content-end"> <span class="me-2"> <i class="bi bi-square-fill text-primary"></i> This year
-                            </span> <span> <i class="bi bi-square-fill text-secondary"></i> Last year
-                            </span> </div>
-                    </div>
-                </div> <!-- /.card -->
             </div> <!-- /.row (main row) -->
       </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
-<script>
-    const pegawai = @json($pegawai);
-</script>
-
 @endsection
