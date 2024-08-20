@@ -125,8 +125,8 @@ class HomeController extends Controller
             }
     
             // Pindahkan file
-            $file->move($path.'/ditangguhkan', $fileName);
-            $filePath = 'blanko/ditangguhkan/' . $fileName;
+            $file->move($path, $fileName);
+            $filePath = 'blanko_ditangguhkan/' . $fileName;
     
             $tahun_kerja = $req->tahun_kerja;
             $bulan_kerja = $req->bulan_kerja;

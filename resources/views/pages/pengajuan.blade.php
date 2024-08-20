@@ -261,8 +261,33 @@
                                 <div class="card-header">
                                     <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
                                 </div> <!-- /.card-header -->
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 2%">#</th>
+                                                <th style="width: 15%">Nama Pekerja</th>
+                                                <th style="width: 5%">NIP</th>
+                                                <th style="width: 10%">Jabatan</th>
+                                                <th style="width: 5%">Unit Kerja</th>
+                                                <th style="width: 8%">Masa Kerja</th>
+                                                <th style="width: 10%">Jenis Cuti</th>
+                                                <th style="width: 10%">Blanko</th>
+                                                <th style="width: 10%">Selengkapnya</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="align-middle">
+                                                <tr class="text-center">
+                                                    <td colspan="9">No data available</td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.card-body -->
+                                <div class="card-footer clearfix">
+                                    {{ $blanko->render('layouts/pagination') }}
+                                </div>
                         @endswitch
-                        
                     </div> <!-- /.card -->
                     {{-- @forelse ($blanko as $view)
                     <iframe src="{{ $view->blanko_ditangguhkan }}" width="100%" height="100%"></iframe>
