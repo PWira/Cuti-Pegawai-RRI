@@ -17,6 +17,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/styles/overlayscrollbars.min.css" integrity="sha256-dSokZseQNT08wYEWiz5iLI8QPlKxG+TswNRD8k35cpg=" crossorigin="anonymous"><!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Third Party Plugin(Bootstrap Icons)-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" integrity="sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI=" crossorigin="anonymous"><!--end::Third Party Plugin(Bootstrap Icons)--><!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous"><!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
 </head> <!--end::Head--> <!--begin::Body-->
@@ -93,62 +94,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script> <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
     <script>
-        // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-        // IT'S ALL JUST JUNK FOR DEMO
-        // ++++++++++++++++++++++++++++++++++++++++++
 
         const sales_chart_options = {
             series: [{
-                    name: "Pekerja Cuti",
-                    data: [28, 48, 40, 19, 86, 27, 90 ,0],
+                    name: "Pegawai Aktif",
+                    data: pegawai.map(p => p.aktif),
                 },
                 {
-                    name: "Pekerja Aktif",
-                    data: [65, 59, 80, 81, 56, 55, 40 ,0],
+                    name: "Pegawai Cuti",
+                    data: pegawai.map(p => p.cuti),
                 },
             ],
             chart: {
-                height: 300,
-                type: "area",
-                toolbar: {
-                    show: false,
-                },
+                type: "bar",
+                height: 200,
             },
-            legend: {
-                show: false,
-            },
-            colors: ["#0d6efd", "#20c997"],
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                curve: "smooth",
-            },
+            // ... rest of the options ...
             xaxis: {
-                type: "datetime",
-                categories: [
-                    "2023-01-01",
-                    "2023-02-01",
-                    "2023-03-01",
-                    "2023-04-01",
-                    "2023-05-01",
-                    "2023-06-01",
-                    "2023-07-01",
-                    "2024-11-02",
-                ],
+                categories: pegawai.map(p => p.unit_kerja),
             },
-            tooltip: {
-                x: {
-                    format: "MMMM yyyy",
-                },
-            },
+            // ... rest of the options ...
         };
 
         const sales_chart = new ApexCharts(
-            document.querySelector("#revenue-chart"),
-            sales_chart_options,
+            document.querySelector("#sales-chart"),
+            sales_chart_options
         );
         sales_chart.render();
+
     </script> <!-- jsvectormap -->
     <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

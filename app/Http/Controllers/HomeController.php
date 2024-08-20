@@ -75,7 +75,7 @@ class HomeController extends Controller
         $admin_blanko = DB::table('pegawai')->paginate(15);
         $konfirmasi = DB::table('pegawai')->where('status','aktif')->get();
 
-        return view('pages.table', compact('blanko'))
+        return view('pages.tabel_pegawai', compact('blanko'))
         ->with('admin_blanko',$admin_blanko)
         ->with('konfirmasi',$konfirmasi)
         // ->with()
@@ -90,11 +90,33 @@ class HomeController extends Controller
         $admin_blanko = DB::table('pegawai')->paginate(15);
         $konfirmasi = DB::table('pegawai')->where('status','cuti')->get();
 
-        return view('pages.table', compact('blanko'))
+        return view('pages.tabel_pegawai', compact('blanko'))
         ->with('admin_blanko',$admin_blanko)
         ->with('konfirmasi',$konfirmasi)
         // ->with()
         ;
+    }
+
+    public function daftarPegawai(Request $req)
+    {
+
+        $tahun_kerja = $req->tahun_kerja;
+        $bulan_kerja = $req->bulan_kerja;
+        $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
+
+        $unitcase = Str::lower($req->unit_kerja);
+
+        $daftar = DB::table("pegawai")->insert([
+            "nama" => $req->nama_pekerja,
+            "nip" => $req->nip,
+            "jabatan" => $req->jabatan,
+            "unit_kerja" => $unitcase,
+            "masa_kerja" => $total_bulan_kerja,
+            "status" => $req->status,
+            "created_at" => now()
+        ]);
+
+        return redirect('table-pengajuan')->with('success', 'Pengajuan berhasil dikirim.');
     }
 
     public function kirimPengajuan(Request $req){
@@ -149,7 +171,22 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('home');
+
+        $pegawai = DB::table('pegawai')
+        ->select('unit_kerja', DB::raw('SUM(CASE WHEN status = "aktif" THEN 1 ELSE 0 END) as aktif'), DB::raw('SUM(CASE WHEN status = "cuti" THEN 1 ELSE 0 END) as cuti'))
+        ->groupBy('unit_kerja')
+        ->get();
+
+        $surat = DB::table('pengajuan')
+        ->select('konfirmasi', DB::raw('count(*) as total'))
+        ->groupBy('konfirmasi')
+        ->get();
+
+        return view('home')
+        ->with('pegawai',$pegawai)
+        ->with('surat',$surat)
+        // ->with()
+        ;
     }
 
     public function hapusPengajuan($id){

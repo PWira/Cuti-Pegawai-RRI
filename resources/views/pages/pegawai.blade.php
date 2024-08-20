@@ -18,7 +18,7 @@
         </div>
     @endif
         <div class="letter-container">
-            <form method="post" action="/kirim-pengajuan" class="needs-validation" enctype="multipart/form-data">
+            <form method="post" action="/daftar-pegawai" class="needs-validation" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="row g-2">
@@ -51,6 +51,9 @@
                             <label for="bulan_kerja" class="form-label">Masa Kerja : Bulan</label>
                             <input type="int" class="form-control" name="bulan_kerja" id="bulan_kerja" placeholder="Tanpa Tulisan. Contoh : 5" required>
                             <div class="valid-feedback"></div>
+                        </div>
+                        <div style="visibility: hidden">
+                            <input type="text" class="form-control" id="status" name="status" value="aktif" required>
                         </div>
                     </div>
                 </div>

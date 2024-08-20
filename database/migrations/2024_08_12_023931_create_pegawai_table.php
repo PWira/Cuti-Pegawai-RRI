@@ -19,6 +19,8 @@ class CreatePegawaiTable extends Migration
             $table->string('unit_kerja');
             $table->integer('masa_kerja');
             $table->enum('status',['aktif','cuti']);
+            $table->integer('cuti_hari')->nullable();
+            $table->timestamps();
         });
     }
 

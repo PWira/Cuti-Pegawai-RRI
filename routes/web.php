@@ -17,11 +17,11 @@ use App\Http\Controllers\HomeController;
 
 Route::middleware(['auth'])->group(function () {
     
-    Route::get('/', function () {
-        return view('home');
-    });
+    // Route::get('/', function () {
+    //     return view('home');
+    // });
 
-    Route::get('home', [HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('form', function () {
         return view('pages.form');
