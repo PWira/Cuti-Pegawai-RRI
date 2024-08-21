@@ -1,0 +1,3 @@
+buat link diterima dan ditolak dengan link yang berbeda sesuai route. dan controllernya.
+
+buat tabel sakit khusus direktur pusat
