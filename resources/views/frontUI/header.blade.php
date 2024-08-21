@@ -37,7 +37,7 @@
                         <img src="{{ asset('/assets/img/avatar5.png') }}" class="rounded-circle shadow" alt="User Image">
                         <p>
                             {{$name}}
-                            <!-- <small>Member since Nov. 2023</small> -->
+                            <small>Status : {{$role}}</small>
                         </p>
                     </li>
                     @endauth

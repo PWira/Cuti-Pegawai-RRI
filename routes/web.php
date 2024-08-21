@@ -23,9 +23,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('form', function () {
-        return view('pages.form');
-    });
+    // Route::get('form', function () {
+    //     return view('pages.form');
+    // });
     Route::get('data-pegawai', function () {
         return view('pages.pegawai');
     });
@@ -33,13 +33,16 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('table', function () {
     //     return view('pages.table');
     // });    
-    
-    Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
-    Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
     Route::get('table-pengajuan',[HomeController::class, 'pengajuanCuti']);
     Route::get('table-ditolak',[HomeController::class, 'cutiDitolak']);
     Route::get('table-diterima',[HomeController::class, 'cutiDiterima']);
     Route::get('pegawai',[HomeController::class, 'pegawai']);
+    Route::get('form',[HomeController::class, 'form']);
+    
+    Route::post('/cuti/{id}/confirm', [YourController::class, 'confirmCuti'])->name('cuti.confirm');
+    Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
+    Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
+
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
 });

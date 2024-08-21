@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-
+    
     /**
      * Create a new controller instance.
      *
@@ -22,6 +22,26 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function daftarPegawai(Request $req){
+    
+        $tahun_kerja = $req->tahun_kerja;
+        $bulan_kerja = $req->bulan_kerja;
+        $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
+    
+        $unitcase = Str::lower($req->unit_kerja);
+    
+        $daftar = DB::table("pegawai")->insert([
+            "nama" => $req->nama_pekerja,
+            "nip" => $req->nip,
+            "jabatan" => $req->jabatan,
+            "unit_kerja" => $unitcase,
+            "masa_kerja" => $total_bulan_kerja,
+            "created_at" => now()
+        ]);
+    
+        return redirect('pegawai')->with('success', 'Pengajuan berhasil dikirim.');
+    }
+    
     public function pengajuanCuti()
     {
         $user = Auth::user();
@@ -90,27 +110,24 @@ class HomeController extends Controller
         return view('pages.tabel_pegawai', compact('blanko' ,'role'));
     }
 
-
-    public function daftarPegawai(Request $req)
+    public function form()
     {
+        $user = Auth::user();
+        $role = $user->role;
 
-        $tahun_kerja = $req->tahun_kerja;
-        $bulan_kerja = $req->bulan_kerja;
-        $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
+        if ($role === 'admin') {
+            $blanko = DB::table('pegawai')->paginate(15);
+        } elseif ($role === 'user' || $role === 'superuser') {
+            $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
+        } else {
+            $blanko = collect(); // Return an empty collection if the role is not recognized
+        }
+        // $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
 
-        $unitcase = Str::lower($req->unit_kerja);
-
-        $daftar = DB::table("pegawai")->insert([
-            "nama" => $req->nama_pekerja,
-            "nip" => $req->nip,
-            "jabatan" => $req->jabatan,
-            "unit_kerja" => $unitcase,
-            "masa_kerja" => $total_bulan_kerja,
-            "created_at" => now()
-        ]);
-
-        return redirect('pegawai')->with('success', 'Pengajuan berhasil dikirim.');
+        return view('pages.form', compact('blanko' ,'role'));
     }
+
+
 
     public function kirimPengajuan(Request $req){
 
@@ -154,6 +171,52 @@ class HomeController extends Controller
         }
     }
 
+    public function confirmCuti(Request $request, $id){
+
+        $view = DB::table('pengajuan')->where('id', $id)->first();
+
+        if ($request->hasFile('respon_blanko')) {
+            $file = $request->file('respon_blanko');
+            $fileName = time() . '_' . Str::slug($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+
+            if ($request->input('status') == 'diterima') {
+                $path = public_path('blanko_diterima');
+                $filePath = 'blanko_diterima/' . $fileName;
+                $view->blanko_diterima = $filePath;
+                $view->konfirmasi = 'diterima';
+            } else {
+                $path = public_path('blanko_ditolak');
+                $filePath = 'blanko_ditolak/' . $fileName;
+                $view->blanko_ditolak = $filePath;
+                $view->konfirmasi = 'ditolak';
+            }
+
+            // Pastikan direktori ada
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
+
+            // Pindahkan file
+            $file->move($path, $fileName);
+
+            DB::table('pengajuan')->where('id', $view->id)->update([
+                'blanko_diterima' => $view->blanko_diterima,
+                'blanko_ditolak' => $view->blanko_ditolak,
+                'konfirmasi' => $view->konfirmasi
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Blanko berhasil dikonfirmasi.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ada file yang diunggah.'
+        ], 400);
+    }
+
 
     /**
      * Show the application dashboard.
@@ -164,23 +227,39 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-
-        $pegawai = DB::table('pegawai')
-        ->select('unit_kerja', DB::raw('SUM(CASE WHEN status = "aktif" THEN 1 ELSE 0 END) as aktif'), DB::raw('SUM(CASE WHEN status = "cuti" THEN 1 ELSE 0 END) as cuti'))
-        ->groupBy('unit_kerja')
-        ->get();
-
-        $surat = DB::table('pengajuan')
-        ->select('konfirmasi', DB::raw('count(*) as total'))
-        ->groupBy('konfirmasi')
-        ->get();
-
-        return view('home')
-        ->with('pegawai',$pegawai)
-        ->with('surat',$surat)
-        // ->with()
-        ;
-    }
+        $role = $user->role;
+    
+        if ($role === 'admin') {
+            $pegawai = DB::table('pegawai')
+                ->select('unit_kerja', DB::raw('count(*) as total'))
+                ->groupBy('unit_kerja')
+                ->get();
+    
+            $surat = DB::table('pengajuan')
+                ->select('konfirmasi', DB::raw('count(*) as total'))
+                ->groupBy('konfirmasi')
+                ->get();
+        } elseif ($role === 'user' || $role === 'superuser') {
+            $pegawai = DB::table('pegawai')
+                ->select('unit_kerja', DB::raw('count(*) as total'))
+                ->where('unit_kerja', $user->asal)
+                ->groupBy('unit_kerja')
+                ->get();
+    
+            $surat = DB::table('pengajuan')
+                ->select('konfirmasi', DB::raw('count(*) as total'))
+                ->where('unit_kerja', $user->asal)
+                ->groupBy('konfirmasi')
+                ->get();
+        } else {
+            $pegawai = collect(); // Return an empty collection if the role is not recognized
+            $surat = collect(); // Return an empty collection if the role is not recognized
+        }
+    
+    return view('home')
+        ->with('pegawai', $pegawai)
+        ->with('surat', $surat);
+    }     
 
     public function hapusPengajuan($id){
         DB::table("pengajuan")->where('id','=',$id)->delete();

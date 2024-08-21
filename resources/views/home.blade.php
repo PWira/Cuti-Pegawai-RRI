@@ -26,7 +26,7 @@
             <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 1-->
                 <div class="small-box text-bg-success">
                     <div class="inner">
-                        <h3>{{ $pegawai->where('status', 'aktif')->first()->total ?? 0 }}</h3>
+                        <h3>{{ $pegawai->first()->total ?? 0 }}</h3>
                         <p>Jumlah Pegawai</p>
                     </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                           <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122z"></path>
@@ -62,7 +62,7 @@
                             <h3>{{ $surat->where('konfirmasi', 'diterima')->first()->total ?? 0}}</h3>
                             <p>Cuti Diterima</p>
                         </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                          <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
+                          <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"></path>
                       </svg> <a href="{{url('table-diterima')}}" class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
                           Selengkapnya <i class="bi bi-link-45deg"></i> </a>
                   </div> <!--end::Small Box Widget 3-->

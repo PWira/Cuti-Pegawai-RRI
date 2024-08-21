@@ -22,36 +22,42 @@
                 @csrf
                 <p>Yang bertanda tangan di bawah ini:</p>
                 <div class="card-body">
+                    <div class="">
+                        <label for="pegawai" class="form-label">Pilih Pegawai</label>
+                        <select class="form-select form-select-sm" id="pegawai" name="pegawai" required>
+                            <option value="">Pilih pegawai</option>
+                            @forelse ($blanko as $pegawai)
+                                <option value="{{ $pegawai->id }}">{{ $pegawai->nama }}</option>
+                            @empty
+                                <option value="" class="text-danger text-center">Kosong! Isi terlebih dahulu data pegawai!</option>
+                            @endforelse
+                        </select>
+                    </div>
+                    <br>
                     <div class="row g-2">
                         <div class="col-md-6">
-                            <label for="nama" class="form-label">Nama Lengkap</label>
-                            <input type="text" class="form-control" name="nama_pekerja" id="nama_pekerja" placeholder="Nama Lengkap" required>
-                            <div class="valid-feedback"></div>
+                            <label for="nama_pekerja" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" name="nama_pekerja" id="nama_pekerja" placeholder="" readonly required>
                         </div>
                         <div class="col-md-6">
                             <label for="nip" class="form-label">NIP</label>
-                            <input type="text" class="form-control" name="nip" id="nip" placeholder="Nomor Induk Pekerja" required>
-                            <div class="valid-feedback"></div>
+                            <input type="text" class="form-control" name="nip" id="nip" placeholder="" readonly required>
                         </div>
                         <div class="col-md-6">
                             <label for="jabatan" class="form-label">Jabatan</label>
-                            <input type="text" class="form-control" name="jabatan" id="jabatan" placeholder="Jabatan" required>
-                            <div class="valid-feedback"></div>
+                            <input type="text" class="form-control" name="jabatan" id="jabatan" placeholder="" readonly required>
                         </div>
                         <div class="col-md-6">
                             <label for="unit_kerja" class="form-label">Unit Kerja RRI</label>
-                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="Contoh : Palembang" required>
-                            <div class="valid-feedback"></div>
+                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="" readonly required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="tahun_kerja" class="form-label">Masa Kerja : Tahun</label>
-                            <input type="int" class="form-control" name="tahun_kerja" id="tahun_kerja" placeholder="Tanpa Tulisan. Contoh : 2" required>
-                            <div class="valid-feedback"></div>
+                            <input type="text" class="form-control" name="tahun_kerja" id="tahun_kerja" placeholder="" readonly required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="bulan_kerja" class="form-label">Masa Kerja : Bulan</label>
-                            <input type="int" class="form-control" name="bulan_kerja" id="bulan_kerja" placeholder="Tanpa Tulisan. Contoh : 5" required>
-                            <div class="valid-feedback"></div>
+                            <input type="text" class="form-control" name="bulan_kerja" id="bulan_kerja" placeholder="" readonly required>
                         </div>
                         <p class="mt-2">Dengan ini mengajukan cuti dengan rincian sebagai berikut:</p>
                         <div class="row g-2">
@@ -84,9 +90,6 @@
                         <div class="mt-2">
                             <label for="blanko_ditangguhkan" class="form-label">PDF Blanko Surat Cuti</label>
                             <input type="file" class="form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
-                            {{-- <div class="progress" style="display: none;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div> --}}
                         </div>
                         <div class="mt-2" style="visibility:hidden">
                             <input type="text" class="form-control" id="konfirmasi" name="konfirmasi" value="ditangguhkan" required>
@@ -103,6 +106,13 @@
         const alasanTextarea = document.getElementById('alasan');
         const alasanHelp = document.getElementById('alasan-help');
         const alasanWarning = document.getElementById('alasan-warning');
+        const pegawaiSelect = document.getElementById('pegawai');
+        const namaPekerjaInput = document.getElementById('nama_pekerja');
+        const nipInput = document.getElementById('nip');
+        const jabatanInput = document.getElementById('jabatan');
+        const unitKerjaInput = document.getElementById('unit_kerja');
+        const tahunKerjaInput = document.getElementById('tahun_kerja');
+        const bulanKerjaInput = document.getElementById('bulan_kerja');
     
         alasanTextarea.addEventListener('input', function () {
             const characterCount = alasanTextarea.value.length;
@@ -114,6 +124,32 @@
                 alasanWarning.classList.add('d-none');
             }
         });
-    </script>    
+    
+        pegawaiSelect.addEventListener('change', function () {
+            const selectedPegawaiId = pegawaiSelect.value;
+            const selectedPegawai = @json($blanko->keyBy('id'));
+    
+            if (selectedPegawaiId) {
+                namaPekerjaInput.value = selectedPegawai[selectedPegawaiId].nama;
+                nipInput.value = selectedPegawai[selectedPegawaiId].nip;
+                jabatanInput.value = selectedPegawai[selectedPegawaiId].jabatan;
+                unitKerjaInput.value = selectedPegawai[selectedPegawaiId].unit_kerja;
+    
+                const totalBulanKerja = selectedPegawai[selectedPegawaiId].masa_kerja;
+                const tahunKerja = Math.floor(totalBulanKerja / 12);
+                const bulanKerja = totalBulanKerja % 12;
+    
+                tahunKerjaInput.value = tahunKerja;
+                bulanKerjaInput.value = bulanKerja;
+            } else {
+                namaPekerjaInput.value = '';
+                nipInput.value = '';
+                jabatanInput.value = '';
+                unitKerjaInput.value = '';
+                tahunKerjaInput.value = '';
+                bulanKerjaInput.value = '';
+            }
+        });
+    </script>       
 </body>
 @endsection

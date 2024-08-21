@@ -29,6 +29,9 @@
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         @switch($item->konfirmasi)
+
+{{-- ====================================================  DITANGGUHKAN  ====================================================== --}}
+
                             @case('ditangguhkan')
                                 <div class="card-header">
                                     <h3 style="font-weight: bold" class="card-title">Pengajuan Cuti</h3>
@@ -84,10 +87,13 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <a class="btn btn-primary" href="#">Upload File <i class="bi bi-upload"></i></a>
-                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                    <a class="btn btn-primary" href="#" onclick="uploadBlanko(event, {{ $view->id }})">Upload File <i class="bi bi-upload"></i></a>
+                                                                    <a class="btn btn-success" href="#" onclick="acceptCuti({{ $view->id }})">Diterima <i class="bi bi-check"></i></a>
+                                                                    <a class="btn btn-danger" href="#" onclick="rejectCuti({{ $view->id }})">Ditolak <i class="bi bi-x"></i></a>
                                                                 </span>
+                                                                @if ($role === "admin")
+                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                @endif
                                                             </p>
                                                         </div>
                                                     </div>
@@ -105,6 +111,9 @@
                                     {{ $blanko->render('layouts/pagination') }}
                                 </div>
                                 @break
+
+{{-- ====================================================  DITERIMA  ====================================================== --}}
+
                             @case('diterima')
                                 <div class="card-header">
                                     <h3 style="font-weight: bold" class="card-title">Cuti Diterima</h3>
@@ -142,7 +151,7 @@
                                                 </td>
                                                 <td>{{$view->jenis_cuti}}</td>
                                                 <td>
-                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                                    <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
@@ -160,10 +169,14 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <a class="btn btn-primary" href="#">Upload File <i class="bi bi-upload"></i></a>
+                                                                    <input type="file" class="btn btn-primary form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
+                                                                    Upload File <i class="bi bi-upload"></i>
                                                                     <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
                                                                 </span>
+                                                                @if ($role === "admin")
+                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                @endif
                                                             </p>
                                                         </div>
                                                     </div>
@@ -181,6 +194,9 @@
                                     {{ $blanko->render('layouts/pagination') }}
                                 </div>
                                 @break
+
+{{-- ====================================================  DITERIMA  ====================================================== --}}
+
                             @case('ditolak')
                                 <div class="card-header">
                                     <h3 style="font-weight: bold" class="card-title">Cuti Ditolak</h3>
@@ -218,7 +234,7 @@
                                                 </td>
                                                 <td>{{$view->jenis_cuti}}</td>
                                                 <td>
-                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                                    <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
@@ -236,10 +252,14 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <a class="btn btn-primary" href="#">Upload File <i class="bi bi-upload"></i></a>
+                                                                    <input type="file" class="btn btn-primary form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
+                                                                    Upload File <i class="bi bi-upload"></i>
                                                                     <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
                                                                 </span>
+                                                                @if ($role === "admin")
+                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                @endif
                                                             </p>
                                                         </div>
                                                     </div>
@@ -257,6 +277,9 @@
                                     {{ $blanko->render('layouts/pagination') }}
                                 </div>
                                 @break
+
+{{-- ====================================================  KOSONG  ====================================================== --}}
+
                             @default
                                 <div class="card-header">
                                     <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
