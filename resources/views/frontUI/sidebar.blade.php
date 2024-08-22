@@ -6,15 +6,11 @@
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
                     <li class="nav-item"> <a href="{{url('/')}}" class="nav-link"> <i class="nav-icon bi bi-speedometer2"></i>
                         <p>Dashboard</p>
-                    </a> </li>
-                    <hr class="" style="color: aliceblue">
-                    <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
-                        <p>Form Pengajuan</p>
                     </a> </li>  
+                    <hr class="" style="color: aliceblue">
                     <li class="nav-item"> <a href="{{url('data-pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                         <p>Isi Data Pegawai</p>
                     </a> </li> 
-                    <hr class="" style="color: aliceblue">
                     <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon fas fa-user-tie"></i>
                         <p>
                             Informasi Data
@@ -35,6 +31,9 @@
                     </ul> --}}
                 </li>
                 <hr style="color: aliceblue">
+                <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                    <p>Form Pengajuan</p>
+                </a> </li>
                 <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon bi bi-file-text"></i>
                     <p>
                         Pengajuan
@@ -48,13 +47,13 @@
                     </li>   
                 </ul>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item"> <a href="{{url('table-ditolak')}}" class="nav-link"> <i class="nav-icon bi bi-table text-info"></i>
+                    <li class="nav-item"> <a href="{{url('table-diterima')}}" class="nav-link"> <i class="nav-icon bi bi-table text-info"></i>
                             <p>Cuti Diterima</p>
                         </a> 
                     </li>   
                 </ul>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item"> <a href="{{url('table-diterima')}}" class="nav-link"> <i class="nav-icon bi bi-table text-danger"></i>
+                    <li class="nav-item"> <a href="{{url('table-ditolak')}}" class="nav-link"> <i class="nav-icon bi bi-table text-danger"></i>
                             <p>Cuti Ditolak</p>
                         </a> 
                     </li>   

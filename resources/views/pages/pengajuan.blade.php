@@ -87,9 +87,9 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <a class="btn btn-primary" href="#" onclick="uploadBlanko(event, {{ $view->id }})">Upload File <i class="bi bi-upload"></i></a>
-                                                                    <a class="btn btn-success" href="#" onclick="acceptCuti({{ $view->id }})">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" href="#" onclick="rejectCuti({{ $view->id }})">Ditolak <i class="bi bi-x"></i></a>
+                                                                    <input class="btn btn-primary" type="file" id="fileInput_{{ $item->id }}" accept="application/pdf" required>
+                                                                    <button class="btn btn-success" onclick="responCuti('diterima', {{ $item->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                                    <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $item->id }})">Ditolak <i class="bi bi-x"></i></button>
                                                                 </span>
                                                                 @if ($role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
@@ -169,10 +169,7 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <input type="file" class="btn btn-primary form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
-                                                                    Upload File <i class="bi bi-upload"></i>
-                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
+                                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
                                                                 @if ($role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
@@ -195,7 +192,7 @@
                                 </div>
                                 @break
 
-{{-- ====================================================  DITERIMA  ====================================================== --}}
+{{-- ====================================================  DITOLAK  ====================================================== --}}
 
                             @case('ditolak')
                                 <div class="card-header">
@@ -252,10 +249,7 @@
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
-                                                                    <input type="file" class="btn btn-primary form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
-                                                                    Upload File <i class="bi bi-upload"></i>
-                                                                    <a class="btn btn-success" href="#">Diterima <i class="bi bi-check"></i></a>
-                                                                    <a class="btn btn-danger" href="#">Ditolak <i class="bi bi-x"></i></a>
+                                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
                                                                 @if ($role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
@@ -322,6 +316,38 @@
         </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
+<script>
+    function responCuti(status, id) {
+        const fileInput = document.getElementById('fileInput_' + id);
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Please select a file to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('status', status);
+        formData.append('id', id);
+
+        fetch('{{ route("respon.cuti") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            location.reload(); // Refresh the page to reflect the changes
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
 @endforeach
 @endauth
 @endsection

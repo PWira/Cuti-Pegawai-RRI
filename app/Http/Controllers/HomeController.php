@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -171,50 +172,32 @@ class HomeController extends Controller
         }
     }
 
-    public function confirmCuti(Request $request, $id){
+    public function responCuti(Request $req){
 
-        $view = DB::table('pengajuan')->where('id', $id)->first();
+        // Log::info('Request data: ' . json_encode($req->all()));
 
-        if ($request->hasFile('respon_blanko')) {
-            $file = $request->file('respon_blanko');
-            $fileName = time() . '_' . Str::slug($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
-
-            if ($request->input('status') == 'diterima') {
-                $path = public_path('blanko_diterima');
-                $filePath = 'blanko_diterima/' . $fileName;
-                $view->blanko_diterima = $filePath;
-                $view->konfirmasi = 'diterima';
-            } else {
-                $path = public_path('blanko_ditolak');
-                $filePath = 'blanko_ditolak/' . $fileName;
-                $view->blanko_ditolak = $filePath;
-                $view->konfirmasi = 'ditolak';
-            }
-
-            // Pastikan direktori ada
-            if (!File::isDirectory($path)) {
-                File::makeDirectory($path, 0777, true, true);
-            }
-
-            // Pindahkan file
-            $file->move($path, $fileName);
-
-            DB::table('pengajuan')->where('id', $view->id)->update([
-                'blanko_diterima' => $view->blanko_diterima,
-                'blanko_ditolak' => $view->blanko_ditolak,
-                'konfirmasi' => $view->konfirmasi
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Blanko berhasil dikonfirmasi.'
-            ]);
+        $req->validate([
+            'file' => 'required|mimes:pdf|max:8192',
+            'status' => 'required|in:diterima,ditolak',
+            'id' => 'required|exists:pengajuan,id',
+        ]);
+    
+        $file = $req->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        if ($req->input('status') === 'diterima') {
+            $filePath = 'blanko_diterima/' . $fileName;
+            $file->move(public_path('blanko_diterima'), $fileName);
+        } else {
+            $filePath = 'blanko_ditolak/' . $fileName;
+            $file->move(public_path('blanko_ditolak'), $fileName);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Tidak ada file yang diunggah.'
-        ], 400);
+    
+        // Update the appropriate column in the database
+        DB::table('pengajuan')->where('id', $req->input('id'))->update(['konfirmasi' => $req->input('status'), 
+        $req->input('status') === 'diterima' ? 'blanko_diterima' : 'blanko_ditolak' => $filePath],
+        );    
+    
+        return response()->json(['message' => 'File uploaded successfully.']);
     }
 
 
@@ -265,5 +248,11 @@ class HomeController extends Controller
         DB::table("pengajuan")->where('id','=',$id)->delete();
 
         return redirect('table-pengajuan');
+    }
+
+    public function hapusPegawai($id){
+        DB::table("pegawai")->where('id','=',$id)->delete();
+
+        return redirect('pegawai');
     }
 }

@@ -40,9 +40,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('form',[HomeController::class, 'form']);
     
-    Route::post('/cuti/{id}/confirm', [YourController::class, 'confirmCuti'])->name('cuti.confirm');
+    Route::post('/respon-cuti', [HomeController::class, 'responCuti'])->name('respon.cuti');
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
     Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
+    Route::get('hapus-pegawai/{id}',[HomeController::class, 'hapusPegawai']);
 });

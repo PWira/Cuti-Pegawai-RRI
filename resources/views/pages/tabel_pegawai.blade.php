@@ -28,7 +28,7 @@
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         <div class="card-header">
-                            <h3 style="font-weight: bold" class="card-title">Pegawai Aktif</h3>
+                            <h3 style="font-weight: bold" class="card-title">Pegawai Terdata</h3>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered">
@@ -63,9 +63,7 @@
                                         </td>
                                         @if ($role === 'admin')
                                         <td>
-                                            <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
-                                                Hapus <i class="bi bi-trash"></i>
-                                            </button>
+                                            <a class="btn btn-danger" onclick="pegawaiDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                         </td>
                                         @endif
                                         </tr>
