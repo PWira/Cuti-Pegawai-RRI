@@ -29,7 +29,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data-pegawai', function () {
         return view('pages.pegawai');
     });
-    
+    // Route::get('/admin/create-user', function () {
+    //     return view('auth.user');
+    // });
+    // Route::get('/admin/create-user', function () {
+    //     return view('auth.createUser');
+    // });
     // Route::get('table', function () {
     //     return view('pages.table');
     // });    
@@ -39,10 +44,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('table-diterima',[HomeController::class, 'cutiDiterima']);
     Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('form',[HomeController::class, 'form']);
+    Route::get('/admin/create-user',[HomeController::class, 'daftarUser']);
     
     Route::post('/respon-cuti', [HomeController::class, 'responCuti'])->name('respon.cuti');
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
     Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
+
+    Route::post('/admin/users', [HomeController::class, 'store'])->name('admin.users.store')->middleware('admin');
 
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
     Route::get('hapus-pegawai/{id}',[HomeController::class, 'hapusPegawai']);

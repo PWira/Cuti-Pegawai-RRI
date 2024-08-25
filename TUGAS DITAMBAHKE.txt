@@ -1,3 +1,5 @@
-buat link diterima dan ditolak dengan link yang berbeda sesuai route. dan controllernya.
+buat link diterima dan ditolak dengan link yang berbeda sesuai route. dan controllernya. (sudah)
 
-buat tabel sakit khusus direktur pusat
+buat tabel sakit khusus direktur pusat (diubah menjadi gabungan, sudah)
+
+buat reset halaman dan reset password bagian route dan semacamnya

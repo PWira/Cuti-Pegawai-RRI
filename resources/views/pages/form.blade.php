@@ -65,11 +65,11 @@
                                 <label for="jenis_cuti" class="form-label">Jenis Cuti</label>
                                 <select class="form-select form-select-sm" id="jenis_cuti" name="jenis_cuti" required>
                                     <option value="">Pilih jenis cuti</option>
-                                    <option value="Cuti Tahunan">Cuti Tahunan</option>
-                                    <option value="Cuti Sakit">Cuti Sakit</option>
-                                    <option value="Cuti Melahirkan">Cuti Melahirkan</option>
-                                    <option value="Cuti Karena Alasan Penting">Cuti Karena Alasan Penting</option>
-                                    <option value="Cuti Di Luar Tanggungan Negara">Cuti Di Luar Tanggungan Negara</option>
+                                    <option value="cuti_tahunan">Cuti Tahunan</option>
+                                    <option value="cuti_sakit">Cuti Sakit</option>
+                                    <option value="cuti_melahirkan">Cuti Melahirkan</option>
+                                    <option value="cuti_karena_alasan_penting">Cuti Karena Alasan Penting</option>
+                                    <option value="cuti_di_luar_tanggungan_negara">Cuti Di Luar Tanggungan Negara</option>
                                 </select>
                             </div>
                             <div class="col-md-3">

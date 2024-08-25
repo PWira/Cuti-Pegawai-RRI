@@ -59,7 +59,7 @@
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
                                                 <td>{{$view->jabatan}}</td>
-                                                <td>{{$view->unit_kerja}}</td>
+                                                <td>{{ucfirst($view->unit_kerja)}}</td>
                                                 <td>
                                                     @php
                                                         $years = floor($view->masa_kerja / 12);
@@ -67,7 +67,7 @@
                                                     @endphp
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
-                                                <td>{{$view->jenis_cuti}}</td>
+                                                <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                                 <td>
                                                     <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                 </td>
@@ -141,7 +141,7 @@
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
                                                 <td>{{$view->jabatan}}</td>
-                                                <td>{{$view->unit_kerja}}</td>
+                                                <td>{{ucfirst($view->unit_kerja)}}</td>
                                                 <td>
                                                     @php
                                                         $years = floor($view->masa_kerja / 12);
@@ -149,7 +149,7 @@
                                                     @endphp
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
-                                                <td>{{$view->jenis_cuti}}</td>
+                                                <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                                 <td>
                                                     <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                 </td>
@@ -221,7 +221,7 @@
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
                                                 <td>{{$view->jabatan}}</td>
-                                                <td>{{$view->unit_kerja}}</td>
+                                                <td>{{ucfirst($view->unit_kerja)}}</td>
                                                 <td>
                                                     @php
                                                         $years = floor($view->masa_kerja / 12);
@@ -229,7 +229,7 @@
                                                     @endphp
                                                     {{ $years }} tahun {{ $months }} bulan
                                                 </td>
-                                                <td>{{$view->jenis_cuti}}</td>
+                                                <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                                 <td>
                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                 </td>

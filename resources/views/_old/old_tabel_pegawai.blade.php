@@ -28,22 +28,9 @@
             <div class="row">
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
-                            @switch($tabel->status)
-                                @case('aktif')
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Pegawai Aktif</h3>
-                                    </div> <!-- /.card-header -->
-                                    @break
-                                @case('cuti')
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Pegawai Cuti</h3>
-                                    </div> <!-- /.card-header -->
-                                    @break
-                                @default
-                                    <div class="card-header">
-                                        <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
-                                    </div> <!-- /.card-header -->
-                            @endswitch
+                        <div class="card-header">
+                            <h3 style="font-weight: bold" class="card-title">Tabel Isi</h3>
+                        </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
@@ -87,31 +74,6 @@
                                                         Selengkapnya <i class="bi bi-arrow-down"></i>
                                                     </button>
                                                 </td> --}}
-                                                </tr>
-                                                @empty
-                                                    <tr class="text-center">
-                                                        <td colspan="9">No data available</td>
-                                                    </tr>
-                                                @endforelse
-                                        @break
-                                        @case('cuti')
-                                            <tr class="align-middle">
-                                                @php $rowNumber = 1; @endphp
-                                                @forelse ($blanko as $view)
-                                                <td>{{ $rowNumber++ }}</td>
-                                                <td>{{$view->nama}}</td>
-                                                <td>{{$view->nip}}</td>
-                                                <td>{{$view->jabatan}}</td>
-                                                <td>{{$view->unit_kerja}}</td>
-                                                <td>
-                                                    @php    
-                                                        $years = floor($view->masa_kerja / 12);
-                                                        $months = $view->masa_kerja % 12;
-                                                    @endphp
-                                                    {{ $years }} tahun {{ $months }} bulan
-                                                </td>
-                                                <td>{{$view->status}}</td>
-                                                <td>{{$view->cuti_hari}}</td>
                                                 </tr>
                                                 @empty
                                                     <tr class="text-center">

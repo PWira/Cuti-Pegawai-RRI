@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -23,6 +26,45 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function createUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'asal' => ['required', 'string'],
+            'role' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'asal' => $request->asal,
+            'role' => $request->role,
+        ]);
+
+        return redirect()->route('create_user')->with('success', 'User created successfully.');
+    }
+
+    public function daftarUser(Request $req){
+    
+        $user = Auth::user();
+        $role = $user->role;
+
+        if ($role === 'admin') {
+            $userlist = DB::table('users')->paginate(15);
+        } else {
+            $userlist = collect(); // Return an empty collection if the role is not recognized
+        }
+
+        return view('auth.user', compact('userlist'));
+    }
+    
     public function daftarPegawai(Request $req){
     
         $tahun_kerja = $req->tahun_kerja;
@@ -43,55 +85,87 @@ class HomeController extends Controller
         return redirect('pegawai')->with('success', 'Pengajuan berhasil dikirim.');
     }
     
-    public function pengajuanCuti()
-    {
+    public function pengajuanCuti(){
+
         $user = Auth::user();
         $role = $user->role;
+        $asal = $user->asal;
 
         if ($role === 'admin') {
             $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
+        } elseif ($role === 'user' || ($role === 'superuser' && $asal !== 'jakarta')) {
+            $blanko = DB::table('pengajuan')->where('unit_kerja', $asal)->paginate(15);
+        } elseif ($role === 'superuser' && $asal === 'jakarta') {
+            $blanko = DB::table('pengajuan')
+                ->where(function ($query) {
+                    $query->where('unit_kerja', 'jakarta')
+                        ->orWhere('jenis_cuti', 'cuti_sakit');
+                })
+                ->paginate(15);
         } else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
-        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditangguhkan')->get();
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditangguhkan')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role'));
     }
 
     public function cutiDitolak()
     {
         $user = Auth::user();
         $role = $user->role;
+        $asal = $user->asal;
 
         if ($role === 'admin') {
-            $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
+            $blanko = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->paginate(15);
+        } elseif ($role === 'user' || ($role === 'superuser' && $asal !== 'jakarta')) {
+            $blanko = DB::table('pengajuan')
+                ->where('unit_kerja', $asal)
+                ->where('konfirmasi', 'ditolak')
+                ->paginate(15);
+        } elseif ($role === 'superuser' && $asal === 'jakarta') {
+            $blanko = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditolak')
+                ->where(function ($query) {
+                    $query->where('unit_kerja', 'jakarta')
+                        ->orWhere('jenis_cuti', 'cuti_sakit');
+                })
+                ->paginate(15);
         } else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
-        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','ditolak')->get();
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role'));
     }
 
     public function cutiDiterima()
     {
         $user = Auth::user();
         $role = $user->role;
+        $asal = $user->asal;
 
         if ($role === 'admin') {
-            $blanko = DB::table('pengajuan')->paginate(15);
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $blanko = DB::table('pengajuan')->where('unit_kerja', $user->asal)->paginate(15);
+            $blanko = DB::table('pengajuan')->where('konfirmasi', 'diterima')->paginate(15);
+        } elseif ($role === 'user' || ($role === 'superuser' && $asal !== 'jakarta')) {
+            $blanko = DB::table('pengajuan')
+                ->where('unit_kerja', $asal)
+                ->where('konfirmasi', 'diterima')
+                ->paginate(15);
+        } elseif ($role === 'superuser' && $asal === 'jakarta') {
+            $blanko = DB::table('pengajuan')
+                ->where('konfirmasi', 'diterima')
+                ->where(function ($query) {
+                    $query->where('unit_kerja', 'jakarta')
+                        ->orWhere('jenis_cuti', 'cuti_sakit');
+                })
+                ->paginate(15);
         } else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
-        $konfirmasi = DB::table('pengajuan')->where('konfirmasi','diterima')->get();
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi','role'));
+        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role'));
     }
 
     public function pegawai()
@@ -151,6 +225,9 @@ class HomeController extends Controller
             $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
     
             $unitcase = Str::lower($req->unit_kerja);
+            
+            // Ubah jenis_cuti menjadi lowercase dan ganti spasi dengan underscore
+            $jenis_cuti = Str::lower(str_replace(' ', '_', $req->jenis_cuti));
     
             $pengajuan = DB::table("pengajuan")->insert([
                 "nama_pekerja" => $req->nama_pekerja,
@@ -158,7 +235,7 @@ class HomeController extends Controller
                 "jabatan" => $req->jabatan,
                 "unit_kerja" => $unitcase,
                 "masa_kerja" => $total_bulan_kerja,
-                "jenis_cuti" => $req->jenis_cuti,
+                "jenis_cuti" => $jenis_cuti,
                 "mulai_cuti" => $req->mulai_cuti,
                 "selesai_cuti" => $req->selesai_cuti,
                 "alasan" => $req->alasan,
@@ -207,42 +284,82 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function index()
-    {
-        $user = Auth::user();
-        $role = $user->role;
-    
-        if ($role === 'admin') {
-            $pegawai = DB::table('pegawai')
-                ->select('unit_kerja', DB::raw('count(*) as total'))
-                ->groupBy('unit_kerja')
-                ->get();
-    
-            $surat = DB::table('pengajuan')
-                ->select('konfirmasi', DB::raw('count(*) as total'))
-                ->groupBy('konfirmasi')
-                ->get();
-        } elseif ($role === 'user' || $role === 'superuser') {
-            $pegawai = DB::table('pegawai')
-                ->select('unit_kerja', DB::raw('count(*) as total'))
-                ->where('unit_kerja', $user->asal)
-                ->groupBy('unit_kerja')
-                ->get();
-    
-            $surat = DB::table('pengajuan')
-                ->select('konfirmasi', DB::raw('count(*) as total'))
-                ->where('unit_kerja', $user->asal)
-                ->groupBy('konfirmasi')
-                ->get();
-        } else {
-            $pegawai = collect(); // Return an empty collection if the role is not recognized
-            $surat = collect(); // Return an empty collection if the role is not recognized
-        }
-    
-    return view('home')
-        ->with('pegawai', $pegawai)
-        ->with('surat', $surat);
-    }     
+     public function index()
+     {
+         $user = Auth::user();
+         $role = $user->role;
+         $asal = $user->asal;
+     
+         if ($role === 'admin') {
+             $pegawai = DB::table('pegawai')
+                 ->select('unit_kerja', DB::raw('count(*) as total'))
+                 ->groupBy('unit_kerja')
+                 ->get();
+     
+             $surat = DB::table('pengajuan')
+                 ->select('konfirmasi', DB::raw('count(*) as total'))
+                 ->groupBy('konfirmasi')
+                 ->get();
+         } elseif ($role === 'user') {
+             $pegawai = DB::table('pegawai')
+                 ->select('unit_kerja', DB::raw('count(*) as total'))
+                 ->where('unit_kerja', $asal)
+                 ->groupBy('unit_kerja')
+                 ->get();
+     
+             $surat = DB::table('pengajuan')
+                 ->select('konfirmasi', DB::raw('count(*) as total'))
+                 ->where('unit_kerja', $asal)
+                 ->groupBy('konfirmasi')
+                 ->get();
+         } elseif ($role === 'superuser') {
+             if ($asal === "jakarta") {
+                 // Tampilkan semua pegawai
+                 $pegawai = DB::table('pegawai')
+                     ->select('unit_kerja', DB::raw('count(*) as total'))
+                     ->groupBy('unit_kerja')
+                     ->get();
+     
+                 // Tampilkan semua pengajuan dan tambahkan filter untuk cuti sakit
+                 $surat = DB::table('pengajuan')
+                     ->select('konfirmasi', DB::raw('count(*) as total'))
+                     ->groupBy('konfirmasi')
+                     ->get();
+     
+                 // Tambahkan query untuk menghitung cuti sakit
+                 $cutiSakit = DB::table('pengajuan')
+                     ->where('jenis_cuti', 'sakit')
+                     ->count();
+             } else {
+                 // Untuk superuser selain Jakarta, gunakan logika yang sama seperti user biasa
+                 $pegawai = DB::table('pegawai')
+                     ->select('unit_kerja', DB::raw('count(*) as total'))
+                     ->where('unit_kerja', $asal)
+                     ->groupBy('unit_kerja')
+                     ->get();
+     
+                 $surat = DB::table('pengajuan')
+                     ->select('konfirmasi', DB::raw('count(*) as total'))
+                     ->where('unit_kerja', $asal)
+                     ->groupBy('konfirmasi')
+                     ->get();
+     
+                 $cutiSakit = DB::table('pengajuan')
+                     ->where('unit_kerja', $asal)
+                     ->where('jenis_cuti', 'sakit')
+                     ->count();
+             }
+         } else {
+             $pegawai = collect(); // Return an empty collection if the role is not recognized
+             $surat = collect(); // Return an empty collection if the role is not recognized
+             $cutiSakit = 0;
+         }
+     
+         return view('home')
+             ->with('pegawai', $pegawai)
+             ->with('surat', $surat)
+             ->with('cutiSakit', $cutiSakit ?? 0);
+     }     
 
     public function hapusPengajuan($id){
         DB::table("pengajuan")->where('id','=',$id)->delete();

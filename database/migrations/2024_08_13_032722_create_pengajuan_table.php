@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('jabatan');
             $table->string('unit_kerja');
             $table->integer('masa_kerja');
-            $table->enum('jenis_cuti', ['Cuti Tahunan', 'Cuti Sakit', 'Cuti Melahirkan','Cuti Karena Alasan Penting','Cuti Di Luar Tanggungan Negara']);
+            $table->string('jenis_cuti');
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
             $table->text('alasan');
