@@ -136,7 +136,7 @@ class HomeController extends Controller
         }
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role'));
+        return view('pages.ditolak', compact('blanko', 'konfirmasi', 'role'));
     }
 
     public function cutiDiterima()
@@ -165,7 +165,7 @@ class HomeController extends Controller
         }
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role'));
+        return view('pages.diterima', compact('blanko', 'konfirmasi', 'role'));
     }
 
     public function pegawai()
@@ -202,7 +202,38 @@ class HomeController extends Controller
         return view('pages.form', compact('blanko' ,'role'));
     }
 
+    public function sakitPengajuan(Request $req){
 
+        if ($req->hasFile('sakit_ditangguhkan')) {
+            $file = $req->file('sakit_ditangguhkan');
+            $fileName = time() . '_' . Str::slug($file->getClientOriginalName()) . '.' . $file->getClientOriginalExtension();
+            $path = public_path('sakit_ditangguhkan');
+    
+            // Pastikan direktori ada
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
+    
+            // Pindahkan file
+            $file->move($path, $fileName);
+            $filePath = 'sakit_ditangguhkan/' . $fileName;
+            
+            // Ubah jenis_cuti menjadi lowercase dan ganti spasi dengan underscore
+            $jenis_cuti = Str::lower(str_replace(' ', '_', $req->jenis_cuti));
+
+            $ubah_konfirmasi = 'sakit';
+    
+            $pengajuan = DB::table("pengajuan")->insert([
+                "sakit_ditangguhkan" => $filePath,
+                "konfirmasi" => $ubah_konfirmasi,
+                "updated_at" => now()
+            ]);
+    
+            return redirect('table-pengajuan')->with('success', 'Pengajuan berhasil dikirim.');
+        } else {
+            return redirect('form')->with('error', 'File blanko harus diunggah.');
+        }
+    }
 
     public function kirimPengajuan(Request $req){
 

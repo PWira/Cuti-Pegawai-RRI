@@ -9,13 +9,13 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Tabel Pendataan</h3>
+                    <h3 class="mb-0">Cuti Diterima</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Tabel Pendataan
+                            Cuti Diterima
                         </li>
                     </ol>
                 </div>
@@ -27,8 +27,8 @@
             <div class="row">
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
-                        <div class="card-header text-bg-warning">
-                            <h3 style="font-weight: bold" class="card-title">Pengajuan Cuti</h3>
+                        <div class="card-header text-bg-success">
+                            <h3 style="font-weight: bold" class="card-title">Cuti Pegawai</h3>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered">
@@ -45,74 +45,72 @@
                                         <th style="width: 10%">Selengkapnya</th>
                                     </tr>
                                 </thead>
-                                    <tbody>
-                                        <tr class="align-middle">
-                                            @php $rowNumber = 1; @endphp
-                                            @forelse ($blanko as $view)
-                                            @if($view->jenis_cuti!="cuti_sakit")
-                                            <td>{{ $rowNumber++ }}</td>
-                                            <td>{{$view->nama_pekerja}}</td>
-                                            <td>{{$view->nip}}</td>
-                                            <td>{{$view->jabatan}}</td>
-                                            <td>{{ucfirst($view->unit_kerja)}}</td>
-                                            <td>
-                                                @php
-                                                    $years = floor($view->masa_kerja / 12);
-                                                    $months = $view->masa_kerja % 12;
-                                                @endphp
-                                                {{ $years }} tahun {{ $months }} bulan
-                                            </td>
-                                            <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
-                                            <td>
-                                                <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
-                                                    Selengkapnya <i class="bi bi-arrow-down"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="9">
-                                                <div class="collapse" id="collapse{{ $view->id }}">
-                                                    <div class="card card-body">
-                                                        <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                        <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
-                                                        <p>Alasan: {{ $view->alasan }}</p>
-                                                        <p class="d-flex justify-content-between">
-                                                            <span>
-                                                                <input class="btn btn-primary" type="file" id="fileInput_{{ $item->id }}" accept="application/pdf" required>
-                                                                <button class="btn btn-success" onclick="responCuti('diterima', {{ $item->id }})">Diterima <i class="bi bi-check"></i></button>
-                                                                <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $item->id }})">Ditolak <i class="bi bi-x"></i></button>
-                                                            </span>
-                                                            @if ($role === "admin")
-                                                                <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                            @endif
-                                                        </p>
+                                        <tbody>
+                                            <tr class="align-middle">
+                                                @php $rowNumber = 1; @endphp
+                                                @forelse ($blanko as $view)
+                                                @if ($view->jenis_cuti!="cuti_sakit")
+                                                <td>{{ $rowNumber++ }}</td>
+                                                <td>{{$view->nama_pekerja}}</td>
+                                                <td>{{$view->nip}}</td>
+                                                <td>{{$view->jabatan}}</td>
+                                                <td>{{ucfirst($view->unit_kerja)}}</td>
+                                                <td>
+                                                    @php
+                                                        $years = floor($view->masa_kerja / 12);
+                                                        $months = $view->masa_kerja % 12;
+                                                    @endphp
+                                                    {{ $years }} tahun {{ $months }} bulan
+                                                </td>
+                                                <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
+                                                <td>
+                                                    <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
+                                                        Selengkapnya <i class="bi bi-arrow-down"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <div class="collapse" id="collapse{{ $view->id }}">
+                                                        <div class="card card-body">
+                                                            <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
+                                                            <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
+                                                            <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
+                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                            <p>Alasan: {{ $view->alasan }}</p>
+                                                            <p class="d-flex justify-content-between">
+                                                                <span>
+                                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
+                                                                </span>
+                                                                @if ($role === "admin")
+                                                                    <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                                @endif
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            {{-- @endif --}}
-                                        </tr>
-                                            @empty
-                                                <tr class="text-center">
-                                                    <td colspan="9">No data available</td>
-                                                </tr>
-                                            @endforelse
-                                    </tbody>
-                                </table>
-                            </div> <!-- /.card-body -->
-                            <div class="card-footer clearfix">
-                                {{ $blanko->render('layouts/pagination') }}
-                            </div>
-                            
+                                                </td>
+                                                @endif
+                                            </tr>
+                                                @empty
+                                                    <tr class="text-center">
+                                                        <td colspan="9">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.card-body -->
+                                <div class="card-footer clearfix">
+                                    {{ $blanko->render('layouts/pagination') }}
+                                </div>
+      
 {{-- ====================================================  SAKIT  ====================================================== --}}
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
-                    <div class="card-header text-bg-warning">
-                        <h3 style="font-weight: bold" class="card-title">Cuti Sakit</h3>
+                    <div class="card-header text-bg-success">
+                        <h3 style="font-weight: bold" class="card-title">Cuti Pegawai Sakit</h3>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -148,7 +146,7 @@
                                         </td>
                                         <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                         <td>
-                                            <a href="{{$view->sakit_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
+                                            <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                         </td>
                                         <td>
                                             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
@@ -167,10 +165,7 @@
                                                     <p>Alasan: {{ $view->alasan }}</p>
                                                     <p class="d-flex justify-content-between">
                                                         <span>
-                                                            <input class="btn btn-primary" type="file" id="fileSakit_{{ $item->id }}" accept="application/pdf" required>
-                                                            <button class="btn btn-success" onclick="responSakit('sakit', {{ $item->id }})">Dikonfirmasi <i class="bi bi-check"></i></button>
-                                                            <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $item->id }})">Ditolak <i class="bi bi-x"></i></button>
-                                                            {{-- <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a> --}}
+                                                            <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                         </span>
                                                         @if ($role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
@@ -198,7 +193,7 @@
         </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
-<script>
+{{-- <script>
     function responCuti(status, id) {
         const fileInput = document.getElementById('fileInput_' + id);
         const file = fileInput.files[0];
@@ -229,37 +224,6 @@
             console.error('Error:', error);
         });
     }
-
-    function responSakit(status, id) {
-        const fileInput = document.getElementById('fileSakit_' + id);
-        const file = fileInput.files[0];
-
-        if (!file) {
-            alert('Please select a file to upload.');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('status', status);
-        formData.append('id', id);
-
-        fetch('{{ route("respon.sakit") }}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            location.reload(); // Refresh the page to reflect the changes
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-</script>
+</script> --}}
 @endauth
 @endsection

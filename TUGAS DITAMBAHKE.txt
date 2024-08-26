@@ -1,5 +1,7 @@
 buat link diterima dan ditolak dengan link yang berbeda sesuai route. dan controllernya. (sudah)
 
-buat tabel sakit khusus direktur pusat (diubah menjadi gabungan, sudah)
+buat tabel sakit khusus direktur pusat (sudah)
+
+BUG : Buat seluruh tabel ditangguhkan, diterima, ditolak di file atau page baru saja sekalian tabel sakit setiap page
 
 buat reset halaman dan reset password bagian route dan semacamnya
