@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
                             Cuti Diterima
                         </li>
@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
-                        <div class="card-header text-bg-success">
+                        <div class="card-header text-bg-info">
                             <h3 style="font-weight: bold" class="card-title">Cuti Pegawai</h3>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
@@ -109,7 +109,7 @@
 {{-- ====================================================  SAKIT  ====================================================== --}}
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
-                    <div class="card-header text-bg-success">
+                    <div class="card-header text-bg-info">
                         <h3 style="font-weight: bold" class="card-title">Cuti Pegawai Sakit</h3>
                     </div> <!-- /.card-header -->
                     <div class="card-body">

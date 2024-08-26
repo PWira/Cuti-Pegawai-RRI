@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/create-user',[HomeController::class, 'daftarUser']);
     
     Route::post('/respon-cuti', [HomeController::class, 'responCuti'])->name('respon.cuti');
+    Route::post('/respon-sakit', [HomeController::class, 'responSakit'])->name('respon.sakit');
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
     Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
