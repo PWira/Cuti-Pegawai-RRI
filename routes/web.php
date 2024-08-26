@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\adminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,17 @@ use App\Http\Controllers\HomeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::group(['middleware' => 'admin'], function () {
+    
+    Route::get('/admin/user',[adminController::class, 'daftarUser']);
+
+    Route::post('/admin/users', [adminController::class, 'createUser'])->name('admin.users.store')->middleware('admin');
+
+    Route::get('hapus-user/{id}',[adminController::class, 'hapusUser']);
+
+});
+
 
 Route::middleware(['auth'])->group(function () {
     
@@ -32,9 +44,9 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/admin/create-user', function () {
     //     return view('auth.user');
     // });
-    // Route::get('/admin/create-user', function () {
-    //     return view('auth.createUser');
-    // });
+    Route::get('/admin/create-user', function () {
+        return view('auth.createUser');
+    });
     // Route::get('table', function () {
     //     return view('pages.table');
     // });    
@@ -44,15 +56,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('table-diterima',[HomeController::class, 'cutiDiterima']);
     Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('form',[HomeController::class, 'form']);
-    Route::get('/admin/create-user',[HomeController::class, 'daftarUser']);
     
     Route::post('/respon-cuti', [HomeController::class, 'responCuti'])->name('respon.cuti');
     Route::post('/respon-sakit', [HomeController::class, 'responSakit'])->name('respon.sakit');
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
     Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
-    Route::post('/admin/users', [HomeController::class, 'store'])->name('admin.users.store')->middleware('admin');
-
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
     Route::get('hapus-pegawai/{id}',[HomeController::class, 'hapusPegawai']);
+
 });

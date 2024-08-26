@@ -25,45 +25,6 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
-    public function createUser(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'asal' => ['required', 'string'],
-            'role' => ['required', 'string'],
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'asal' => $request->asal,
-            'role' => $request->role,
-        ]);
-
-        return redirect()->route('create_user')->with('success', 'User created successfully.');
-    }
-
-    public function daftarUser(Request $req){
-    
-        $user = Auth::user();
-        $role = $user->role;
-
-        if ($role === 'admin') {
-            $userlist = DB::table('users')->paginate(15);
-        } else {
-            $userlist = collect(); // Return an empty collection if the role is not recognized
-        }
-
-        return view('auth.user', compact('userlist'));
-    }
     
     public function daftarPegawai(Request $req){
     
@@ -403,4 +364,5 @@ class HomeController extends Controller
 
         return redirect('pegawai');
     }
+    
 }

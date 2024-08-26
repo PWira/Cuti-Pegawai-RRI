@@ -51,7 +51,9 @@
               <div class="input-group mb-3">
                 <select class="form-select" id="role" name="role" required>
                   <option value="">Hak Akses Website</option>
-                  <option value="superuser">Kepala Direktur</option>
+                  <option value="admin">Admin</option>
+                  <option value="superuser">Direktur</option>
+                  <option value="superuser">Kepala Unit</option>
                   <option value="user">SDM</option>
                 </select>
               </div>
