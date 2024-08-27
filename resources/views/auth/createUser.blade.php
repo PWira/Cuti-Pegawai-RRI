@@ -49,14 +49,28 @@
                 </select>
               </div>
               <div class="input-group mb-3">
-                <select class="form-select" id="role" name="role" required>
-                  <option value="">Hak Akses Website</option>
-                  <option value="admin">Admin</option>
-                  <option value="superuser">Direktur</option>
-                  <option value="superuser">Kepala Unit</option>
-                  <option value="user">SDM</option>
+                <select class="form-select" id="jabatan" name="jabatan" required onchange="setRole()">
+                    <option value="">Jabatan</option>
+                    <option value="direktur">Direktur</option>
+                    <option value="kepala_lpp">Kepala LPP</option>
+                    <option value="SDM">SDM</option>
                 </select>
               </div>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control @error('role') is-invalid @enderror" id="role" name="role" placeholder="Hak Akses Website" value="" readonly required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-key"></span>
+                    </div>
+                  </div>
+              </div>
+              {{-- <div class="input-group mb-3">
+                  <select class="form-select" id="role" name="role" required @readonly(true) readonly>
+                      <option value="">Hak Akses Website</option>
+                      <option value="superuser">Super User</option>
+                      <option value="user">User</option>
+                  </select>
+              </div> --}}
               <div class="input-group mb-3">
                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
                 <div class="input-group-append">
@@ -87,4 +101,19 @@
         </div><!-- /.card -->
       </div>
     </div>
+</body>
+  <script>
+    function setRole() {
+        var jabatan = document.getElementById("jabatan");
+        var role = document.getElementById("role");
+
+        if (jabatan.value === "direktur" || jabatan.value === "kepala_lpp") {
+            role.value = "Super User";
+        } else if (jabatan.value === "SDM") {
+            role.value = "User";
+        } else {
+            role.value = "";
+        }
+    }
+  </script>
 @endsection

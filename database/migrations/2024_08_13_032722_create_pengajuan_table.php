@@ -21,6 +21,9 @@ return new class extends Migration
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
             $table->text('alasan');
+            $table->string('oleh_user');
+            $table->string('oleh_asal');
+            $table->string('oleh_jabatan');
             $table->string('blanko_ditangguhkan');
             $table->text('sakit_ditangguhkan')->nullable();
             $table->text('blanko_diterima')->nullable();

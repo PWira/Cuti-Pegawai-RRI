@@ -28,11 +28,15 @@ class adminController extends Controller
 
     public function createUser(Request $req)
     {
+
+        $role = strtolower(str_replace(' ', '_', $req->input('role')));
+
         $validator = Validator::make($req->all(), [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'asal' => ['required', 'string'],
+            'jabatan' => ['required', 'string'],
             'role' => ['required', 'string'],
         ]);
 
@@ -45,7 +49,8 @@ class adminController extends Controller
             'email' => $req->email,
             'password' => Hash::make($req->password),
             'asal' => $req->asal,
-            'role' => $req->role,
+            'jabatan' => $req->jabatan,
+            'role' => $role,
         ]);
 
         return redirect('admin/user')->with('success', 'User created successfully.');

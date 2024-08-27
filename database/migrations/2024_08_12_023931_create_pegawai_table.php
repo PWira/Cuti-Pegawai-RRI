@@ -18,6 +18,9 @@ class CreatePegawaiTable extends Migration
             $table->string('jabatan');
             $table->string('unit_kerja');
             $table->integer('masa_kerja');
+            $table->string('oleh_user');
+            $table->string('oleh_asal');
+            $table->string('oleh_jabatan');
             $table->timestamps();
         });
     }

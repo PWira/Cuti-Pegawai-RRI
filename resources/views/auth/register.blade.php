@@ -50,12 +50,20 @@
                 </select>
               </div>
               <div class="input-group mb-3">
-                <select class="form-select" id="role" name="role" required>
-                  <option value="">Hak Akses Website</option>
-                  <option value="superuser">Kepala Direktur</option>
-                  <option value="user">SDM</option>
+                <select class="form-select" id="jabatan" name="jabatan" required onchange="setRole()">
+                    <option value="">Jabatan</option>
+                    <option value="ditektur">Direktur</option>
+                    <option value="kepala">Kepala LPP</option>
+                    <option value="SDM">SDM</option>
                 </select>
-              </div>
+            </div>
+            <div class="input-group mb-3">
+                <select class="form-select" id="role" name="role" required readonly>
+                    <option value="">Hak Akses Website</option>
+                    <option value="superuser">Super User</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
               <div class="input-group mb-3">
                 <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
                 <div class="input-group-append">
@@ -92,4 +100,19 @@
     </div>
   </div>
     <!-- /.register-box -->
+</body>
+    <script>
+      function setRole() {
+          var jabatan = document.getElementById("jabatan");
+          var role = document.getElementById("role");
+  
+          if (jabatan.value === "ditektur" || jabatan.value === "kepala") {
+              role.value = "superuser";
+          } else if (jabatan.value === "SDM") {
+              role.value = "user";
+          } else {
+              role.value = "";
+          }
+      }
+  </script>
 @endsection

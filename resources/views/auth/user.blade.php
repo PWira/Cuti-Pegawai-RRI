@@ -69,8 +69,8 @@
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->name}}</td>
                                         <td>{{$view->email}}</td>
-                                        <td>{{$view->role}}</td>
-                                        <td>{{$view->asal}}</td>
+                                        <td>{{ ucwords(str_replace('_', ' ', $view->role)) }}</td>
+                                        <td>{{ucwords($view->asal)}}</td>
                                         <td>{{$view->created_at}}</td>
                                         <td><a class="btn btn-danger" onclick="userDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a></td>
                                         </tr>

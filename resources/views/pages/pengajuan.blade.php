@@ -9,7 +9,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Tabel Pendataan</h3>
+                    <h3 class="mb-0">Tabel Pengajuan</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
@@ -76,22 +76,29 @@
                                             <td colspan="9">
                                                 <div class="collapse" id="collapse{{ $view->id }}">
                                                     <div class="card card-body">
-                                                        <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                        <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                        <span class="d-flex justify-content-between">
+                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                        </span>
+                                                        <span class="d-flex justify-content-between">
+                                                            <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
+                                                            <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
+                                                            <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
+                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                        </span>
                                                         <p>Alasan: {{ $view->alasan }}</p>
-                                                        @if ($role === "superuser")
+                                                        @if ($role === "super_user")
                                                         <p class="d-flex justify-content-between">
                                                             <span>
-                                                                <input class="btn btn-primary" type="file" id="fileInput_{{ $item->id }}" accept="application/pdf" required>
-                                                                <button class="btn btn-success" onclick="responCuti('diterima', {{ $item->id }})">Diterima <i class="bi bi-check"></i></button>
-                                                                <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $item->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                                <input class="btn btn-primary" type="file" id="fileInput_{{ $view->id }}" accept="application/pdf" required>
+                                                                <button class="btn btn-success" onclick="responCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                                <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
                                                             </span>
-                                                            @elseif($role === "admin")
-                                                                <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                            @endif
                                                         </p>
+                                                            @elseif($role === "admin")
+                                                            <p class="">
+                                                                <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                            </p>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>
@@ -161,23 +168,30 @@
                                         <td colspan="9">
                                             <div class="collapse" id="collapse{{ $view->id }}">
                                                 <div class="card card-body">
-                                                    <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                    <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                    <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                    <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                    <span class="d-flex justify-content-between">
+                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                    </span>
+                                                    <span class="d-flex justify-content-between">
+                                                        <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
+                                                        <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
+                                                        <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
+                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) }} hari</p>
+                                                    </span>
                                                     <p>Alasan: {{ $view->alasan }}</p>
-                                                    @if ($role === "superuser")
+                                                    @if ($role === "super_user")
                                                     <p class="d-flex justify-content-between">
                                                         <span>
-                                                            <input class="btn btn-primary" type="file" id="fileSakit_{{ $item->id }}" accept="application/pdf" required>
-                                                            <button class="btn btn-success" onclick="responSakit('sakit', {{ $item->id }})">Dikonfirmasi <i class="bi bi-check"></i></button>
-                                                            <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $item->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                            <input class="btn btn-primary" type="file" id="fileSakit_{{ $view->id }}" accept="application/pdf" required>
+                                                            <button class="btn btn-success" onclick="responSakit('sakit', {{ $view->id }})">Dikonfirmasi <i class="bi bi-check"></i></button>
+                                                            <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
                                                             {{-- <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a> --}}
                                                         </span>
-                                                        @elseif ($role === "admin")
-                                                            <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        @endif
                                                     </p>
+                                                        @elseif ($role === "admin")
+                                                        <p class="">
+                                                            <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                        </p>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

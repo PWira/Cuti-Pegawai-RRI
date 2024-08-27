@@ -32,6 +32,7 @@ class KeymasterUserSeeder extends Seeder
             'email' => 'k@m.null',
             'password' => Hash::make('1qazse4765rfvbhu-09ijm,.'),
             'role' => 'admin',
+            'jabatan'=> ' ',
             'asal'=> ' ',
         ]);
     }

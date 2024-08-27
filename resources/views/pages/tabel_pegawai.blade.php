@@ -40,8 +40,8 @@
                                         <th style="width: 10%">Jabatan</th>
                                         <th style="width: 10%">Unit Kerja</th>
                                         <th style="width: 15%">Masa Kerja</th>
-                                        @if ($role === 'admin')
-                                        <th style="width: 10%">Kontrol Admin</th>
+                                        @if ($role === 'admin' || $role === 'super_user')
+                                        <th style="width: 10%">Selengkapnya</th>
                                         @endif
                                     </tr>
                                 </thead>
@@ -61,12 +61,36 @@
                                             @endphp
                                             {{ $years }} tahun {{ $months }} bulan
                                         </td>
-                                        @if ($role === 'admin')
+                                        @if ($role === "super_user" || $role ==="admin")
+                                            <td>
+                                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->id }}" aria-expanded="false" aria-controls="collapse{{ $view->id }}">
+                                                    Selengkapnya <i class="bi bi-arrow-down"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="9">
+                                                <div class="collapse" id="collapse{{ $view->id }}">
+                                                    <div class="card card-body">
+                                                        <span class="d-flex justify-content-between">
+                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                        </span>
+                                                        <p class="d-flex justify-content-between">
+                                                            @if ($role === "admin")
+                                                                <a class="btn btn-danger" onclick="pegawaiDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            @endif
+                                        </tr>
+                                        {{-- @if ($role === 'admin')
                                         <td>
                                             <a class="btn btn-danger" onclick="pegawaiDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                         </td>
                                         @endif
-                                        </tr>
+                                        </tr> --}}
                                         @empty
                                             <tr class="text-center">
                                                 <td colspan="9">No data available</td>
