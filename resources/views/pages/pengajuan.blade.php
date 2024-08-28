@@ -28,20 +28,23 @@
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         <div class="card-header text-bg-warning">
-                            <h3 style="font-weight: bold" class="card-title">Pengajuan Cuti</h3>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 style="font-weight: bold" class="card-title">PENGAJUAN CUTI</h3>
+                                <a href="{{ url('pengajuan/semua') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
+                            </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table id="myTable" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 2%">#</th>
-                                        <th style="width: 13%">Nama Pekerja</th>
-                                        <th style="width: 5%">NIP</th>
-                                        <th style="width: 5%">Jabatan</th>
-                                        <th style="width: 10%">Unit Kerja</th>
-                                        <th style="width: 8%">Masa Kerja</th>
-                                        <th style="width: 10%">Jenis Cuti</th>
-                                        <th style="width: 10%">Tanggal Diajukan</th>
+                                        <th style="width: 13%" class="sortable">Nama Pekerja</th>
+                                        <th style="width: 5%" class="sortable">NIP</th>
+                                        <th style="width: 5%" class="sortable">Jabatan</th>
+                                        <th style="width: 10%" class="sortable">Unit Kerja</th>
+                                        <th style="width: 8%" class="sortable">Masa Kerja</th>
+                                        <th style="width: 10%" class="sortable">Jenis Cuti</th>
+                                        <th style="width: 10%" class="sortable">Tanggal Diajukan</th>
                                         <th style="width: 10%">Selengkapnya</th>
                                     </tr>
                                 </thead>
@@ -125,7 +128,10 @@
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
                     <div class="card-header text-bg-warning">
-                        <h3 style="font-weight: bold" class="card-title">Cuti Sakit yang Sudah Dikonfirmasi</h3>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 style="font-weight: bold" class="card-title">Cuti Sakit yang Sudah Dikonfirmasi</h3>
+                            {{-- <a href="{{ url('pengajuan/semua') }}" class="btn btn-primary">Download DOC</a> --}}
+                        </div>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -219,9 +225,6 @@
 </main> <!--end::App Main--> <!--begin::Footer-->
 
 <script>
-    $(document).ready(function() {
-        $('#myTable').DataTable();
-    });
 
     function responCuti(status, bid) {
         const fileInput = document.getElementById('blankoInput_' + bid);

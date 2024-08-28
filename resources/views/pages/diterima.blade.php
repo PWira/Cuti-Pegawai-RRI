@@ -28,7 +28,10 @@
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         <div class="card-header text-bg-info">
-                            <h3 style="font-weight: bold" class="card-title">Cuti Pegawai</h3>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 style="font-weight: bold" class="card-title">CUTI DITERIMA</h3>
+                                <a href="{{ url('pengajuan/diterima') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
+                            </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered">
@@ -115,7 +118,10 @@
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
                     <div class="card-header text-bg-info">
-                        <h3 style="font-weight: bold" class="card-title">Cuti Pegawai Sakit</h3>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 style="font-weight: bold" class="card-title"></h3>
+                            {{-- <a href="{{ url('pengajuan/diterima') }}" class="btn btn-primary">Download DOC</a> --}}
+                        </div>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered">

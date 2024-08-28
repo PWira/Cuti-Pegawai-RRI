@@ -4,20 +4,6 @@
 
 @auth
 {{-- @foreach ($konfirmasi as $tabel) --}}
-<style>
-    .card-header {
-        flex-wrap: wrap;
-    }
-    .card-title {
-        flex: 1 1 auto;
-        min-width: 0;
-        margin-right: 1rem; /* Memberikan sedikit jarak antara judul dan tombol */
-    }
-    .btn-info {
-        flex: 0 0 auto;
-        white-space: nowrap;
-    }
-</style>
 
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\downloadDoc;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +55,13 @@ Route::middleware(['auth'])->group(function () {
     // });
     // Route::get('table', function () {
     //     return view('pages.table');
-    // });    
+    // });   
+
+    // Route::get('/download-doc', [downloadDoc::class, 'pengajuan'])->name('download.doc');
+    Route::get('pengajuan/semua', [downloadDoc::class, 'pengajuanSemua']);
+    Route::get('pengajuan/diterima', [downloadDoc::class, 'pengajuanDiterima']);
+    Route::get('pengajuan/ditolak', [downloadDoc::class, 'pengajuanDitolak']);
+    Route::get('/doc-pegawai', [downloadDoc::class, 'dataPegawai']);
 
     Route::get('table-pengajuan',[HomeController::class, 'pengajuanCuti']);
     Route::get('table-ditolak',[HomeController::class, 'cutiDitolak']);

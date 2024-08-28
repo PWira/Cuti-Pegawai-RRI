@@ -28,7 +28,10 @@
                 <div class="">
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         <div class="card-header text-bg-success">
-                            <h3 style="font-weight: bold" class="card-title">Pegawai Terdata</h3>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 style="font-weight: bold" class="card-title">DATA PEGAWAI</h3>
+                                <a href="{{ url('doc-pegawai') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
+                            </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered">
@@ -85,12 +88,6 @@
                                             </td>
                                             @endif
                                         </tr>
-                                        {{-- @if ($role === 'admin')
-                                        <td>
-                                            <a class="btn btn-danger" onclick="pegawaiDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
-                                        </td>
-                                        @endif
-                                        </tr> --}}
                                         @empty
                                             <tr class="text-center">
                                                 <td colspan="9">No data available</td>
