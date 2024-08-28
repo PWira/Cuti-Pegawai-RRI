@@ -73,7 +73,7 @@
                                                 <div class="collapse" id="collapse{{ $view->id }}">
                                                     <div class="card card-body">
                                                         <span class="d-flex justify-content-between">
-                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                         </span>
                                                         <p class="d-flex justify-content-between">
                                                             @if ($role === "admin")

@@ -48,8 +48,8 @@
                                         <tbody>
                                             <tr class="align-middle">
                                                 @php $rowNumber = 1; @endphp
-                                                @forelse ($blanko as $view)
-                                                @if($view->jenis_cuti!="cuti_sakit")
+                                                @foreach ($blanko as $view)
+                                                @if($view->jenis_cuti!="cuti_sakit" && $view->konfirmasi=="ditolak")
                                                 <td>{{ $rowNumber++ }}</td>
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
@@ -77,7 +77,7 @@
                                                     <div class="collapse" id="collapse{{ $view->id }}">
                                                         <div class="card card-body">
                                                             <span class="d-flex justify-content-between">
-                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                             </span>
                                                             <span class="d-flex justify-content-between">
                                                                 <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
@@ -90,19 +90,20 @@
                                                                 <span>
                                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
-                                                                @elseif ($role === "admin")
+                                                                @if ($role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                                                 @endif
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </td>
+                                            @else
+                                            <tr class="text-center">
+                                                <td colspan="9">No data available</td>
                                             </tr>
-                                                @empty
-                                                    <tr class="text-center">
-                                                        <td colspan="9">No data available</td>
-                                                    </tr>
-                                                @endforelse
+                                            @endif  
+                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div> <!-- /.card-body -->
@@ -114,7 +115,7 @@
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
                     <div class="card-header text-bg-danger">
-                        <h3 style="font-weight: bold" class="card-title">Cuti Sakit</h3>
+                        <h3 style="font-weight: bold" class="card-title">Cuti Pegawai Sakit</h3>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered">
@@ -134,8 +135,8 @@
                                 <tbody>
                                     <tr class="align-middle">
                                         @php $rowNumber = 1; @endphp
-                                        @forelse ($blanko as $view)
-                                        @if ($view->jenis_cuti=="cuti_sakit")
+                                        @foreach ($blanko as $view)
+                                        @if ($view->jenis_cuti=="cuti_sakit" && $view->konfirmasi=="ditolak")
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
                                         <td>{{$view->nip}}</td>
@@ -163,7 +164,7 @@
                                             <div class="collapse" id="collapse{{ $view->id }}">
                                                 <div class="card card-body">
                                                     <span class="d-flex justify-content-between">
-                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                     </span>
                                                     <span class="d-flex justify-content-between">
                                                         <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
@@ -183,13 +184,13 @@
                                                 </div>
                                             </div>
                                         </td>
+                                    @else
+                                    <tr class="text-center">
+                                        <td colspan="9">No data available</td>
                                     </tr>
-                                    @endif
-                                        @empty
-                                            <tr class="text-center">
-                                                <td colspan="9">No data available</td>
-                                            </tr>
-                                        @endforelse
+                                    @endif  
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->

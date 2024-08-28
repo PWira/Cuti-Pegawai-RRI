@@ -79,10 +79,12 @@ class HomeController extends Controller
             $blanko = DB::table('pengajuan')
                 ->where(function ($query) {
                     $query->where('unit_kerja', 'jakarta')
-                        ->orWhere('jenis_cuti', 'cuti_sakit');
-                })
-                ->paginate(15);
-        } else {
+                        ->orWhere(function ($query) {
+                            $query->where('jenis_cuti', 'cuti_sakit')
+                                ->where('konfirmasi', 'sakit');
+                        });
+                })->paginate(15);
+        }else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditangguhkan')->get();
@@ -276,6 +278,39 @@ class HomeController extends Controller
         } else {
             return redirect('form')->with('error', 'File blanko harus diunggah.');
         }
+    }
+
+    public function responSakit(Request $req){
+
+        $userData = $this->getUserData();
+        $role = $userData['role'];
+        $asal = $userData['asal'];
+        $jabatan = $userData['jabatan'];
+
+        // Log::info('Request data: ' . json_encode($req->all()));
+
+        $req->validate([
+            'file' => 'required|mimes:pdf|max:8192',
+            'status' => 'required|in:sakit,ditolak',
+            'id' => 'required|exists:pengajuan,id',
+        ]);
+    
+        $file = $req->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        if ($req->input('status') === 'sakit') {
+            $filePath = 'sakit_ditangguhkan/' . $fileName;
+            $file->move(public_path('sakit_ditangguhkan'), $fileName);
+        } else {
+            $filePath = 'blanko_ditolak/' . $fileName;
+            $file->move(public_path('blanko_ditolak'), $fileName);
+        }
+    
+        // Update the appropriate column in the database
+        DB::table('pengajuan')->where('id', $req->input('id'))->update(['konfirmasi' => $req->input('status'), 
+        $req->input('status') === 'sakit' ? 'sakit_ditangguhkan' : 'blanko_ditolak' => $filePath],
+        );    
+    
+        return response()->json(['message' => 'File uploaded successfully.']);
     }
 
     public function responCuti(Request $req){

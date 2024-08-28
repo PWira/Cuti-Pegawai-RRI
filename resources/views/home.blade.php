@@ -83,4 +83,5 @@
       </div> <!--end::Container-->
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
+
 @endsection

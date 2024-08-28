@@ -18,6 +18,10 @@ use App\Http\Controllers\adminController;
 
 Route::group(['middleware' => 'admin'], function () {
     
+    Route::get('/admin/create-user', function () {
+        return view('auth.createUser');
+    });
+
     Route::get('/admin/user',[adminController::class, 'daftarUser']);
 
     Route::post('/admin/users', [adminController::class, 'createUser'])->name('admin.users.store')->middleware('admin');
@@ -41,12 +45,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data-pegawai', function () {
         return view('pages.pegawai');
     });
+    
+    Route::get('data-pegawai', function () {
+        return view('pages.pegawai');
+    });
     // Route::get('/admin/create-user', function () {
     //     return view('auth.user');
     // });
-    Route::get('/admin/create-user', function () {
-        return view('auth.createUser');
-    });
     // Route::get('table', function () {
     //     return view('pages.table');
     // });    

@@ -52,8 +52,9 @@
                 <select class="form-select" id="jabatan" name="jabatan" required onchange="setRole()">
                     <option value="">Jabatan</option>
                     <option value="direktur">Direktur</option>
-                    <option value="kepala_lpp">Kepala LPP</option>
+                    <option value="kepala_rri">Kepala Daerah RRI</option>
                     <option value="SDM">SDM</option>
+                    {{-- <option value="Pegawai">Pegawai</option> --}}
                 </select>
               </div>
               <div class="input-group mb-3">

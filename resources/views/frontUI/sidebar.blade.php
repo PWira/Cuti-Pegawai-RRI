@@ -24,6 +24,7 @@
                         </li>   
                     </ul>
                 </li>
+
                 <hr style="color: aliceblue">
                 <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                     <p>Form Pengajuan</p>

@@ -56,11 +56,11 @@
               <!-- /.col -->
             </div>
           </form>
-          @if (Route::has('login'))
+          {{-- @if (Route::has('login'))
           <p class="mt-3 mb-1">
             <a href="{{ route('login') }}">Login</a>
           </p>
-          @endif
+          @endif --}}
         </div>
         <!-- /.login-card-body -->
       </div>

@@ -48,8 +48,8 @@
                                         <tbody>
                                             <tr class="align-middle">
                                                 @php $rowNumber = 1; @endphp
-                                                @forelse ($blanko as $view)
-                                                @if ($view->jenis_cuti!="cuti_sakit")
+                                                @foreach ($blanko as $view)
+                                                @if ($view->jenis_cuti!="cuti_sakit" && $view->konfirmasi=="diterima")
                                                 <td>{{ $rowNumber++ }}</td>
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
@@ -77,7 +77,7 @@
                                                     <div class="collapse" id="collapse{{ $view->id }}">
                                                         <div class="card card-body">
                                                             <span class="d-flex justify-content-between">
-                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                             </span>
                                                             <span class="d-flex justify-content-between">
                                                                 <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
@@ -97,13 +97,13 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                @endif
+                                            @else
+                                            <tr class="text-center">
+                                                <td colspan="9">No data available</td>
                                             </tr>
-                                                @empty
-                                                    <tr class="text-center">
-                                                        <td colspan="9">No data available</td>
-                                                    </tr>
-                                                @endforelse
+                                            @endif  
+                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div> <!-- /.card-body -->
@@ -135,8 +135,8 @@
                                 <tbody>
                                     <tr class="align-middle">
                                         @php $rowNumber = 1; @endphp
-                                        @forelse ($blanko as $view)
-                                        @if ($view->jenis_cuti=="cuti_sakit")
+                                        @foreach ($blanko as $view)
+                                        @if ($view->jenis_cuti=="cuti_sakit" && $view->konfirmasi=="diterima")
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
                                         <td>{{$view->nip}}</td>
@@ -164,7 +164,7 @@
                                             <div class="collapse" id="collapse{{ $view->id }}">
                                                 <div class="card card-body">
                                                     <span class="d-flex justify-content-between">
-                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{ucwords(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
+                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                     </span>
                                                     <span class="d-flex justify-content-between">
                                                         <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
@@ -184,13 +184,13 @@
                                                 </div>
                                             </div>
                                         </td>
+                                    @else
+                                    <tr class="text-center">
+                                        <td colspan="9">No data available</td>
                                     </tr>
-                                    @endif
-                                        @empty
-                                            <tr class="text-center">
-                                                <td colspan="9">No data available</td>
-                                            </tr>
-                                        @endforelse
+                                    @endif  
+                                    </tr>
+                                    @endforeach    
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->
