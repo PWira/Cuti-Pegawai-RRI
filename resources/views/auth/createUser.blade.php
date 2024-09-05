@@ -44,6 +44,7 @@
               <div class="input-group mb-3">
                 <select class="form-select" id="asal" name="asal" required>
                   <option value="">Unit Kerja</option>
+                  <option value="-">Admin</option>
                   <option value="jakarta">Jakarta</option>
                   <option value="palembang">Palembang</option>
                 </select>
@@ -51,6 +52,7 @@
               <div class="input-group mb-3">
                 <select class="form-select" id="jabatan" name="jabatan" required onchange="setRole()">
                     <option value="">Jabatan</option>
+                    <option value="admin">Admin</option>
                     <option value="direktur">Direktur</option>
                     <option value="kepala_rri">Kepala Daerah RRI</option>
                     <option value="SDM">SDM</option>
@@ -108,7 +110,9 @@
         var jabatan = document.getElementById("jabatan");
         var role = document.getElementById("role");
 
-        if (jabatan.value === "direktur" || jabatan.value === "kepala_lpp") {
+        if(jabatan.value === "admin"){
+          role.value = "Admin";
+        }else if (jabatan.value === "direktur" || jabatan.value === "kepala_lpp") {
             role.value = "Super User";
         } else if (jabatan.value === "SDM") {
             role.value = "User";
