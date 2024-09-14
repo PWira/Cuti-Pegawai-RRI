@@ -1,7 +1,5 @@
-buat link diterima dan ditolak dengan link yang berbeda sesuai route. dan controllernya. (sudah)
+Laporan : Buat Flowchart dan selesai ke bab 3
 
-buat tabel sakit khusus direktur pusat (sudah)
+Aplikasi : buat dokumentasi video cara kerja
 
-BUG : Buat seluruh tabel ditangguhkan, diterima, ditolak di file atau page baru saja sekalian tabel sakit setiap page
-
-buat reset halaman dan reset password bagian route dan semacamnya
+tambahan : minta tanda tangan wawancara

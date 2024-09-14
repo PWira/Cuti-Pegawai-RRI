@@ -30,7 +30,9 @@
                         <div class="card-header text-bg-danger">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">CUTI DITOLAK</h3>
+                                @if ($role === 'user')
                                 <a href="{{ url('pengajuan/ditolak') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
+                                @endif
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">

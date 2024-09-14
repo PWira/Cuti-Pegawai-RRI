@@ -23,6 +23,12 @@ Route::group(['middleware' => 'admin'], function () {
         return view('auth.createUser');
     });
 
+    Route::get('data-pegawai', function () {
+        return view('pages.pegawai');
+    });
+
+    Route::post('daftar-pegawai',[adminController::class, 'daftarPegawai']);
+
     Route::get('/admin/user',[adminController::class, 'daftarUser']);
 
     Route::post('/admin/users', [adminController::class, 'createUser'])->name('admin.users.store')->middleware('admin');
@@ -40,24 +46,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    // Route::get('form', function () {
-    //     return view('pages.form');
-    // });
-    Route::get('data-pegawai', function () {
-        return view('pages.pegawai');
-    });
-    
-    Route::get('data-pegawai', function () {
-        return view('pages.pegawai');
-    });
-    // Route::get('/admin/create-user', function () {
-    //     return view('auth.user');
-    // });
-    // Route::get('table', function () {
-    //     return view('pages.table');
-    // });   
-
-    // Route::get('/download-doc', [downloadDoc::class, 'pengajuan'])->name('download.doc');
     Route::get('pengajuan/semua', [downloadDoc::class, 'pengajuanSemua']);
     Route::get('pengajuan/diterima', [downloadDoc::class, 'pengajuanDiterima']);
     Route::get('pengajuan/ditolak', [downloadDoc::class, 'pengajuanDitolak']);
@@ -72,7 +60,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/respon-cuti', [HomeController::class, 'responCuti'])->name('respon.cuti');
     Route::post('/respon-sakit', [HomeController::class, 'responSakit'])->name('respon.sakit');
     Route::post('kirim-pengajuan',[HomeController::class, 'kirimPengajuan']);
-    Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
     Route::get('hapus-pengajuan/{id}',[HomeController::class, 'hapusPengajuan']);
     Route::get('hapus-pegawai/{id}',[HomeController::class, 'hapusPegawai']);

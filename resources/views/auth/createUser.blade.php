@@ -55,7 +55,7 @@
                     <option value="admin">Admin</option>
                     <option value="direktur">Direktur</option>
                     <option value="kepala_rri">Kepala Daerah RRI</option>
-                    <option value="SDM">SDM</option>
+                    <option value="sdm">SDM</option>
                     {{-- <option value="Pegawai">Pegawai</option> --}}
                 </select>
               </div>
@@ -112,9 +112,9 @@
 
         if(jabatan.value === "admin"){
           role.value = "Admin";
-        }else if (jabatan.value === "direktur" || jabatan.value === "kepala_lpp") {
+        }else if (jabatan.value === "direktur" || jabatan.value === "kepala_rri") {
             role.value = "Super User";
-        } else if (jabatan.value === "SDM") {
+        } else if (jabatan.value === "sdm") {
             role.value = "User";
         } else {
             role.value = "";

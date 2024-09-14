@@ -26,6 +26,16 @@ class adminController extends Controller
         $this->middleware('auth');
     }
 
+    public function getUserData(){
+
+        $user = Auth::user();
+        $role = $user->role;
+        $asal = $user->asal;
+        $jabatan = $user->jabatan;
+
+        return compact('role', 'asal', 'jabatan');
+    }
+
     public function createUser(Request $req)
     {
 
@@ -68,6 +78,34 @@ class adminController extends Controller
         }
 
         return view('auth.user', compact('userlist'));
+    }
+
+    public function daftarPegawai(Request $req){
+
+        $userData = $this->getUserData();
+        $role = $userData['role'];
+        $asal = $userData['asal'];
+        $jabatan = $userData['jabatan'];
+    
+        $tahun_kerja = $req->tahun_kerja;
+        $bulan_kerja = $req->bulan_kerja;
+        $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
+    
+        $unitcase = Str::lower($req->unit_kerja);
+    
+        $daftar = DB::table("pegawai")->insert([
+            "nama" => $req->nama_pekerja,
+            "nip" => $req->nip,
+            "jabatan" => $req->jabatan,
+            "unit_kerja" => $unitcase,
+            "masa_kerja" => $total_bulan_kerja,
+            "oleh_user"=>$role,
+            "oleh_asal"=>$asal,
+            "oleh_jabatan"=>$jabatan,
+            "created_at" => now()
+        ]);
+    
+        return redirect('pegawai')->with('success', 'Data pegawai berhasil dimasukan.');
     }
 
     public function hapusUser($id){
