@@ -95,7 +95,7 @@
                                                                 <span>
                                                                     <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
-                                                                @if ($role === "admin")
+                                                                @if ($role === "user" || $role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                                                 @endif
                                                             </p>
@@ -185,7 +185,7 @@
                                                         <span>
                                                             <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                         </span>
-                                                        @if ($role === "admin")
+                                                        @if ($role === "user" || $role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                                         @endif
                                                     </p>

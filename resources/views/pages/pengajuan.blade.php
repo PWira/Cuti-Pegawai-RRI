@@ -97,15 +97,19 @@
                                                             <span>
                                                                 @if ($view->jenis_cuti!="cuti_sakit")
                                                                     <input class="btn btn-primary" type="file" id="blankoInput_{{ $view->id }}" accept="application/pdf" required>
-                                                                    <button class="btn btn-success" onclick="responCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
-                                                                    <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                                    <button class="btn btn-success" onclick="return confirmResponCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                                    <button class="btn btn-danger" onclick="return confirmResponCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                                    {{-- <button class="btn btn-success" onclick="responCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                                    <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                                 @elseif ($view->jenis_cuti=="cuti_sakit")
                                                                     <input class="btn btn-primary" type="file" id="fileSakit_{{ $view->id }}" accept="application/pdf" required>
-                                                                    <button class="btn btn-success" onclick="responSakit('sakit', {{ $view->id }})">Dikonfirmasi <i class="bi bi-check"></i></button>
-                                                                    <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                                    <button class="btn btn-success" onclick="return confirmSakitCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                                    <button class="btn btn-danger" onclick="return confirmSakitCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                                    {{-- <button class="btn btn-success" onclick="responSakit('sakit', {{ $view->id }})">Dikonfirmasi <i class="bi bi-check"></i></button>
+                                                                    <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                                 @endif
                                                             </span>
-                                                        @elseif($role === "admin")
+                                                        @elseif($role === "user" || $role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                                         @endif
                                                         </p>
@@ -196,10 +200,12 @@
                                                     @if ($role === "super_user" && $jabatan === "direktur")
                                                         <span>
                                                             <input class="btn btn-primary" type="file" id="fileBalasanSakit_{{ $view->id }}" accept="application/pdf" required>
-                                                            <button class="btn btn-info" onclick="balasanSakit('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
-                                                            <button class="btn btn-danger" onclick="balasanSakit('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                            <button class="btn btn-success" onclick="return confirmSakitCuti('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                            <button class="btn btn-danger" onclick="return confirmSakitCuti('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button>
+                                                            {{-- <button class="btn btn-info" onclick="balasanSakit('diterima', {{ $view->id }})">Diterima <i class="bi bi-check"></i></button>
+                                                            <button class="btn btn-danger" onclick="balasanSakit('ditolak', {{ $view->id }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                         </span>
-                                                    @elseif ($role === "admin")
+                                                    @elseif ($role === "user" || $role === "admin")
                                                         <a class="btn btn-danger" onclick="confirmDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a>
                                                     @endif
                                                     </p>
@@ -227,6 +233,13 @@
 </main> <!--end::App Main--> <!--begin::Footer-->
 
 <script>
+    
+    function confirmResponCuti(status, bid) {
+        if (confirm("Kirim Respon? Pastikan blanko yang dikirim benar!")) {
+            responCuti(status, bid);
+        }
+        return false;
+    }
 
     function responCuti(status, bid) {
         const fileInput = document.getElementById('blankoInput_' + bid);
@@ -259,6 +272,13 @@
         });
     }
 
+    function confirmSakitCuti(status, sid) {
+        if (confirm("Kirim Respon? Pastikan blanko yang dikirim benar!")) {
+            responSakit(status, sid);
+        }
+        return false;
+    }
+
     function responSakit(status, sid) {
         const fileInput = document.getElementById('fileSakit_' + sid);
         const file = fileInput.files[0];
@@ -288,6 +308,13 @@
         .catch(error => {
             console.error('Error:', error);
         });
+    }
+
+    function confirmBalasanSakitCuti(status, bsid) {
+        if (confirm("Kirim Respon? Pastikan blanko yang dikirim benar!")) {
+            balasanSakit(status, bsid);
+        }
+        return false;
     }
 
     function balasanSakit(status, bsid) {

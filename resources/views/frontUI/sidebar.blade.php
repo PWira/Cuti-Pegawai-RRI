@@ -41,7 +41,7 @@
                     </ul>
                 </li>
                 <hr style="color: aliceblue">
-                @if ($role ==='user')
+                @if ($role !='super_user')
                 <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                     <p>Form Pengajuan</p>
                 </a> </li>
