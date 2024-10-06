@@ -1,0 +1,50 @@
+@font-face {
+    font-family: SymbolMT_im;
+    src: url( "../plugins/fonts/SymbolMT_im.woff") format("woff");
+}
+
+@font-face {
+    font-family: TimesNewRomanPSMT_ig;
+    src: url("../plugins/fonts/TimesNewRomanPSMT_ig.woff") format("woff");
+}
+
+@font-face {
+    font-family: sub_TimesNewRomanPS-BoldMT_lfb;
+    src: url("../plugins/fonts/sub_TimesNewRomanPS-BoldMT_lfb.woff") format("woff");
+}
+
+@font-face {
+    font-family: sub_TimesNewRomanPSMT_lfr;
+    src: url("../plugins/fonts/sub_TimesNewRomanPSMT_lfr.woff") format("woff");
+}
+
+/* 
+.card-header {
+    flex-wrap: wrap;
+} */
+.card-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-right: 1rem; /* Memberikan sedikit jarak antara judul dan tombol */
+}
+.btn-info {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.t {
+	transform-origin: bottom left;
+	z-index: 2;
+	position: absolute;
+	white-space: pre;
+	overflow: visible;
+	line-height: 1.5;
+}
+.text-container {
+	white-space: pre;
+}
+@supports (-webkit-touch-callout: none) {
+	.text-container {
+		white-space: normal;
+	}
+}
