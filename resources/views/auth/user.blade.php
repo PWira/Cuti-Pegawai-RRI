@@ -3,7 +3,9 @@
 @section('content')
 
 @auth
-{{-- @foreach ($konfirmasi as $tabel) --}}
+<head>
+    <title>@php $title=" | ADMIN ONLY | Akun User"@endphp</title>
+  </head>
 
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->

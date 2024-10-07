@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('jenis_cuti');
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
+            $table->text('tujuan_cuti');
             $table->text('alasan');
             $table->string('blanko_ditangguhkan');
             $table->text('sakit_ditangguhkan')->nullable();

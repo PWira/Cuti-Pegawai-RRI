@@ -4,10 +4,6 @@
 
 @auth
 
-<head>
-    <title>@php $title=" | Buat Pengajuan Cuti"@endphp</title>
-  </head>
-
 <body>
     <div class="card card-info card-outline mb-4">
         <div class="card-header" style="text-align:center;">
@@ -29,7 +25,7 @@
                 <div class="card-body">
                     <div class="">
                         <label for="pegawai" class="form-label">Pilih Pegawai</label>
-                        <select class="form-select " id="pegawai" name="pegawai" required>
+                        <select class="form-select form-select-sm" id="pegawai" name="pegawai" required>
                             <option value="">Pilih pegawai</option>
                             @forelse ($blanko as $pegawai)
                                 <option value="{{ $pegawai->pid }}">{{ $pegawai->nama }}</option>
@@ -66,9 +62,9 @@
                         </div>
                         <p class="mt-2">Dengan ini mengajukan cuti dengan rincian sebagai berikut:</p>
                         <div class="row g-2">
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label for="jenis_cuti" class="form-label">Jenis Cuti</label>
-                                <select class="form-select" id="jenis_cuti" name="jenis_cuti" required>
+                                <select class="form-select form-select-sm" id="jenis_cuti" name="jenis_cuti" required>
                                     <option value="">Pilih jenis cuti</option>
                                     <option value="cuti_tahunan">Cuti Tahunan</option>
                                     <option value="cuti_sakit">Cuti Sakit</option>
@@ -77,10 +73,6 @@
                                     <option value="cuti_di_luar_tanggungan_negara">Cuti Di Luar Tanggungan Negara</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <label for="tujuan_cuti" class="form-label">Tujuan Cuti</label>
-                                <input type="text" class="form-control" id="tujuan_cuti" name="tujuan_cuti" required>
-                            </div> 
                             <div class="col-md-3">
                                 <label for="mulai_cuti" class="form-label">Mulai Cuti</label>
                                 <input type="date" class="form-control" id="mulai_cuti" name="mulai_cuti" required>
@@ -92,28 +84,15 @@
                         </div>
                         <div class="mt-2">
                             <label for="alasan" class="form-label">Alasan Cuti</label>
-                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="51"></textarea>
+                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="50"></textarea>
                             <small id="alasan-help" class="form-text text-muted">Maksimum 50 karakter</small>
                             <small id="alasan-warning" class="form-text text-danger d-none">Batas maksimun karakter</small>
-                        </div>         
-                        <div class="mt-2">
-                            <label for="keterangan" class="form-label">Keterangan Cuti (untuk rekapitulasi)</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="1" required maxlength="16"></textarea>
-                            <small id="keterangan-help" class="form-text text-muted">Maksimum 15 karakter</small>
-                            <small id="keterangan-warning" class="form-text text-danger d-none">Batas maksimun karakter</small>
-                        </div>              
-                        <div class="mt-2">
-                            <label for="blanko_ditangguhkan" class="form-label">PDF Blanko Surat Cuti</label>
-                            <input type="file" class="form-control" id="blanko_ditangguhkan" name="blanko_ditangguhkan" accept="application/pdf" required>
-                        </div>
-                        <div class="mt-2" style="visibility:hidden">
-                            <input type="text" class="form-control" id="konfirmasi" name="konfirmasi" value="ditangguhkan" required>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
                 <div class="card-footer" style="text-align: center">
-                    <button class="btn btn-info" type="submit" onclick="return confirm('Apakah Anda yakin ingin mengirim pengajuan cuti ini? Pastikan semua sudah benar!')">Submit form</button>
-                </div>                
+                    <button class="btn btn-info" type="submit">Update Form</button>
+                </div>
             </form>
         </div>
     </div>

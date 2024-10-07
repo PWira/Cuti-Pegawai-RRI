@@ -2,6 +2,10 @@
 
 @section('content')
 
+<head>
+  <title>@php $title=" | Register"@endphp</title>
+</head>
+
 <body class="register-page bg-body-secondary">
   <div class="register-box"> <!-- /.register-logo -->
       <div class="card card-outline card-primary">

@@ -3,6 +3,9 @@
 @section('content')
 
 @auth
+<head>
+    <title>@php $title=" | Cuti Ditolak"@endphp</title>
+</head>
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
@@ -54,7 +57,7 @@
                                         <tbody>
                                             <tr class="align-middle">
                                                 @php $rowNumber = $blanko->firstItem(); @endphp
-                                                @foreach ($blanko as $view)
+                                                @forelse ($blanko as $view)
                                                 @if($view->jenis_cuti!="cuti_sakit" && $view->konfirmasi=="ditolak")
                                                 <td>{{ $rowNumber++ }}</td>
                                                 <td>{{$view->nama_pekerja}}</td>
@@ -70,27 +73,24 @@
                                                 </td>
                                                 <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                                 <td>{{ucwords($view->konfirmasi)}}</td>
-                                                <td>
+                                                {{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y')}}
+                                                <td class="text-center">
                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}">
-                                                        Selengkapnya <i class="bi bi-arrow-down"></i>
-                                                    </button>
+                                                    <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="9">
+                                                <td colspan="100">
                                                     <div class="collapse" id="collapse{{ $view->bid }}">
                                                         <div class="card card-body">
                                                             <span class="d-flex justify-content-between">
                                                                 <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                             </span>
-                                                            <span class="d-flex justify-content-between">
-                                                                <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                                <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                                <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                                <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
+                                                            <span class="d-flex">
+                                                                <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
+                                                                <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
                                                             </span>
                                                             <p>Alasan: {{ $view->alasan }}</p>
                                                             <p class="d-flex justify-content-between">
@@ -105,12 +105,16 @@
                                                     </div>
                                                 </td>
                                             @else
-                                            <tr class="text-center">
-                                                <td colspan="9">No data available</td>
-                                            </tr>
+                                            {{-- <tr class="text-center">
+                                                <td colspan="100">No data available</td>
+                                            </tr> --}}
                                             @endif  
                                             </tr>
-                                            @endforeach
+                                            @empty
+                                            {{-- <tr class="text-center">
+                                                <td colspan="100">No data available</td>
+                                            </tr> --}}
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div> <!-- /.card-body -->
@@ -146,7 +150,7 @@
                                 <tbody>
                                     <tr class="align-middle">
                                         @php $rowNumber = 1; @endphp
-                                        @foreach ($blanko as $view)
+                                        @forelse ($blanko as $view)
                                         @if ($view->jenis_cuti=="cuti_sakit" && $view->konfirmasi=="ditolak")
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
@@ -162,27 +166,24 @@
                                         </td>
                                         <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                         <td>{{ucwords($view->konfirmasi)}}</td>
-                                        <td>
+                                        <td>{{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y')}}</td>
+                                        <td class="text-center">
                                             <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}">
-                                                Selengkapnya <i class="bi bi-arrow-down"></i>
-                                            </button>
+                                            <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="9">
+                                        <td colspan="100">
                                             <div class="collapse" id="collapse{{ $view->bid }}">
                                                 <div class="card card-body">
                                                     <span class="d-flex justify-content-between">
                                                         <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                     </span>
-                                                    <span class="d-flex justify-content-between">
-                                                        <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                        <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
+                                                    <span class="d-flex">
+                                                        <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
+                                                        <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
                                                     </span>
                                                     <p>Alasan: {{ $view->alasan }}</p>
                                                     <p class="d-flex justify-content-between">
@@ -197,12 +198,15 @@
                                             </div>
                                         </td>
                                     @else
-                                    <tr class="text-center">
-                                        <td colspan="9">No data available</td>
-                                    </tr>
+                                    {{-- <tr class="text-center">
+                                        <td colspan="100">No data available</td>
+                                    </tr> --}}
                                     @endif  
-                                    </tr>
-                                    @endforeach
+                                    @empty
+                                    {{-- <tr class="text-center">
+                                        <td colspan="100">No data available</td>
+                                    </tr> --}}
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->

@@ -112,7 +112,7 @@ class PegawaiSeeder extends Seeder
 
                 Pegawai::create([
                     'nama' => $firstName . ' ' . $lastName,
-                    'admin_id' => 1,
+                    'by_id' => 1,
                     'jk' => $gender,
                     'status' => $statuses[array_rand($statuses)],
                     'umur' => rand(20, 60),

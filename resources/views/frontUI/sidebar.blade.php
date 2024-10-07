@@ -74,7 +74,7 @@
                         </li>   
                     </ul>
                     {{-- <hr style="color: aliceblue">
-                    <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                    <li class="nav-item"> <a href="{{url('rekapitulasi  ')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                         <p>Test Form Baru</p>
                     </a> </li> --}}
                 </li>

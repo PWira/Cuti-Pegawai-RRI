@@ -2,6 +2,10 @@
 
 @section('content')
 
+<head>
+  <title>@php $title=" | ADMIN ONLY | Buat Akun"@endphp</title>
+</head>
+
 <body class="register-page bg-body-secondary">
     <div class="card card-outline card-primary" style="margin: auto; width: 500px;">
           {{-- <div class="card-header"> <a href="{{ route('home') }}" class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover">

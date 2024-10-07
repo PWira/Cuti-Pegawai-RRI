@@ -3,6 +3,9 @@
 @section('content')
 
 @auth
+<head>
+    <title>@php $title=" | Pengajuan Cuti"@endphp</title>
+</head>
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->
@@ -30,12 +33,9 @@
                         <div class="card-header text-bg-warning">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">PENGAJUAN CUTI</h3>
-                                @if ($role === 'super_user')
-                                <a href="{{ url('pengajuan/semua') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
-                                @endif
                             </div>
-                        </div> <!-- /.card-header -->
-                        <div class="card-body">
+                        </div>
+                        <div class="card-body"> 
                             <table id="myTable" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -70,28 +70,24 @@
                                             </td>
                                             <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                             <td>{{ucwords($view->konfirmasi)}}</td>
-                                            <td>
-                                                <p>{{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                            </td>
-                                            <td>
+                                            <td>{{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y')}}</td>
+                                            <td class="text-center">
                                                 <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
                                                 <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
-                                                {{-- <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}">
-                                                    Detail<i class="bi bi-arrow-down"></i>
-                                                </button> --}}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="12">
+                                            <td colspan="100">
                                                 <div class="collapse" id="collapse{{ $view->bid }}">
                                                     <div class="card card-body">
                                                         <span class="d-flex justify-content-between">
                                                             <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                         </span>
-                                                        <span class="d-flex justify-content-between">
-                                                            <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                            <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
+                                                        <span class="d-flex">
+                                                            <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
+                                                            <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                            <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                            <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
                                                         </span>
                                                         <p>Alasan: {{ $view->alasan }}</p>
                                                         @if ($role === "user")
@@ -118,12 +114,16 @@
                                                     </div>
                                                 </div>
                                             </td>
+                                            @else
+                                            {{-- <tr class="text-center">
+                                                <td colspan="100">No data available</td>
+                                            </tr> --}}
                                         @endif
                                         </tr>
                                         @empty
-                                    <tr class="text-center">
-                                        <td colspan="12">No data available</td>
-                                    </tr>
+                                    {{-- <tr class="text-center">
+                                        <td colspan="100">No data available</td>
+                                    </tr> --}}
                                     @endforelse
                                 </tbody>
                             </table>
@@ -143,7 +143,7 @@
                         </div>
                     </div> <!-- /.card-header -->
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table id="myTable" class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th style="width: 2%">#</th>
@@ -154,7 +154,6 @@
                                     <th style="" class="sortable">Masa Kerja</th>
                                     <th style="" class="sortable">Jenis Cuti</th>
                                     <th style="" class="sortable">Status</th>
-                                    <th style="" class="sortable">Blanko</th>
                                     <th style="" class="sortable">Tanggal Diajukan</th>
                                     <th style="">Selengkapnya</th>
                                 </tr>
@@ -178,31 +177,25 @@
                                         </td>
                                         <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                         <td>{{ucwords($view->konfirmasi)}}</td>
-                                        <td>
-                                            <p>{{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                        </td>
-                                        <td>
+                                        <td>{{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y') }}</td>
+                                        <td class="text-center">
                                             <a href="{{$view->sakit_ditangguhkan}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}">
-                                                Selengkapnya <i class="bi bi-arrow-down"></i>
-                                            </button>
+                                            <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="12">
+                                        <td colspan="100">
                                             <div class="collapse" id="collapse{{ $view->bid }}">
                                                 <div class="card card-body">
                                                     <span class="d-flex justify-content-between">
                                                         <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                     </span>
-                                                    <span class="d-flex justify-content-between">
-                                                        <p>Diajukan Tanggal: {{ \Carbon\Carbon::parse($view->created_at)->format('d-m-Y') }}</p>
-                                                        <p>Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->format('d-m-Y') }}</p>
-                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
-                                                    </span>
+                                                    <span class="d-flex">
+                                                        <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
+                                                        <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
+                                                    </span>    
                                                     <p>Alasan: {{ $view->alasan }}</p>
                                                     <p class="d-flex justify-content-between">
                                                         <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal<i class="bi bi-file-text-fill"></i></a>
@@ -221,12 +214,16 @@
                                                 </div>
                                             </div>
                                         </td>
+                                    @else
+                                    {{-- <tr class="text-center">
+                                        <td colspan="100">No data available</td>
+                                    </tr> --}}
                                     @endif  
                                     </tr>
                                     @empty
-                                    <tr class="text-center">
-                                        <td colspan="12">No data available</td>
-                                    </tr>
+                                    {{-- <tr class="text-center">
+                                        <td colspan="100">No data available</td>
+                                    </tr> --}}
                                     @endforelse
                                 </tbody>
                             </table>
@@ -359,6 +356,7 @@
             console.error('Error:', error);
         });
     }
+    
 </script>
 @endauth
 @endsection

@@ -2,6 +2,10 @@
 
 @section('content')
 
+<head>
+    <title>@php $title=" | Dashboard"@endphp</title>
+</head>
+
 <main class="app-main"> <!--begin::App Content Header-->
   <div class="app-content-header"> <!--begin::Container-->
       <div class="container-fluid"> <!--begin::Row-->
@@ -51,7 +55,7 @@
               <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 3-->
                 <div class="small-box text-bg-info">
                     <div class="inner">
-                            <h3>{{ $surat->where('konfirmasi', 'diterima')->first()->total ?? 0}}</h3>
+                            <h3>{{ $surat->whereIn('konfirmasi', ['diterima', 'sakit'])->sum('total') ?? 0}}</h3>
                             {{-- <h3>{{ $surat ?? 0}}</h3> --}}
                             <p>Cuti Diterima</p>
                         </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -63,7 +67,7 @@
               <div class="col-lg-6 col-5"> <!--begin::Small Box Widget 5-->
                   <div class="small-box text-bg-danger">
                       <div class="inner">
-                          <h3>{{ $surat->where('konfirmasi', 'ditolak')->first()->total ?? 0 }}</h3>
+                          <h3>{{ $surat->whereIn('konfirmasi', ['ditolak', 'sakit'])->sum('total') ?? 0}}</h3>
                           {{-- <h3>{{ $surat ?? 0 }}</h3> --}}
                           <p>Cuti Ditolak</p>
                       </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

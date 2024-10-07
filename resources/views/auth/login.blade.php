@@ -2,6 +2,10 @@
 
 @section('content')
 
+<head>
+    <title>@php $title=" | Login"@endphp</title>
+</head>
+
 <body class="login-page bg-body-secondary">
   <div class="login-box">
       <div class="card card-outline card-primary">

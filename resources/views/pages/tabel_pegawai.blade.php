@@ -3,6 +3,9 @@
 @section('content')
 
 @auth
+<head>
+    <title>@php $title=" | Tabel Pegawai"@endphp</title>
+</head>
 <main class="app-main"> <!--begin::App Content Header-->
     <div class="app-content-header"> <!--begin::Container-->
         <div class="container-fluid"> <!--begin::Row-->

@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data-pegawai', function () {
         return view('pages.pegawai');
     });
-    Route::post('daftar-pegawai',[adminController::class, 'daftarPegawai']);
+    Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
     Route::get('pengajuan/semua', [downloadDoc::class, 'pengajuanSemua']);
     Route::get('pengajuan/diterima', [downloadDoc::class, 'pengajuanDiterima']);
@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('form',[HomeController::class, 'form']);
 
-    Route::get('form-baru',[HomeController::class, 'formBaru']);
+    Route::get('rekapitulasi',[HomeController::class, 'rekapitulasi']);
     // Route::get('test-form-baru',[HomeController::class, 'testFormBaru']);
     Route::get('/generate-pdf', [downloadDoc::class, 'generatePDF'])->name('generate.pdf');
     

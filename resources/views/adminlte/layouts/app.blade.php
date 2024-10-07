@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>{{ $title ?? "Cuti Pegawai" }}</title>
+    <title>Cuti Pegawai{{ $title ?? "" }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="title" content="AdminLTE v4 | Dashboard">
@@ -54,7 +54,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/PIoEvIeWh4I=" crossorigin="anonymous"></script> <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha256-YMa+wAM6QkVyz999odX7lPRxkoYAan8suedu4k2Zur8=" crossorigin="anonymous"></script> <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/bootstrap-5/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('assets/js/addOn.js') }}"></script>        
     <script>
@@ -64,6 +63,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             scrollbarAutoHide: "leave",
             scrollbarClickScroll: true,
         };
+        
         document.addEventListener("DOMContentLoaded", function() {
             const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
             if (
@@ -84,7 +84,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         const connectedSortables =
             document.querySelectorAll(".connectedSortable");
-        connectedSortables.forEach((connectedSortable) => {
+            connectedSortables.forEach((connectedSortable) => {
             let sortable = new Sortable(connectedSortable, {
                 group: "shared",
                 handle: ".card-header",

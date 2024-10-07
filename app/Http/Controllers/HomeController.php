@@ -41,6 +41,7 @@ class HomeController extends Controller
     public function daftarPegawai(Request $req){
 
         $userData = $this->getUserData();
+        $id = $userData['id'];
         $role = $userData['role'];
         $asal = $userData['asal'];
         $jabatan = $userData['jabatan'];
@@ -53,13 +54,14 @@ class HomeController extends Controller
     
         $daftar = DB::table("pegawai")->insert([
             "nama" => $req->nama_pekerja,
+            "by_id" => $id,
             "nip" => $req->nip,
+            "jk" => $req->jk,
+            "umur" => $req->umur,
+            "status" => $req->status,
             "jabatan" => $req->jabatan,
             "unit_kerja" => $unitcase,
             "masa_kerja" => $total_bulan_kerja,
-            "oleh_user"=>$role,
-            "oleh_asal"=>$asal,
-            "oleh_jabatan"=>$jabatan,
             "created_at" => now()
         ]);
     
@@ -90,28 +92,18 @@ class HomeController extends Controller
 
         if ($role === 'admin') {
             $blanko = $query->paginate(15);
-            $konfirmasi = DB::table('pengajuan')->get();
+            // $konfirmasi = DB::table('pengajuan')->get();
         } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
-            $blanko = $query->where('pegawai.unit_kerja', $asal)
-                ->paginate(15);
-            $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditangguhkan')->get();
+            $blanko = $query->where('pegawai.unit_kerja', $asal)->paginate(15);
+            // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditangguhkan')->get();
         } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
-            $blanko = $query
-                ->where(function ($search) {
-                    $search->where('unit_kerja', 'jakarta')
-                        ->orWhere(function ($sq) {
-                            $sq->where('jenis_cuti', 'cuti_sakit')
-                                ->where('konfirmasi', 'sakit');
-                        }
-                    );
-                })
-                ->paginate(15);
-            $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'sakit')->get();
+            $blanko = $query->where('konfirmasi', 'sakit')->paginate(15);
+            // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'sakit')->get();
         } else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
 
-        return view('pages.pengajuan', compact('blanko', 'konfirmasi', 'role', 'jabatan'));
+        return view('pages.pengajuan', compact('blanko', 'role', 'jabatan'));
     }
 
     public function cutiDitolak()
@@ -138,25 +130,18 @@ class HomeController extends Controller
             );
 
         if ($role === 'admin') {
-            $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')->paginate(15);
-        } elseif ($role === 'user' || ($role === 'super_user' && $asal !== 'jakarta')) {
-            $blanko = $query->where('pegawai.unit_kerja', $asal)
-                ->where('pengajuan.konfirmasi', 'ditolak')
-                ->paginate(15);
-        } elseif ($role === 'super_user' && $asal === 'jakarta') {
-            $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')
-                ->where(function ($query) {
-                    $query->where('pegawai.unit_kerja', 'jakarta')
-                        ->orWhere('pengajuan.jenis_cuti', 'cuti_sakit');
-                })
-                ->paginate(15);
+            $blanko = $query->paginate(15);
+        } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
+            $blanko = $query->where('pegawai.unit_kerja', $asal)->paginate(15);
+        } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
+            $blanko = $query->where('jenis_cuti', 'cuti_sakit')->paginate(15);
         } else {
             $blanko = collect(); // Return an empty collection if the role is not recognized
         }
 
-        $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
+        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
 
-        return view('pages.ditolak', compact('id', 'blanko', 'konfirmasi', 'role', 'jabatan'));
+        return view('pages.ditolak', compact('id', 'blanko', 'role', 'jabatan'));
     }
 
     public function cutiDiterima()
@@ -182,26 +167,38 @@ class HomeController extends Controller
                 'users.asal as oleh_asal'
             );
 
-        if ($role === 'admin') {
-            $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-        } elseif ($role === 'user' || ($role === 'super_user' && $asal !== 'jakarta')) {
-            $blanko = $query->where('pegawai.unit_kerja', $asal)
+            if ($role === 'admin') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+            } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
+                $blanko = $query->where('pegawai.unit_kerja', $asal)
                 ->where('pengajuan.konfirmasi', 'diterima')
                 ->paginate(15);
-        } elseif ($role === 'super_user' && $asal === 'jakarta') {
-            $blanko = $query->where('pengajuan.konfirmasi', 'diterima')
-                ->where(function ($query) {
-                    $query->where('pegawai.unit_kerja', 'jakarta')
-                        ->orWhere('pengajuan.jenis_cuti', 'cuti_sakit');
-                })
-                ->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
+            } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+            } else {
+                $blanko = collect(); // Return an empty collection if the role is not recognized
+            }
 
-        $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
+        // if ($role === 'admin') {
+        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+        // } elseif ($role === 'user' || ($role === 'super_user' && $asal !== 'jakarta')) {
+        //     $blanko = $query->where('pegawai.unit_kerja', $asal)
+        //         ->where('pengajuan.konfirmasi', 'diterima')
+        //         ->paginate(15);
+        // } elseif ($role === 'super_user' && $asal === 'jakarta') {
+        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')
+        //         ->where(function ($query) {
+        //             $query->where('pengajuan.konfirmasi', 'diterima')
+        //                 ->Where('pengajuan.jenis_cuti', 'cuti_sakit');
+        //         })
+        //         ->paginate(15);
+        // } else {
+        //     $blanko = collect(); // Return an empty collection if the role is not recognized
+        // }
 
-        return view('pages.diterima', compact('id', 'blanko', 'konfirmasi', 'role', 'jabatan'));
+        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
+
+        return view('pages.diterima', compact('id', 'blanko', 'role', 'jabatan'));
     }
 
     public function pengajuanSaya()
@@ -243,7 +240,7 @@ class HomeController extends Controller
         $jabatan = $userData['jabatan'];
 
         $query = DB::table('pegawai')
-            ->join('users', 'pegawai.admin_id', '=', 'users.id')
+            ->join('users', 'pegawai.by_id', '=', 'users.id')
             ->select(
                 'pegawai.*',
                 'users.name as oleh_user',
@@ -282,7 +279,7 @@ class HomeController extends Controller
         return view('pages.form', compact('id', 'blanko' ,'role','jabatan'));
     }
 
-    public function formBaru()
+    public function rekapitulasi()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
@@ -290,16 +287,24 @@ class HomeController extends Controller
         $asal = $userData['asal'];
         $jabatan = $userData['jabatan'];
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pegawai')->paginate(15);
-        } elseif ($role === 'user' || $role === 'super_user') {
-            $blanko = DB::table('pegawai')->where('unit_kerja', $asal)->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
-        // $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.unit_kerja as unit_kerja',
+                'pegawai.masa_kerja',
+                'users.name as oleh_user',
+                'users.jabatan as oleh_jabatan',
+                'users.asal as oleh_asal'
+            );
 
-        return view('pages.test_form', compact('id', 'blanko' ,'role','jabatan'));
+        $blanko = $query->where('unit_kerja', $asal)->paginate(15);
+
+        return view('download.rekapitulasi', compact('id', 'blanko' ,'role','jabatan'));
     }
 
     public function kirimPengajuan(Request $req)
@@ -316,7 +321,6 @@ class HomeController extends Controller
             'jenis_cuti' => 'required|string',
             'mulai_cuti' => 'required|date',
             'selesai_cuti' => 'required|date|after_or_equal:mulai_cuti',
-            'alasan' => 'required|string|max:255',
             'blanko_ditangguhkan' => 'required|file|mimes:pdf',
         ]);
 
@@ -354,8 +358,10 @@ class HomeController extends Controller
                 "jenis_cuti" => $jenis_cuti,
                 "mulai_cuti" => $validatedData['mulai_cuti'],
                 "selesai_cuti" => $validatedData['selesai_cuti'],
-                "alasan" => $validatedData['alasan'],
+                "alasan" => $req->alasan,
+                "tujuan_cuti" => $req->tujuan_cuti,
                 "blanko_ditangguhkan" => $filePath,
+                "keterangan" => $req->keterangan,
                 "konfirmasi" => "ditangguhkan",
                 "created_at" => now()
             ]);
@@ -393,8 +399,8 @@ class HomeController extends Controller
     
         // Update the appropriate column in the database
         DB::table('pengajuan')->where('bid', $req->input('bid'))->update(['konfirmasi' => $req->input('status'), 
-        $req->input('status') === 'sakit' ? 'sakit_ditangguhkan' : 'blanko_ditolak' => $filePath],
-        );    
+        $req->input('status') === 'sakit' ? 'sakit_ditangguhkan' : 'blanko_ditolak' => $filePath, 'updated_at' => now(),
+    ],);    
     
         return response()->json(['message' => 'File uploaded successfully.']);
     }
@@ -427,8 +433,8 @@ class HomeController extends Controller
     
         // Update the appropriate column in the database
         DB::table('pengajuan')->where('bid', $req->input('bid'))->update(['konfirmasi' => $req->input('status'), 
-        $req->input('status') === 'diterima' ? 'blanko_diterima' : 'blanko_ditolak' => $filePath],
-        );    
+        $req->input('status') === 'diterima' ? 'blanko_diterima' : 'blanko_ditolak' => $filePath, 'updated_at' => now(),
+        ],);    
     
         return response()->json(['message' => 'File uploaded successfully.']);
     }
@@ -471,8 +477,25 @@ class HomeController extends Controller
                 ->groupBy('pengajuan.konfirmasi')
                 ->get();
 
-        }
-         elseif ($role === 'user') {
+        }elseif ($role === 'user' && $jabatan ==="direktur") {
+            $pegawai = DB::table('pegawai')
+                ->select('unit_kerja', DB::raw('count(*) as total'))
+                ->where('unit_kerja', $asal)
+                ->groupBy('unit_kerja')
+                ->get();
+
+                $surat = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
+                ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
+                ->where(function ($query) use ($asal) {
+                    $query->where('pegawai.unit_kerja', $asal)
+                          ->orWhere('pengajuan.konfirmasi', 'sakit');
+                })
+                ->groupBy('pengajuan.konfirmasi')
+                ->get();            
+
+        } elseif ($role === 'user' && $jabatan !="direktur") {
             $pegawai = DB::table('pegawai')
                 ->select('unit_kerja', DB::raw('count(*) as total'))
                 ->where('unit_kerja', $asal)

@@ -13,8 +13,8 @@ class CreatePegawaiTable extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id("pid");
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('by_id');
+            $table->foreign('by_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
             $table->enum('jk',['laki_laki','perempuan']);
             $table->integer('umur');

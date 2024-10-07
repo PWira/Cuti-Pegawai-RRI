@@ -4,6 +4,9 @@
 
 @auth
 
+<head>
+    <title>@php $title=" | Daftarkan Pegawai"@endphp</title>
+  </head>
 
 <body>
     <div class="card card-info card-outline mb-4">
@@ -64,7 +67,7 @@
                             <select class="form-select form-select-sm" id="jabatan" name="jabatan" required>
                                 <option value="">Pilih Jabatan</option>
                                 <option value="pranata_siaran_ahli_madya">Pranata Siaran Ahli Madya</option>
-                                <option value="pranata_siaran_ahli_muda">Pranata Siaran Ahli Madya</option>
+                                <option value="pranata_siaran_ahli_muda">Pranata Siaran Ahli Muda</option>
                                 <option value="teknisi_siaran_ahli_madya">Teknisi Siaran Ahli Madya</option>
                                 <option value="teknisi_siaran_ahli_muda">Teknisi Siaran Ahli Muda</option>
                             </select>
@@ -73,11 +76,14 @@
                         <div class="col-md-6">
                             <label for="unit_kerja" class="form-label">Unit Kerja RRI</label>
                             <select class="form-select form-select-sm" id="unit_kerja" name="unit_kerja" required>
-                                <option value="">Pilih Unit Kerja</option>
+
+                                {{-- <option value="">Pilih Unit Kerja</option>
                                 <option value="Jakarta">Jakarta</option>
                                 <option value="Palembang">Palembang</option>
                                 <option value="Medan">Medan</option>
-                                <option value="Yogyakarta">Yogyakarta</option>
+                                <option value="Yogyakarta">Yogyakarta</option> --}}
+
+                                <option value="{{$asal}}">{{ucwords($asal)}}</option>
                             </select>
                             <div class="valid-feedback"></div>
                         </div>

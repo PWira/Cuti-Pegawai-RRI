@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengajuan;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -17,18 +21,117 @@ use Carbon\Carbon;
 class downloadDoc extends Controller
 {
 
+    public function getUserData(){
+
+        $user = Auth::user();
+        $id = $user->id;
+        $role = $user->role;
+        $asal = $user->asal;
+        $jabatan = $user->jabatan;
+
+        return compact('id', 'role', 'asal', 'jabatan');
+    }
+
     public function generatePDF(Request $req)
     {
-        $html = view('pages.test_form')->render();
-        
-        $pdf = PDF::loadHTML($html)
-        ->setPaper('a4', 'portrait') // set ukuran khusus
-        ->setOptions([
-            'dpi' => 250, // Mengatur DPI sesuai ukuran 1 piksel = 1/96 inci
-        ]);
+        $userData = $this->getUserData();
+        $asal = $userData['asal'];
 
-        return $pdf->download('test_form.pdf');
+        $month = $req->query('month');
+        Log::info('month: ' . $month);
+        
+        if (!$month || !is_numeric($month) || $month < 1 || $month > 12) {
+            return redirect()->back()->with('error', 'Please select a valid month.');
+        }
+
+        // $year = Carbon::now()->year;
+        // $startDate = Carbon::create($year, $month, 1)->startOfMonth()->timestamp;
+        // $endDate = Carbon::create($year, $month, 1)->endOfMonth()->timestamp;
+
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.unit_kerja as unit_kerja',
+                'pegawai.masa_kerja',
+                'users.name as oleh_user',
+                'users.jabatan as oleh_jabatan',
+                'users.asal as oleh_asal'
+            )
+            ->where('unit_kerja', $asal)
+            ->whereRaw('MONTH(pengajuan.updated_at) = ?', [$month])
+            ->orderBy('pengajuan.updated_at', 'asc');
+
+        $blanko = $query->get(); // Get all results for the PDF
+        
+
+        // if ($blanko->count() === 0) {
+        //     Log::info('The collection is empty.');
+        //     return redirect()->back()->with('error', 'No data found for the selected month.');
+        // } else {
+        //     Log::info('Collection not empty. Data exists.');
+        // }        
+        // Log::info('Session Error: ' . session('error'));
+        
+        if ($blanko->isEmpty()) {
+            return redirect()->back()->with('error', 'No data found for the selected month.');
+        }        
+
+        $firstRecord = $blanko->first();
+        $reportDate = Carbon::parse($firstRecord->updated_at);
+        $monthName = $reportDate->locale('id')->translatedFormat('F');
+        $year = $reportDate->year;
+
+        $pdf = PDF::loadView('download.rekapitulasi', compact('blanko'))
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'dpi' => 150,
+            ]);
+
+        // Log::info('Query Results: ', $blanko->toString());
+        // Log::info('Month: ' . $monthName);
+        // Log::info('Year: ' . $year);
+
+        return $pdf->download("rekapitulasi_{$monthName}_{$year}.pdf");
     }
+
+    // public function generatePDF(Request $req)
+    // {
+
+    //     $userData = $this->getUserData();
+    //     $asal = $userData['asal'];
+
+    //     $query = DB::table('pengajuan')
+    //         ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+    //         ->join('users', 'pengajuan.user_id', '=', 'users.id')
+    //         ->select(
+    //             'pengajuan.*',
+    //             'pegawai.nama as nama_pekerja',
+    //             'pegawai.nip',
+    //             'pegawai.jabatan',
+    //             'pegawai.unit_kerja as unit_kerja',
+    //             'pegawai.masa_kerja',
+    //             'users.name as oleh_user',
+    //             'users.jabatan as oleh_jabatan',
+    //             'users.asal as oleh_asal'
+    //         );
+
+    //     $blanko = $query->where('unit_kerja', $asal)->paginate(15);
+
+    //     $html = view('download.rekapitulasi', compact('blanko'))->render();
+        
+    //     $pdf = PDF::loadHTML($html)
+    //     ->setPaper('a4', 'landscape') // set ukuran khusus
+    //     ->setOptions([
+    //         'dpi' => 150, // Mengatur DPI sesuai ukuran 1 piksel = 1/96 inci
+    //     ]);
+
+    //     return $pdf->download('rekapitulasi.pdf');
+    // }
 
     public function pengajuanSemua(Request $req)
     {
