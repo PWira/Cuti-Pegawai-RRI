@@ -27,7 +27,7 @@
             font-size: 4.5rem;
             font-weight: bold;
             margin-bottom: 0;
-            width: 80%;
+            width: 100%;
             overflow: hidden;
             white-space: nowrap;
             border-right: 2px solid;
@@ -35,26 +35,24 @@
         }
 
         @keyframes typing {
-            from {
+            0% {
                 width: 0;
+                border-right-color: black;
             }
-            to {
-                width: 80%;
+            99% {
+                width: 99%;
+                border-right-color: black;
+            }
+            100% {
+                width: 100%;
+                border-right-color: transparent;
             }
         }
+
+
 
         .user-name {
             color: red;
-        }
-
-        .user-info {
-            width: 20%;
-            padding-left: 20px;
-        }
-
-        .user-info p {
-            font-size: 2rem;
-            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -78,15 +76,7 @@
             </div> <!--end::Row-->
             <div class="welcome-card">
                 <div class="welcome-text">Selamat Datang, <span class="user-name">{{ $name }}</span></div>
-                <div class="user-info">
-                  <p>
-                    Jabatan: {{ strtoupper(str_replace('_', ' ', empty($jabatan) ? ' ' : $jabatan)) }} {{ ucwords(str_replace('_', ' ', empty($asal) ? ' ' : $asal)) }}
-                  </p>
-                  <p>
-                    Hak: {{ ucwords(str_replace('_', ' ', $role)) }}
-                  </p>
-                </div>
-              </div>
+            </div>
       </div> <!--end::Container-->
   </div> <!--end::App Content Header--> <!--begin::App Content-->
   <div class="app-content"> <!--begin::Container-->
