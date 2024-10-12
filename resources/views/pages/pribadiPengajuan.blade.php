@@ -37,7 +37,7 @@
                                 <h3 style="font-weight: bold" class="card-title">PENGAJUAN CUTI ANDA</h3>
                                 @if ($role === 'super_user')
                                 <div class="d-flex align-items-center">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <select id="monthSelect" class="form-select">
                                             <option value="">Pilih Bulan</option>
                                             <option value="1">Januari</option>
@@ -54,7 +54,10 @@
                                             <option value="12">Desember</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-4">
+                                        <input type="number" id="yearInput" class="form-control" placeholder="Masukkan Tahun">
+                                    </div>
+                                    <div class="col-md-6">
                                         <a href="#" id="downloadDoc" class="btn btn-primary">Download PDF <i class="bi bi-file-text-fill"></i></a>
                                     </div>
                                 </div>                                
@@ -258,18 +261,32 @@
             });
         });
 
-        // Handle month-based PDF generation
         const downloadButton = document.getElementById('downloadDoc');
         const monthSelect = document.getElementById('monthSelect');
+        const yearInput = document.getElementById('yearInput');
 
-        if (downloadButton && monthSelect) {
+        // Set tahun default ke tahun sekarang
+        const currentYear = new Date().getFullYear();
+        yearInput.value = currentYear;
+
+        // Set min dan max untuk input tahun
+        yearInput.min = "2000"; // Sesuaikan dengan kebutuhan
+        yearInput.max = currentYear.toString();
+
+        if (downloadButton && monthSelect && yearInput) {
             downloadButton.addEventListener('click', function(e) {
                 e.preventDefault();
                 const selectedMonth = monthSelect.value;
-                if (selectedMonth) {
-                    window.location.href = `/generate-pdf?month=${selectedMonth}`;
+                const selectedYear = yearInput.value;
+
+                if (selectedMonth && selectedYear) {
+                    if (selectedYear < 2000 || selectedYear > currentYear) {
+                        alert('Silakan masukkan tahun antara 2000 dan ' + currentYear);
+                    } else {
+                        window.location.href = `/generate-pdf?month=${selectedMonth}&year=${selectedYear}`;
+                    }
                 } else {
-                    alert('Please select a month before downloading.');
+                    alert('Silakan pilih bulan dan masukkan tahun sebelum mengunduh.');
                 }
             });
         }

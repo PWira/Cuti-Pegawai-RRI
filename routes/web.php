@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('table-diterima',[HomeController::class, 'cutiDiterima']);
     Route::get('pegawai',[HomeController::class, 'pegawai']);
     Route::get('form',[HomeController::class, 'form']);
+    Route::get('/edit-pegawai/{pid}', [HomeController::class, 'editPegawai'])->name('edit-pegawai');
+    Route::put('/update-pegawai/{pid}', [HomeController::class, 'updatePegawai'])->name('update-pegawai');
 
     Route::get('rekapitulasi',[HomeController::class, 'rekapitulasi']);
     // Route::get('test-form-baru',[HomeController::class, 'testFormBaru']);

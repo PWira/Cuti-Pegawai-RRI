@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use App\Models\Pegawai;
 
 class HomeController extends Controller
 {
@@ -257,6 +258,40 @@ class HomeController extends Controller
         }
 
         return view('pages.tabel_pegawai', compact('id', 'blanko', 'role', 'jabatan'));
+    }
+
+    public function editPegawai($pid)
+    {
+        $pegawai = Pegawai::findOrFail($pid);
+        return view('pages.edit_pegawai', compact('pegawai'));
+    }
+
+    public function updatePegawai(Request $req, $pid)
+    {
+        $pegawai = Pegawai::findOrFail($pid);
+        
+        $validatedData = $req->validate([
+            'nama_pekerja' => 'required|string|max:255',
+            'umur' => 'required|integer',
+            'nip' => 'required|string|max:255',
+            'jk' => 'required|in:laki_laki,perempuan',
+            'jabatan' => 'required|string',
+            'unit_kerja' => 'required|string',
+            'tahun_kerja' => 'required|integer',
+            'bulan_kerja' => 'required|integer',
+        ]);
+
+        $pegawai->nama = $validatedData['nama_pekerja'];
+        $pegawai->umur = $validatedData['umur'];
+        $pegawai->nip = $validatedData['nip'];
+        $pegawai->jk = $validatedData['jk'];
+        $pegawai->jabatan = $validatedData['jabatan'];
+        $pegawai->unit_kerja = $validatedData['unit_kerja'];
+        $pegawai->masa_kerja = ($validatedData['tahun_kerja'] * 12) + $validatedData['bulan_kerja'];
+
+        $pegawai->save();
+
+        return redirect('pegawai')->with('success', 'Data pegawai berhasil diperbarui');
     }
 
     public function form()

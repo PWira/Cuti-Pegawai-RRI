@@ -46,7 +46,6 @@
                                         <th style="">Nama Pekerja</th>
                                         <th style="">Jenis Kelamin</th>
                                         <th style="width: 2%">Umur</th>
-                                        <th style="">Status</th>
                                         <th style="width: 5%">NIP</th>
                                         <th style="">Jabatan</th>
                                         <th style="">Unit Kerja</th>
@@ -62,9 +61,8 @@
                                         @forelse ($blanko as $view)
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama}}</td>
-                                        <td>{{$view->jk}}</td>
+                                        <td>{{ format_jk($view->jk) }}</td>
                                         <td>{{$view->umur}}</td>
-                                        <td>{{ format_status($view->status) }}</td>
                                         <td>{{$view->nip}}</td>
                                         <td>{{ format_jabatan($view->jabatan) }}</td>
                                         <td>{{$view->unit_kerja}}</td>
@@ -90,7 +88,8 @@
                                                             <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
                                                         </span>
                                                         <p class="d-flex justify-content-between">
-                                                            @if ($role === "admin")
+                                                            @if ($role === "super_user")
+                                                                <a href="{{ route('edit-pegawai', $view->pid) }}" class="btn btn-primary">Edit</a>
                                                                 <a class="btn btn-danger" onclick="pegawaiDelete({{$view->pid}})">HAPUS <i class="bi bi-trash"></i></a>
                                                             @endif
                                                         </p>

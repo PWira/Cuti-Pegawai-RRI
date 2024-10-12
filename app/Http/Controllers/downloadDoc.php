@@ -38,15 +38,13 @@ class downloadDoc extends Controller
         $asal = $userData['asal'];
 
         $month = $req->query('month');
-        Log::info('month: ' . $month);
+        $year = $req->query('year');
+        Log::info('month: ' . $month . ', year: ' . $year);
         
-        if (!$month || !is_numeric($month) || $month < 1 || $month > 12) {
-            return redirect()->back()->with('error', 'Please select a valid month.');
+        if (!$month || !is_numeric($month) || $month < 1 || $month > 12 ||
+            !$year || !is_numeric($year) || $year < 2000 || $year > date('Y')) {
+            return redirect()->back()->with('error', 'Silakan pilih bulan dan tahun yang valid.');
         }
-
-        // $year = Carbon::now()->year;
-        // $startDate = Carbon::create($year, $month, 1)->startOfMonth()->timestamp;
-        // $endDate = Carbon::create($year, $month, 1)->endOfMonth()->timestamp;
 
         $query = DB::table('pengajuan')
             ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
@@ -64,21 +62,13 @@ class downloadDoc extends Controller
             )
             ->where('unit_kerja', $asal)
             ->whereRaw('MONTH(pengajuan.updated_at) = ?', [$month])
+            ->whereRaw('YEAR(pengajuan.updated_at) = ?', [$year])
             ->orderBy('pengajuan.updated_at', 'asc');
 
-        $blanko = $query->get(); // Get all results for the PDF
-        
-
-        // if ($blanko->count() === 0) {
-        //     Log::info('The collection is empty.');
-        //     return redirect()->back()->with('error', 'No data found for the selected month.');
-        // } else {
-        //     Log::info('Collection not empty. Data exists.');
-        // }        
-        // Log::info('Session Error: ' . session('error'));
+        $blanko = $query->get();
         
         if ($blanko->isEmpty()) {
-            return redirect()->back()->with('error', 'No data found for the selected month.');
+            return redirect()->back()->with('error', 'Tidak ada data untuk bulan dan tahun yang dipilih.');
         }        
 
         $firstRecord = $blanko->first();
@@ -86,15 +76,11 @@ class downloadDoc extends Controller
         $monthName = $reportDate->locale('id')->translatedFormat('F');
         $year = $reportDate->year;
 
-        $pdf = PDF::loadView('download.rekapitulasi', compact('blanko'))
+        $pdf = PDF::loadView('download.rekapitulasi', compact('blanko', 'monthName', 'year'))
             ->setPaper('a4', 'landscape')
             ->setOptions([
                 'dpi' => 150,
             ]);
-
-        // Log::info('Query Results: ', $blanko->toString());
-        // Log::info('Month: ' . $monthName);
-        // Log::info('Year: ' . $year);
 
         return $pdf->download("rekapitulasi_{$monthName}_{$year}.pdf");
     }

@@ -4,14 +4,68 @@
 
 <head>
     <title>@php $title=" | Dashboard"@endphp</title>
+    <style>
+        @font-face {
+            font-family: 'Times New Roman PS MT';
+            src: url('{{ asset('assets/plugins/fonts/TimesNewRomanPSMT_ig.woff') }}') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .welcome-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-family: 'Times New Roman PS MT', serif;
+        }
+
+        .welcome-text {
+            font-size: 4.5rem;
+            font-weight: bold;
+            margin-bottom: 0;
+            width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid;
+            animation: typing 2s steps(20) forwards;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 80%;
+            }
+        }
+
+        .user-name {
+            color: red;
+        }
+
+        .user-info {
+            width: 20%;
+            padding-left: 20px;
+        }
+
+        .user-info p {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 
 <main class="app-main"> <!--begin::App Content Header-->
   <div class="app-content-header"> <!--begin::Container-->
       <div class="container-fluid"> <!--begin::Row-->
           <div class="row">
-              <div class="col-sm-6">
-                  <h3 class="mb-0">Dashboard</h3>
+            <div class="col-sm-6">
+                <h3 class="mb-0" style="">Dashboard</h3>
+                <!-- Add the welcome card here -->
               </div>
               <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-end">
@@ -21,7 +75,18 @@
                       </li>
                   </ol>
               </div>
-          </div> <!--end::Row-->
+            </div> <!--end::Row-->
+            <div class="welcome-card">
+                <div class="welcome-text">Selamat Datang, <span class="user-name">{{ $name }}</span></div>
+                <div class="user-info">
+                  <p>
+                    Jabatan: {{ strtoupper(str_replace('_', ' ', empty($jabatan) ? ' ' : $jabatan)) }} {{ ucwords(str_replace('_', ' ', empty($asal) ? ' ' : $asal)) }}
+                  </p>
+                  <p>
+                    Hak: {{ ucwords(str_replace('_', ' ', $role)) }}
+                  </p>
+                </div>
+              </div>
       </div> <!--end::Container-->
   </div> <!--end::App Content Header--> <!--begin::App Content-->
   <div class="app-content"> <!--begin::Container-->

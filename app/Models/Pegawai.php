@@ -17,6 +17,27 @@ class Pegawai extends Model
     protected $table = 'pegawai';
 
     /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'pid'; // Ubah ini sesuai dengan nama primary key di tabel pegawai Anda
+
+    /**
+     * Indicates if the model's ID is auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true; // Ubah menjadi false jika primary key bukan auto-increment
+
+    /**
+     * The data type of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'int'; // Ubah jika tipe data primary key bukan integer
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

@@ -12,8 +12,8 @@ if (!function_exists('format_jabatan')) {
     }
 }
 
-if (!function_exists('format_status')) {
-    function format_status($status) {
-        return ucwords(str_replace('_', ' ', $status));
+if (!function_exists('format_jk')) {
+    function format_jk($jk) {
+        return ucwords(str_replace('_', ' ', $jk));
     }
 }

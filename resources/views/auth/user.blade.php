@@ -4,7 +4,7 @@
 
 @auth
 <head>
-    <title>@php $title=" | ADMIN ONLY | Akun User"@endphp</title>
+    <title>@php $title=" | ADMIN | Akun User"@endphp</title>
   </head>
 
 <main class="app-main"> <!--begin::App Content Header-->
@@ -53,7 +53,7 @@
                                 </thead>
                                 <tbody>
                                     <tr class="align-middle">
-                                        @php $rowNumber = 1; @endphp
+                                        @php $rowNumber = $userlist->firstItem(); @endphp
                                         @forelse ($userlist as $view)
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{ucwords(str_replace('_', ' ', $view->name))}}</td>
@@ -72,6 +72,9 @@
                                 </tbody>
                             </table>
                         </div> <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            {{ $userlist->render('layouts/pagination') }}
+                        </div>
                     </div> <!-- /.card -->
                 </div> <!-- /.col -->
             </div> <!--end::Row-->

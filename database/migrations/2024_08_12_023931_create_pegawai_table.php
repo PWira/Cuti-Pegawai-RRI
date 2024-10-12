@@ -18,7 +18,6 @@ class CreatePegawaiTable extends Migration
             $table->string('nama');
             $table->enum('jk',['laki_laki','perempuan']);
             $table->integer('umur');
-            $table->enum('status',['belum_menikah','sudah_menikah','cerai_hidup','cerai_mati']);
             $table->string('nip')->unique();
             $table->string('jabatan');
             $table->string('unit_kerja');

@@ -98,9 +98,8 @@ class PegawaiSeeder extends Seeder
         $lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Rodriguez', 'Wilson'];
 
         $cities = ['Jakarta', 'Palembang', 'Medan', 'Yogyakarta'];
-        $jobs = ['penyiaran_pro_1', 'penyiaran_pro_2', 'penyiaran_pro_3', 'penyiaran_pro_4', 'Keuangan', 'IT'];
+        $jobs = ['pranata_siaran_ahli_madya','pranata_siaran_ahli_muda','teknisi_siaran_ahli_madya','teknisi_siaran_ahli_muda',];
         $genders = ['laki_laki', 'perempuan'];
-        $statuses = ['belum_menikah', 'sudah_menikah','cerai_hidup','cerai_mati'];
 
         foreach ($cities as $city) {
             for ($i = 1; $i <= 10; $i++) {
@@ -114,7 +113,6 @@ class PegawaiSeeder extends Seeder
                     'nama' => $firstName . ' ' . $lastName,
                     'by_id' => 1,
                     'jk' => $gender,
-                    'status' => $statuses[array_rand($statuses)],
                     'umur' => rand(20, 60),
                     'nip' => $nip,
                     'jabatan' => $jobs[array_rand($jobs)],
