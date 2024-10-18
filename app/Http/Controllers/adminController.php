@@ -81,8 +81,8 @@ class adminController extends Controller
         return view('auth.user', compact('userlist'));
     }
 
-    public function hapusUser($pid){
-        DB::table("users")->where('pid','=',$pid)->delete();
+    public function hapusUser($id){
+        DB::table("users")->where('id','=',$id)->delete();
 
         return redirect('admin/user');
     }

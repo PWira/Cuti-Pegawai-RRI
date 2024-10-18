@@ -117,9 +117,9 @@
         if(jabatan.value === "admin"){
           role.value = "Admin";
         }else if (jabatan.value === "direktur" || jabatan.value === "kepala_rri") {
-            role.value = "Super User";
-        } else if (jabatan.value === "sdm") {
             role.value = "User";
+        } else if (jabatan.value === "sdm") {
+            role.value = "Super User";
         } else {
             role.value = "User";
         }
