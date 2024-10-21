@@ -6,7 +6,50 @@
     <title>@php $title=" | Login"@endphp</title>
 </head>
 
-<body class="login-page bg-body-secondary">
+{{-- <head>
+  <title>@php $title=" | Login"@endphp</title>
+  <style>
+      body, html {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+      }
+      .bg-login {
+          height: 100vh;
+          width: 100vw;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          overflow: hidden;
+      }
+      .scrolling-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 300%;
+          height: 100%;
+          background-image: url("{{ asset('/assets/img/rri-logo-3.png') }}");
+          background-repeat: space;
+          background-size: auto 80%;
+          background-position: center;
+          opacity: 0.3;
+          animation: scrollBackground 30s linear infinite;
+      }
+      @keyframes scrollBackground {
+          0% {
+              transform: translateX(0);
+          }
+          100% {
+              transform: translateX(-33.33%); /* Adjusted for new width */
+          }
+      }
+  </style>
+</head> --}}
+
+<body class="login-page bg-body-secondary bg-login">
+  <div class="scrolling-background"></div>
   <div class="login-box">
       <div class="card card-outline card-primary">
           <div class="card-header"> <a href="{{ route('home') }}" class="link-dark text-center link-offset-2 link-opacity-100 link-opacity-50-hover">

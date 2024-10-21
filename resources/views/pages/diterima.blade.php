@@ -93,9 +93,9 @@
                                                                 <span>
                                                                     <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
-                                                                @if ($role === "super_user" || $role === "admin")
+                                                                {{-- @if ($role === "super_user" || $role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                                @endif
+                                                                @endif --}}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -187,9 +187,9 @@
                                                         <span>
                                                             <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                         </span>
-                                                        @if ($role === "super_user" || $role === "admin")
+                                                        {{-- @if ($role === "super_user" || $role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        @endif
+                                                        @endif --}}
                                                     </p>
                                                 </div>
                                             </div>

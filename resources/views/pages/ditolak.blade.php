@@ -73,7 +73,7 @@
                                                 </td>
                                                 <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
                                                 <td>{{ucwords($view->konfirmasi)}}</td>
-                                                {{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y')}}
+                                                <td>{{ \Carbon\Carbon::parse($view->created_at)->locale('id')->translatedFormat('d F Y')}}</td>
                                                 <td class="text-center">
                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">View File <i class="bi bi-file-text-fill"></i></a>
                                                     <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
@@ -97,9 +97,9 @@
                                                                 <span>
                                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                                 </span>
-                                                                @if ($role === "super_user" || $role === "admin")
+                                                                {{-- @if ($role === "super_user" || $role === "admin")
                                                                     <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                                @endif
+                                                                @endif --}}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -190,9 +190,9 @@
                                                         <span>
                                                             <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
                                                         </span>
-                                                        @if ($role === "super_user" || $role === "admin")
+                                                        {{-- @if ($role === "super_user" || $role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        @endif
+                                                        @endif --}}
                                                     </p>
                                                 </div>
                                             </div>

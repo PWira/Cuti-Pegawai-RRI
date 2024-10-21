@@ -107,9 +107,9 @@
                                                                     <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                                 @endif
                                                             </span>
-                                                        @elseif($role === "super_user" || $role === "admin")
+                                                        {{-- @elseif($role === "super_user" || $role === "admin")
                                                             <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        @endif
+                                                        @endif --}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -207,9 +207,9 @@
                                                             {{-- <button class="btn btn-info" onclick="balasanSakit('diterima', {{ $view->bid }})">Diterima <i class="bi bi-check"></i></button>
                                                             <button class="btn btn-danger" onclick="balasanSakit('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                         </span>
-                                                    @elseif ($role === "super_user" || $role === "admin")
+                                                    {{-- @elseif ($role === "super_user" || $role === "admin")
                                                         <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                    @endif
+                                                    @endif --}}
                                                     </p>
                                                 </div>
                                             </div>

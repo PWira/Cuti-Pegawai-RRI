@@ -51,7 +51,7 @@ class downloadDoc extends Controller
             ->join('users', 'pengajuan.user_id', '=', 'users.id')
             ->select(
                 'pengajuan.*',
-                'pegawai.nama as nama_pekerja',
+                'pegawai.nama as nama_pegawai',
                 'pegawai.nip',
                 'pegawai.jabatan',
                 'pegawai.unit_kerja as unit_kerja',
