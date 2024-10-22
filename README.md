@@ -30,7 +30,7 @@ AdminLTE 4 for Laravel 11.
 - make user to run migration with --seed at the end
 - keymaster credential
     - k@m.null
-    - 1qazse4765rfvbhu-09ijm,.
+    - adminkey135
 
 ## Create User Account
 

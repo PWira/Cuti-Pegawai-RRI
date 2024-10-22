@@ -122,7 +122,7 @@
                                             @elseif ($cekstatus === "sakit")
                                                 <span class="text-success">{{ucwords($view->konfirmasi)}}</span>
                                             @elseif ($cekstatus === "diterima")
-                                                <span class="text-success">{{ucwords($view->konfirmasi)}}</span>
+                                                <span class="text-info">{{ucwords($view->konfirmasi)}}</span>
                                             @elseif ($cekstatus === "ditolak")
                                                 <span class="text-danger">{{ucwords($view->konfirmasi)}}</span>
                                             @endif

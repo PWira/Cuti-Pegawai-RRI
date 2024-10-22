@@ -108,8 +108,8 @@
                                                                 @endif
                                                             </span>
                                                         {{-- @elseif($role === "super_user" || $role === "admin")
-                                                            <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        @endif --}}
+                                                            <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a> --}}
+                                                        @endif
                                                         </p>
                                                     </div>
                                                 </div>
@@ -208,8 +208,8 @@
                                                             <button class="btn btn-danger" onclick="balasanSakit('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                         </span>
                                                     {{-- @elseif ($role === "super_user" || $role === "admin")
-                                                        <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                    @endif --}}
+                                                        <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a> --}}
+                                                    @endif
                                                     </p>
                                                 </div>
                                             </div>

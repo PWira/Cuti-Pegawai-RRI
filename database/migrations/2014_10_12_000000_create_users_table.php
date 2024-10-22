@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('asal');
             $table->string('jabatan');
-            $table->string('role',['admin','super_user','user']);
+            $table->enum('role',['admin','super_user','user']);
             $table->rememberToken();
             $table->timestamps();
         });
