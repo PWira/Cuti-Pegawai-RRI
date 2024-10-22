@@ -61,6 +61,7 @@ class downloadDoc extends Controller
                 'users.asal as oleh_asal'
             )
             ->where('unit_kerja', $asal)
+            ->where('pengajuan.konfirmasi', 'diterima')
             ->whereRaw('MONTH(pengajuan.updated_at) = ?', [$month])
             ->whereRaw('YEAR(pengajuan.updated_at) = ?', [$year])
             ->orderBy('pengajuan.updated_at', 'asc');
