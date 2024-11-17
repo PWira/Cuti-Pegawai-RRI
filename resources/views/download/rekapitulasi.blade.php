@@ -34,7 +34,8 @@
     </style>
 </head>
 <body>
-    <h2>USULAN PENGAJUAN CUTI PEGAWAI : BULAN @foreach ($blanko as $index => $format){{ strtoupper(\Carbon\Carbon::parse($format->updated_at)->locale('id')->translatedFormat('F Y')) }}@endforeach</h2>
+    {{-- <h2>USULAN PENGAJUAN CUTI PEGAWAI : BULAN {{ strtoupper(\Carbon\Carbon::parse($blanko->first()->updated_at)->locale('id')->translatedFormat('F Y')) }}</h2> --}}
+    <h2>USULAN PENGAJUAN CUTI PEGAWAI : BULAN {{ strtoupper($monthName)}} {{ $year }}</h2>
     <table>
         <tr>
             <th>NO</th>
