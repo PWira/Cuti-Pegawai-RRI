@@ -27,9 +27,9 @@ class downloadDoc extends Controller
         $id = $user->id;
         $role = $user->role;
         $asal = $user->asal;
-        $jabatan = $user->jabatan;
+        $roles = $user->roles;
 
-        return compact('id', 'role', 'asal', 'jabatan');
+        return compact('id', 'role', 'asal', 'roles');
     }
 
     public function generatePDF(Request $req)
@@ -57,7 +57,7 @@ class downloadDoc extends Controller
                 'pegawai.unit_kerja as unit_kerja',
                 'pegawai.masa_kerja',
                 'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
+                'users.roles as oleh_roles',
                 'users.asal as oleh_asal'
             )
             ->where('unit_kerja', $asal)

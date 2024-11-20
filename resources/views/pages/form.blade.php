@@ -54,8 +54,14 @@
                         </div>
                         <div class="col-md-6">
                             <label for="unit_kerja" class="form-label">Unit Kerja RRI</label>
-                            <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" placeholder="" readonly required>
-                        </div>
+                            @if($blanko->isNotEmpty())
+                                <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" 
+                                       value="{{ $blanko->first()->unit_kerja }}" readonly required>
+                            @else
+                                <input type="text" class="form-control" name="unit_kerja" id="unit_kerja" 
+                                       value="Data tidak ditemukan" readonly required>
+                            @endif
+                        </div>                        
                         <div class="col-md-3">
                             <label for="tahun_kerja" class="form-label">Masa Kerja : Tahun</label>
                             <input type="text" class="form-control" name="tahun_kerja" id="tahun_kerja" placeholder="" readonly required>

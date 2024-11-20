@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pegawai extends Model
+class UnitKerja extends Model
 {
     use HasFactory;
 
@@ -14,14 +14,14 @@ class Pegawai extends Model
      *
      * @var string
      */
-    protected $table = 'pegawai';
+    protected $table = 'unit_kerja';
 
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'pid'; // Ubah ini sesuai dengan nama primary key
+    protected $primaryKey = 'unit_id'; // Ubah ini sesuai dengan nama primary key
 
     /**
      * Indicates if the model's ID is auto-incrementing.
@@ -43,15 +43,7 @@ class Pegawai extends Model
      * @var array
      */
     protected $fillable = [
-        'nama',
-        'by_id',
-        'jk',
-        'umur',
-        'status',
-        'nip',
-        'jabatan',
-        'pegawai_unit_id',
-        'masa_kerja',
+        'unit_kerja',
     ];
 
     /**

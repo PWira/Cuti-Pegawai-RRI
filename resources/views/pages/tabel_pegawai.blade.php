@@ -33,7 +33,7 @@
                         <div class="card-header text-bg-success">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">DATA PEGAWAI</h3>
-                                @if ($role === 'super_user')
+                                @if ($hak === 'super_user')
                                 {{-- <a href="{{ url('doc-pegawai') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a> --}}
                                 @endif
                             </div>
@@ -50,7 +50,7 @@
                                         <th style="">Jabatan</th>
                                         <th style="">Unit Kerja</th>
                                         <th style="">Masa Kerja</th>
-                                        @if ($role === 'admin' || $role === 'super_user')
+                                        @if ($hak === 'admin' || $hak === 'super_user')
                                         <th style="">Selengkapnya</th>
                                         @endif
                                     </tr>
@@ -65,7 +65,7 @@
                                         <td>{{$view->umur}}</td>
                                         <td>{{$view->nip}}</td>
                                         <td>{{ format_jabatan($view->jabatan) }}</td>
-                                        <td>{{$view->unit_kerja}}</td>
+                                        <td>{{ucwords($view->unit_kerja)}}</td>
                                         <td>
                                             @php
                                                 $years = floor($view->masa_kerja / 12);
@@ -73,7 +73,7 @@
                                             @endphp
                                             {{ $years }} tahun {{ $months }} bulan
                                         </td>
-                                        @if ($role === "super_user" || $role ==="admin")
+                                        @if ($hak === "super_user" || $hak ==="admin")
                                             <td>
                                                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->pid }}" aria-expanded="false" aria-controls="collapse{{ $view->pid }}">
                                                     Selengkapnya <i class="bi bi-arrow-down"></i>
@@ -84,11 +84,11 @@
                                             <td colspan="100">
                                                 <div class="collapse" id="collapse{{ $view->pid }}">
                                                     <div class="card card-body">
-                                                        <span class="d-flex justify-content-between">
-                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
-                                                        </span>
+                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} 
+                                                            <br>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} 
+                                                            <br>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
                                                         <p class="d-flex justify-content-between">
-                                                            @if ($role === "super_user")
+                                                            @if ($hak === "super_user")
                                                                 <a href="{{ route('edit-pegawai', $view->pid) }}" class="btn btn-primary">Edit</a>
                                                                 <a class="btn btn-danger" onclick="pegawaiDelete({{$view->pid}})">HAPUS <i class="bi bi-trash"></i></a>
                                                             @endif

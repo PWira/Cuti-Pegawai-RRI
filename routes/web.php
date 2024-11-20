@@ -19,9 +19,7 @@ use App\Http\Controllers\downloadDoc;
 
 Route::group(['middleware' => 'admin'], function () {
     
-    Route::get('/admin/create-user', function () {
-        return view('auth.createUser');
-    });
+    Route::get('/admin/create-user', [adminController::class, 'inputUser']);
 
     Route::get('/admin/user',[adminController::class, 'daftarUser']);
 
@@ -40,15 +38,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('data-pegawai', function () {
-        return view('pages.pegawai');
-    });
+    Route::get('data-pegawai', [HomeController::class, 'dataPegawai']);
     Route::post('daftar-pegawai',[HomeController::class, 'daftarPegawai']);
 
     Route::get('pengajuan/semua', [downloadDoc::class, 'pengajuanSemua']);
-    Route::get('pengajuan/diterima', [downloadDoc::class, 'pengajuanDiterima']);
-    Route::get('pengajuan/ditolak', [downloadDoc::class, 'pengajuanDitolak']);
-    Route::get('/doc-pegawai', [downloadDoc::class, 'dataPegawai']);
+    // Route::get('pengajuan/diterima', [downloadDoc::class, 'pengajuanDiterima']);
+    // Route::get('pengajuan/ditolak', [downloadDoc::class, 'pengajuanDitolak']);
+    // Route::get('/doc-pegawai', [downloadDoc::class, 'dataPegawai']);
 
     Route::get('pengajuan-anda',[HomeController::class, 'pengajuanSaya']);
     Route::get('table-pengajuan',[HomeController::class, 'pengajuanCuti']);

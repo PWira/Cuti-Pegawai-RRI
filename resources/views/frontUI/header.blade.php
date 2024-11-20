@@ -22,8 +22,8 @@
                         <img src="{{ asset('/assets/img/avatar5.png') }}" class="rounded-circle shadow" alt="User Image">
                         <p>
                             {{$name}}
-                            <small>Jabatan : {{ strtoupper(str_replace('_', ' ', empty($jabatan) ? ' ' : $jabatan)) }} {{ ucwords(str_replace('_', ' ', empty($asal) ? ' ' : $asal)) }}</small>
-                            <small>Hak : {{ucwords(str_replace('_', ' ',$role))}}</small>
+                            <small>{{ strtoupper(str_replace('_', ' ', empty($roles) ? ' ' : $roles)) }} {{ ucwords(str_replace('_', ' ', empty($user_nip) ? ' ' : $user_nip)) }}</small>
+                            <small>Hak : {{ucwords(str_replace('_', ' ',$hak))}}</small>
                         </p>
                     </li>
                     @endauth

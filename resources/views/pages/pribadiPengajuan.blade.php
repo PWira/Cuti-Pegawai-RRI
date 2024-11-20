@@ -35,7 +35,6 @@
                         <div class="card-header text-bg-white">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">PENGAJUAN CUTI ANDA</h3>
-                                @if ($role === 'super_user')
                                 <div class="d-flex align-items-center">
                                     <div class="col-md-4">
                                         <select id="monthSelect" class="form-select">
@@ -61,7 +60,6 @@
                                         <a href="#" id="downloadDoc" class="btn btn-primary">Download PDF <i class="bi bi-file-text-fill"></i></a>
                                     </div>
                                 </div>                                
-                                @endif
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
@@ -102,12 +100,12 @@
                                             @php $rowNumber = 1; @endphp
                                             @forelse ($blanko as $view)
                                             @php $cekstatus = $view->konfirmasi @endphp
-                                            @if($view->oleh_user === $name && $view->oleh_asal === $asal && $view->oleh_jabatan === $jabatan)
+                                            @if($view->oleh_user === $name && $view->oleh_nip === $user_nip && $view->oleh_jabatan === $user_jabatan)
                                             <td>{{ $rowNumber++ }}</td>
                                             <td>{{$view->nama_pekerja}}</td>
                                             <td>{{$view->nip}}</td>
                                             <td>{{ format_jabatan($view->jabatan) }}</td>
-                                            <td>{{ucfirst($view->unit_kerja)}}</td>
+                                            <td>{{ucfirst($view->nama_unit_kerja)}}</td>
                                             <td>
                                                 @php
                                                     $years = floor($view->masa_kerja / 12);
@@ -145,18 +143,23 @@
                                             <td colspan="100">
                                                 <div class="collapse" id="collapse{{ $view->bid }}">
                                                     <div class="card card-body">
-                                                        <span class="d-flex justify-content-between">
-                                                            <p>Dibuat Oleh : {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
-                                                        </span>
-                                                        <span class="d-flex">
-                                                            <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
-                                                            <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                            <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                            <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
-                                                        </span>    
-                                                        <span class="d-flex">                                                    
-                                                        <p>Alasan : {{ $view->alasan }}</p>
-                                                        <p style="margin-left: 40px;">Keterangan Cuti (untuk rekpitulasi) : {{ $view->keterangan }}</p>
+                                                        <div class="d-flex content-between">
+                                                            <div class="col-md-3">
+                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }}</p>
+                                                                <p>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} </p>
+                                                                <p>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
+                                                                <p>Alamat Selama Cuti: {{ $view->tujuan_cuti }}</p>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <p>Mulai Cuti: {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p>Selesai Cuti: {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) + 1 }} hari</p>
+                                                                <p>Alasan: {{ $view->alasan }}</p>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <p>Keterangan Cuti (untuk rekpitulasi) : {{ $view->keterangan }}</p>
+                                                            </div>
+                                                        </div>
                                                         </span>
                                                         <span class="d-flex justify-content-between">
                                                         <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal<i class="bi bi-file-text-fill"></i></a>

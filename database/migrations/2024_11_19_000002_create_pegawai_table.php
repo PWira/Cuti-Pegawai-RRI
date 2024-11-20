@@ -13,15 +13,16 @@ class CreatePegawaiTable extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id("pid");
-            $table->unsignedBigInteger('by_id');
-            $table->foreign('by_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('nama');
+            $table->string('nama', 50);
+            $table->string('nip', 20)->unique();
             $table->enum('jk',['laki_laki','perempuan']);
-            $table->integer('umur');
-            $table->string('nip')->unique();
-            $table->string('jabatan');
-            $table->string('unit_kerja');
-            $table->integer('masa_kerja');
+            $table->integer('umur')->length(2);
+            $table->string('jabatan', 40);
+            $table->unsignedBigInteger('pegawai_unit_id');
+            $table->foreign('pegawai_unit_id')->references('unit_id')->on('unit_kerja');
+            $table->integer('masa_kerja')->length(5);
+            $table->unsignedBigInteger('by_id')->nullable();
+            $table->foreign('by_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id("bid");
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('pegawai_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('pegawai_id')->references('pid')->on('pegawai')->onDelete('cascade');
-            $table->string('jenis_cuti');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('pegawai_id')->references('pid')->on('pegawai');
+            $table->string('jenis_cuti', 40);
             $table->date('mulai_cuti');
             $table->date('selesai_cuti');
             $table->text('tujuan_cuti');
             $table->text('alasan');
-            $table->string('blanko_ditangguhkan');
+            $table->text('blanko_ditangguhkan');
             $table->text('sakit_ditangguhkan')->nullable();
             $table->text('blanko_diterima')->nullable();
             $table->text('blanko_ditolak')->nullable();

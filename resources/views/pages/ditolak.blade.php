@@ -33,9 +33,6 @@
                         <div class="card-header text-bg-danger">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">CUTI DITOLAK</h3>
-                                @if ($role === 'super_user')
-                                <a href="{{ url('pengajuan/ditolak') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a>
-                                @endif
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
@@ -63,7 +60,7 @@
                                                 <td>{{$view->nama_pekerja}}</td>
                                                 <td>{{$view->nip}}</td>
                                                 <td>{{ format_jabatan($view->jabatan) }}</td>
-                                                <td>{{ucfirst($view->unit_kerja)}}</td>
+                                                <td>{{ucfirst($view->nama_unit_kerja)}}</td>
                                                 <td>
                                                     @php
                                                         $years = floor($view->masa_kerja / 12);
@@ -83,16 +80,20 @@
                                                 <td colspan="100">
                                                     <div class="collapse" id="collapse{{ $view->bid }}">
                                                         <div class="card card-body">
-                                                            <span class="d-flex justify-content-between">
-                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
-                                                            </span>
-                                                            <span class="d-flex">
-                                                                <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
-                                                                <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                                <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                                <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
-                                                            </span>
-                                                            <p>Alasan: {{ $view->alasan }}</p>
+                                                            <div class="d-flex content-between">
+                                                                <div class="col-md-3">
+                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }}</p>
+                                                                <p>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} </p>
+                                                                <p>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
+                                                                <p>Alamat Selama Cuti: {{ $view->tujuan_cuti }}</p>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                <p>Mulai Cuti: {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p>Selesai Cuti: {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                                <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) + 1 }} hari</p>
+                                                                <p>Alasan: {{ $view->alasan }}</p>
+                                                                </div>
+                                                            </div>
                                                             <p class="d-flex justify-content-between">
                                                                 <span>
                                                                     <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>
@@ -149,14 +150,14 @@
                             </thead>
                                 <tbody>
                                     <tr class="align-middle">
-                                        @php $rowNumber = 1; @endphp
+                                        @php $rowNumber = $blanko->firstItem(); @endphp
                                         @forelse ($blanko as $view)
                                         @if ($view->jenis_cuti=="cuti_sakit" && $view->konfirmasi=="ditolak")
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
                                         <td>{{$view->nip}}</td>
                                         <td>{{ format_jabatan($view->jabatan) }}</td>
-                                        <td>{{ucfirst($view->unit_kerja)}}</td>
+                                        <td>{{ucfirst($view->nama_unit_kerja)}}</td>
                                         <td>
                                             @php
                                                 $years = floor($view->masa_kerja / 12);
@@ -176,16 +177,20 @@
                                         <td colspan="100">
                                             <div class="collapse" id="collapse{{ $view->bid }}">
                                                 <div class="card card-body">
-                                                    <span class="d-flex justify-content-between">
-                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }} {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} {{ucwords(str_replace('_', ' ', $view->oleh_asal))}}</p>
-                                                    </span>
-                                                    <span class="d-flex">
-                                                        <p>Alamat Selama Cuti : {{ $view->tujuan_cuti}}</p>
-                                                        <p style="margin-left: 40px;">Mulai Cuti : {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                        <p style="margin-left: 40px;">Selesai Cuti : {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                        <p style="margin-left: 40px;">Lamanya Cuti : {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti)))+1 }} hari</p>
-                                                    </span>
-                                                    <p>Alasan: {{ $view->alasan }}</p>
+                                                    <div class="d-flex content-between">
+                                                        <div class="col-md-3">
+                                                        <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }}</p>
+                                                        <p>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} </p>
+                                                        <p>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
+                                                        <p>Alamat Selama Cuti: {{ $view->tujuan_cuti }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                        <p>Mulai Cuti: {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p>Selesai Cuti: {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                        <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) + 1 }} hari</p>
+                                                        <p>Alasan: {{ $view->alasan }}</p>
+                                                        </div>
+                                                    </div>
                                                     <p class="d-flex justify-content-between">
                                                         <span>
                                                             <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal <i class="bi bi-file-text-fill"></i></a>

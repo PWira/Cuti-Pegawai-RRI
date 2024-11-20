@@ -41,14 +41,12 @@
                                         <th style="width: 2%">#</th>
                                         <th style="">Nama Akun</th>
                                         <th style="">E-mail</th>
+                                        <th style="">NIP</th>
+                                        <th style="">Unit Kerja</th>
                                         <th style="">Hak</th>
                                         <th style="">jabatan</th>
-                                        <th style="">Asal</th>
                                         <th style="">Akun dibuat</th>
-                                        {{-- <th style="width: 10%">Status</th> --}}
-                                        @if ($role === 'admin')
                                         <th style="">ADMIN CONTROL</th>
-                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,9 +56,10 @@
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{ucwords(str_replace('_', ' ', $view->name))}}</td>
                                         <td>{{$view->email}}</td>
-                                        <td>{{ ucwords(str_replace('_', ' ', $view->role)) }}</td>
-                                        <td>{{ strtoupper(format_jabatan($view->jabatan)) }}</td>
-                                        <td>{{ucwords($view->asal)}}</td>
+                                        <td>{{ucwords($view->user_nip)}}</td>
+                                        <td>{{ucwords($view->unit_kerja)}}</td>
+                                        <td>{{ ucwords(str_replace('_', ' ', $view->hak)) }}</td>
+                                        <td>{{ strtoupper(format_jabatan($view->user_jabatan)) }}</td>
                                         <td>{{$view->created_at}}</td>
                                         <td><a class="btn btn-danger" onclick="userDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a></td>
                                         </tr>

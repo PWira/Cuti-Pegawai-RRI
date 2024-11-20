@@ -9,7 +9,7 @@
   </head>
 
 <body>
-    <div class="card card-info card-outline mb-4">
+    <div class="card card-success card-outline mb-4">
         <div class="card-header" style="text-align:center;">
             <h3 class="">Data Pegawai</h3>
         </div>
@@ -64,15 +64,12 @@
                         </div>
                         <div class="col-md-6">
                             <label for="unit_kerja" class="form-label">Unit Kerja RRI</label>
-                            <select class="form-select form-select-sm" id="unit_kerja" name="unit_kerja" required>
-
-                                {{-- <option value="">Pilih Unit Kerja</option>
-                                <option value="Jakarta">Jakarta</option>
-                                <option value="Palembang">Palembang</option>
-                                <option value="Medan">Medan</option>
-                                <option value="Yogyakarta">Yogyakarta</option> --}}
-
-                                <option value="{{$asal}}">{{ucwords($asal)}}</option>
+                            <select class="form-select form-select-sm" id="unit_kerja" name="pegawai_unit_id" required>
+                                @forelse($unit_kerja as $unit)
+                                    <option value="{{ $unit->unit_id }}">{{ $unit->unit_kerja }}</option>
+                                @empty
+                                    <option value="" class="text-danger text-center">Kosong!</option>
+                                @endforelse
                             </select>
                             <div class="valid-feedback"></div>
                         </div>

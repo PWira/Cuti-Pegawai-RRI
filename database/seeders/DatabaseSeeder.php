@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Pegawai;
+use App\Models\UnitKerja;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,8 +16,23 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run(){
+        $this->call(UnitKerjaSeeder::class);
         $this->call(KeymasterUserSeeder::class);
-        $this->call(PegawaiSeeder::class);
+        // $this->call(PegawaiSeeder::class);
+    }
+}
+
+class UnitKerjaSeeder extends Seeder
+{
+    public function run(){
+
+        $daerah=['jakarta','bandung','surabaya','medan','makassar','semarang','yogyakarta','denpasar','palembang','pontianak','manado','ambon','jayapura','banjarmasin','mataram',];
+
+        foreach ($daerah as $namaDaerah) {
+            UnitKerja::create([
+                'unit_kerja' => $namaDaerah,
+            ]);
+        }
     }
 }
 
@@ -31,55 +47,57 @@ class KeymasterUserSeeder extends Seeder
     {
         User::create([
             'name' => 'Keymaster',
+            'user_nip'=>'101',
+            'user_unit_id'=>'1',
+            'user_jabatan'=>'',
             'email' => 'k@m.null',
             'password' => Hash::make('adminkey135'),
-            'role' => 'admin',
-            'jabatan'=> 'keymaster',
-            'asal'=> 'keymaster',
+            'roles'=> 'admin',
+            'hak' => 'admin',
         ]);
 
-        $nama = [
-            'Andi',
-            'Dewi',
-            'Budi',
-            'Siti',
-            'Rudi',
-            'Lina',
-            'Toni',
-            'Rina',
-            'Agus',
-            'Sri'
-        ];        
-        $peringkat =['kepala_rri','direktur','sdm'];
-        $role =['user','super_user'];
-        $kota =['jakarta', 'palembang', 'medan', 'yogyakarta'];
+        // $nama = [
+        //     'Andi',
+        //     'Dewi',
+        //     'Budi',
+        //     'Siti',
+        //     'Rudi',
+        //     'Lina',
+        //     'Toni',
+        //     'Rina',
+        //     'Agus',
+        //     'Sri'
+        // ];        
+        // $peringkat =['kepala_rri','direktur','sdm'];
+        // $role =['user','super_user'];
+        // $kota =['jakarta', 'palembang', 'medan', 'yogyakarta'];
 
-        foreach ($role as $akses) {
-            for ($i = 1; $i <= 10; $i++) {
-                $name = $nama[array_rand($nama)];
-                $email = $nama[array_rand($nama)].  rand(0,999).'@email.com';
-                // $password = $nama[array_rand($nama)].rand(0,999);
-                $password = "12345678";
-                $jabatan = $peringkat[array_rand(array_keys($peringkat))];
-                $asal = $kota[array_rand(array_keys($kota))];
-                if ($jabatan == 'direktur' || $jabatan == 'kepala_rri'){
-                    $hak = $role[0];
-                }elseif ($jabatan == 'sdm') {
-                    $hak = $role[1];
-                }else{
-                    break;
-                }
+        // foreach ($role as $akses) {
+        //     for ($i = 1; $i <= 10; $i++) {
+        //         $name = $nama[array_rand($nama)];
+        //         $email = $nama[array_rand($nama)].  rand(0,999).'@email.com';
+        //         // $password = $nama[array_rand($nama)].rand(0,999);
+        //         $password = "12345678";
+        //         $jabatan = $peringkat[array_rand(array_keys($peringkat))];
+        //         $asal = $kota[array_rand(array_keys($kota))];
+        //         if ($jabatan == 'direktur' || $jabatan == 'kepala_rri'){
+        //             $hak = $role[0];
+        //         }elseif ($jabatan == 'sdm') {
+        //             $hak = $role[1];
+        //         }else{
+        //             break;
+        //         }
 
-                User::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => Hash::make($password),
-                    'role' => $hak,
-                    'jabatan'=> $jabatan,
-                    'asal'=> $asal,
-                ]);
-            }
-        }
+        //         User::create([
+        //             'name' => $name,
+        //             'email' => $email,
+        //             'password' => Hash::make($password),
+        //             'role' => $hak,
+        //             'jabatan'=> $jabatan,
+        //             'asal'=> $asal,
+        //         ]);
+        //     }
+        // }
 
     }
 }

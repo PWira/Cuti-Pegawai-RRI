@@ -32,26 +32,28 @@ class HomeController extends Controller
 
         $user = Auth::user();
         $id = $user->id;
-        $role = $user->role;
-        $asal = $user->asal;
-        $jabatan = $user->jabatan;
+        $hak = $user->hak;
+        $nip = $user->user_nip;
+        $user_unit_id = $user->user_unit_id;
+        $roles = $user->roles;
 
-        return compact('id', 'role', 'asal', 'jabatan');
+        return compact('id', 'hak', 'nip', 'roles','user_unit_id');
     }
 
     public function daftarPegawai(Request $req){
 
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
+
+
     
         $tahun_kerja = $req->tahun_kerja;
         $bulan_kerja = $req->bulan_kerja;
         $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
-    
-        $unitcase = Str::lower($req->unit_kerja);
     
         $daftar = DB::table("pegawai")->insert([
             "nama" => $req->nama_pekerja,
@@ -59,205 +61,62 @@ class HomeController extends Controller
             "nip" => $req->nip,
             "jk" => $req->jk,
             "umur" => $req->umur,
-            "status" => $req->status,
             "jabatan" => $req->jabatan,
-            "unit_kerja" => $unitcase,
+            "pegawai_unit_id" => $req->pegawai_unit_id,
             "masa_kerja" => $total_bulan_kerja,
             "created_at" => now()
         ]);
     
         return redirect('pegawai')->with('success', 'Data pegawai berhasil dimasukan.');
     }
-    
-    public function pengajuanCuti()
-    {
-        $userData = $this->getUserData();
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
 
-        $query = DB::table('pengajuan')
-            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-            ->join('users', 'pengajuan.user_id', '=', 'users.id')
-            ->select(
-                'pengajuan.*',
-                'pegawai.nama as nama_pekerja',
-                'pegawai.nip',
-                'pegawai.jabatan',
-                'pegawai.unit_kerja',
-                'pegawai.masa_kerja',
-                'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
-            );
-
-        if ($role === 'admin') {
-            $blanko = $query->paginate(15);
-            // $konfirmasi = DB::table('pengajuan')->get();
-        } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
-            $blanko = $query->where('pegawai.unit_kerja', $asal)->paginate(15);
-            // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditangguhkan')->get();
-        } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
-            $blanko = $query->where('konfirmasi', 'sakit')->paginate(15);
-            // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'sakit')->get();
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
-
-        return view('pages.pengajuan', compact('blanko', 'role', 'jabatan'));
-    }
-
-    public function cutiDitolak()
+    public function dataPegawai()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
-        $query = DB::table('pengajuan')
-            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-            ->join('users', 'pengajuan.user_id', '=', 'users.id')
-            ->select(
-                'pengajuan.*',
-                'pegawai.nama as nama_pekerja',
-                'pegawai.nip',
-                'pegawai.jabatan',
-                'pegawai.unit_kerja',
-                'pegawai.masa_kerja',
-                'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
-            );
+        // Mengambil unit kerja yang sesuai dengan user_unit_id
+        $unit_kerja = DB::table('unit_kerja')
+            ->where('unit_id', $user_unit_id)
+            ->select('unit_id', 'unit_kerja')
+            ->get();
 
-        if ($role === 'admin') {
-            $blanko = $query->paginate(15);
-        } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
-            $blanko = $query->where('pegawai.unit_kerja', $asal)->paginate(15);
-        } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
-            $blanko = $query->where('jenis_cuti', 'cuti_sakit')->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
-        }
-
-        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
-
-        return view('pages.ditolak', compact('id', 'blanko', 'role', 'jabatan'));
-    }
-
-    public function cutiDiterima()
-    {
-        $userData = $this->getUserData();
-        $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
-
-        $query = DB::table('pengajuan')
-            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-            ->join('users', 'pengajuan.user_id', '=', 'users.id')
-            ->select(
-                'pengajuan.*',
-                'pegawai.nama as nama_pekerja',
-                'pegawai.nip',
-                'pegawai.jabatan',
-                'pegawai.unit_kerja',
-                'pegawai.masa_kerja',
-                'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
-            );
-
-            if ($role === 'admin') {
-                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-            } elseif ($role === 'super_user' || ($role === 'user' && $asal !== 'jakarta')) {
-                $blanko = $query->where('pegawai.unit_kerja', $asal)
-                ->where('pengajuan.konfirmasi', 'diterima')
-                ->paginate(15);
-            } elseif ($role === 'user' && $asal === 'jakarta' && $jabatan === 'direktur') {
-                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-            } else {
-                $blanko = collect(); // Return an empty collection if the role is not recognized
-            }
-
-        // if ($role === 'admin') {
-        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-        // } elseif ($role === 'user' || ($role === 'super_user' && $asal !== 'jakarta')) {
-        //     $blanko = $query->where('pegawai.unit_kerja', $asal)
-        //         ->where('pengajuan.konfirmasi', 'diterima')
-        //         ->paginate(15);
-        // } elseif ($role === 'super_user' && $asal === 'jakarta') {
-        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')
-        //         ->where(function ($query) {
-        //             $query->where('pengajuan.konfirmasi', 'diterima')
-        //                 ->Where('pengajuan.jenis_cuti', 'cuti_sakit');
-        //         })
-        //         ->paginate(15);
-        // } else {
-        //     $blanko = collect(); // Return an empty collection if the role is not recognized
-        // }
-
-        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
-
-        return view('pages.diterima', compact('id', 'blanko', 'role', 'jabatan'));
-    }
-
-    public function pengajuanSaya()
-    {
-        $userData = $this->getUserData();
-        $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
-
-        $query = DB::table('pengajuan')
-            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-            ->join('users', 'pengajuan.user_id', '=', 'users.id')
-            ->select(
-                'pengajuan.*',
-                'pegawai.nama as nama_pekerja',
-                'pegawai.nip',
-                'pegawai.jabatan',
-                'pegawai.unit_kerja',
-                'pegawai.masa_kerja',
-                'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
-            );
-
-        $blanko = $query->paginate(15);
-
-        $konfirmasi = DB::table('pengajuan')->get();
-
-        return view('pages.pribadiPengajuan', compact('id', 'blanko', 'konfirmasi', 'role', 'jabatan'));
+        return view('pages.pegawai', compact('id', 'hak', 'roles', 'unit_kerja'));
     }
 
     public function pegawai()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         $query = DB::table('pegawai')
             ->join('users', 'pegawai.by_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
             ->select(
-                'pegawai.*',
+                'pegawai.*', 
+                'unit_kerja.*',
                 'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
             );
 
-        if ($role === 'admin') {
+        if ($hak === 'admin') {
             $blanko = $query->paginate(15);
-        } elseif ($role === 'user' || $role === 'super_user') {
-            $blanko = $query->where('unit_kerja', $asal)->paginate(15);
+        } elseif ($hak === 'user' || $hak === 'super_user') {
+            $blanko = $query->where('pegawai_unit_id', $user_unit_id)->paginate(15);
         } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
+            $blanko = collect(); // Return an empty collection if the hak is not recognized
         }
 
-        return view('pages.tabel_pegawai', compact('id', 'blanko', 'role', 'jabatan'));
+        return view('pages.tabel_pegawai', compact('id', 'blanko', 'hak', 'roles'));
     }
 
     public function editPegawai($pid)
@@ -276,7 +135,7 @@ class HomeController extends Controller
             'nip' => 'required|string|max:255',
             'jk' => 'required|in:laki_laki,perempuan',
             'jabatan' => 'required|string',
-            'unit_kerja' => 'required|string',
+            'pegawai_unit_id' => 'required|string',
             'tahun_kerja' => 'required|integer',
             'bulan_kerja' => 'required|integer',
         ]);
@@ -286,41 +145,230 @@ class HomeController extends Controller
         $pegawai->nip = $validatedData['nip'];
         $pegawai->jk = $validatedData['jk'];
         $pegawai->jabatan = $validatedData['jabatan'];
-        $pegawai->unit_kerja = $validatedData['unit_kerja'];
+        $pegawai->pegawai_unit_id = $validatedData['pegawai_unit_id'];
         $pegawai->masa_kerja = ($validatedData['tahun_kerja'] * 12) + $validatedData['bulan_kerja'];
 
         $pegawai->save();
 
         return redirect('pegawai')->with('success', 'Data pegawai berhasil diperbarui');
     }
+    
+    public function pengajuanCuti()
+    {
+        $userData = $this->getUserData();
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
+
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.pegawai_unit_id',
+                'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
+                'users.name as oleh_user',
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
+            );
+
+            switch (true) {
+                case $hak === 'admin':
+                    $blanko = $query->paginate(15);
+                    break;
+            
+                case $hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1):
+                    $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)->paginate(15);
+                    break;
+            
+                case $hak === 'user' && $roles === 'direktur':
+                    $blanko = $query->where('konfirmasi', 'sakit')->paginate(15);
+                    break;
+            
+                default:
+                    $blanko = collect(); // Return an empty collection if no case matches
+                    break;
+            }            
+
+
+        return view('pages.pengajuan', compact('blanko', 'hak', 'roles'));
+    }
+
+    public function cutiDitolak()
+    {
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
+
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.pegawai_unit_id',
+                'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
+                'users.name as oleh_user',
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
+            );
+
+        if ($hak === 'admin') {
+            $blanko = $query->paginate(15);
+        } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+            $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)->paginate(15);
+        } elseif ($hak === 'user' && $roles === 'direktur') {
+            $blanko = $query->where('jenis_cuti', 'cuti_sakit')->paginate(15);
+        } else {
+            $blanko = collect(); // Return an empty collection if the hak is not recognized
+        }
+
+        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
+
+        return view('pages.ditolak', compact('id', 'blanko', 'hak', 'roles'));
+    }
+
+    public function cutiDiterima()
+    {
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
+
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.pegawai_unit_id',
+                'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
+                'users.name as oleh_user',
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
+            );
+
+            if ($hak === 'admin') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+                $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
+                ->where('pengajuan.konfirmasi', 'diterima')
+                ->paginate(15);
+            } elseif ($hak === 'user' && $roles === 'direktur') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+            } else {
+                $blanko = collect(); // Return an empty collection if the hak is not recognized
+            }
+
+        // if ($hak === 'admin') {
+        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
+        // } elseif ($hak === 'user' || ($hak === 'super_user' && $user_unit_id !== 1)) {
+        //     $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
+        //         ->where('pengajuan.konfirmasi', 'diterima')
+        //         ->paginate(15);
+        // } elseif ($hak === 'super_user') {
+        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')
+        //         ->where(function ($query) {
+        //             $query->where('pengajuan.konfirmasi', 'diterima')
+        //                 ->Where('pengajuan.jenis_cuti', 'cuti_sakit');
+        //         })
+        //         ->paginate(15);
+        // } else {
+        //     $blanko = collect(); // Return an empty collection if the hak is not recognized
+        // }
+
+        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
+
+        return view('pages.diterima', compact('id', 'blanko', 'hak', 'roles'));
+    }
+
+    public function pengajuanSaya()
+    {
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
+
+        $query = DB::table('pengajuan')
+            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+            ->select(
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.pegawai_unit_id',
+                'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
+                'users.name as oleh_user',
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
+            );
+
+        $blanko = $query->paginate(15);
+
+        $konfirmasi = DB::table('pengajuan')->get();
+
+        return view('pages.pribadiPengajuan', compact('id', 'blanko', 'konfirmasi', 'hak', 'roles'));
+    }
 
     public function form()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
-        if ($role === 'admin') {
-            $blanko = DB::table('pegawai')->paginate(15);
-        } elseif ($role === 'user' || $role === 'super_user') {
-            $blanko = DB::table('pegawai')->where('unit_kerja', $asal)->paginate(15);
+        if ($hak === 'admin') {
+            $blanko = DB::table('pegawai')
+                ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+                ->select('pegawai.*', 'unit_kerja.unit_kerja')
+                ->paginate(15);
+        } elseif ($hak === 'user' || $hak === 'super_user') {
+            $blanko = DB::table('pegawai')
+                ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
+                ->select('pegawai.*', 'unit_kerja.unit_kerja')
+                ->where('pegawai_unit_id', $user_unit_id)
+                ->paginate(15);
         } else {
-            $blanko = collect(); // Return an empty collection if the role is not recognized
+            $blanko = collect(); // Return an empty collection if the hak is not recognized
         }
-        // $blanko = DB::table('pegawai')->where('unit_kerja', $user->asal)->paginate(15);
 
-        return view('pages.form', compact('id', 'blanko' ,'role','jabatan'));
+        return view('pages.form', compact('id', 'blanko', 'hak', 'roles'));
     }
 
     public function rekapitulasi()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         $query = DB::table('pengajuan')
             ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
@@ -330,25 +378,26 @@ class HomeController extends Controller
                 'pegawai.nama as nama_pegawai',
                 'pegawai.nip',
                 'pegawai.jabatan',
-                'pegawai.unit_kerja as unit_kerja',
+                'pegawai.pegawai_unit_id as pegawai_unit_id',
                 'pegawai.masa_kerja',
                 'users.name as oleh_user',
-                'users.jabatan as oleh_jabatan',
-                'users.asal as oleh_asal'
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
             );
 
-        $blanko = $query->where('unit_kerja', $asal)->paginate(15);
+        $blanko = $query->where('pegawai_unit_id', $user_unit_id)->paginate(15);
 
-        return view('download.rekapitulasi', compact('id', 'blanko' ,'role','jabatan'));
+        return view('download.rekapitulasi', compact('id', 'blanko' ,'hak','roles'));
     }
 
     public function kirimPengajuan(Request $req)
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         // Validate the request
         $validatedData = $req->validate([
@@ -410,9 +459,10 @@ class HomeController extends Controller
     public function responSakit(Request $req){
 
         $userData = $this->getUserData();
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         // Log::info('Request data: ' . json_encode($req->all()));
 
@@ -444,9 +494,10 @@ class HomeController extends Controller
 
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+        $hak = $userData['hak'];
+        $user_unit_id = $userData['user_unit_id'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         // Log::info('Request data: ' . json_encode($req->all()));
 
@@ -481,123 +532,162 @@ class HomeController extends Controller
      */
 
      public function index()
-    {
-        $userData = $this->getUserData();
-        $id = $userData['id'];
-        $role = $userData['role'];
-        $asal = $userData['asal'];
-        $jabatan = $userData['jabatan'];
+{
+    $userData = $this->getUserData();
+    $id = $userData['id'];
+    $hak = $userData['hak'];
+    $user_unit_id = $userData['user_unit_id'];
+    $user_nip = $userData['nip'];
+    $roles = $userData['roles'];
 
-        if ($role === 'admin' && ($asal === "keymaster" || $asal ==="jakarta")) {
-            $pegawai = DB::table('pegawai')
-                ->select(DB::raw('count(*) as total'))
-                ->get();
+    $jumlahPegawai = 0;
+    $jumlahPengajuan = 0;
+    $cutiDiterima = 0;
+    $cutiDitolak = 0;
+    $chartCuti = 0;
 
-            $surat = DB::table('pengajuan')
-            ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-            ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-            ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-            ->groupBy('pengajuan.konfirmasi')
-            ->get();
-        }elseif ($role === 'admin' && $asal !=" ") {
-            $pegawai = DB::table('pegawai')
-                ->select('unit_kerja', DB::raw('count(*) as total'))
-                ->groupBy('unit_kerja')
-                ->get();
+    switch ($roles) {
+        case 'admin':
+            $jumlahPegawai = DB::table('pegawai')->count();
+            $jumlahPengajuan = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditangguhkan')
+                ->count();
+            $cutiDiterima = DB::table('pengajuan')
+                ->where('konfirmasi', 'diterima')
+                ->count();
+            $cutiDitolak = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditolak')
+                ->count();
 
-            $surat = DB::table('pengajuan')
+            $chartCuti = DB::table('pengajuan')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->groupBy('month')
+                ->get()
+                ->pluck('count', 'month')
+                ->toArray();
+
+            // Calculate the additional statistics
+            $totalCutiTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->count();
+            $totalCutiBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->count();
+            $cutiDiterimaBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'diterima')
+                ->count();
+            $cutiDitolakBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'ditolak')
+                ->count();
+            break;
+
+        case 'direktur':
+            $jumlahPegawai = DB::table('pegawai')->count();
+            $jumlahPengajuan = DB::table('pengajuan')
                 ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-                ->groupBy('pengajuan.konfirmasi')
-                ->get();
-
-        }elseif ($role === 'user' && $jabatan ==="direktur") {
-            $pegawai = DB::table('pegawai')
-                ->select('unit_kerja', DB::raw('count(*) as total'))
-                ->where('unit_kerja', $asal)
-                ->groupBy('unit_kerja')
-                ->get();
-
-                $surat = DB::table('pengajuan')
-                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-                ->where(function ($query) use ($asal) {
-                    $query->where('pegawai.unit_kerja', $asal)
-                          ->orWhere('pengajuan.konfirmasi', 'sakit');
+                ->where(function ($query) use ($user_unit_id) {
+                    $query->where('konfirmasi', 'sakit')
+                          ->orWhere('pegawai.pegawai_unit_id', $user_unit_id);
                 })
-                ->groupBy('pengajuan.konfirmasi')
-                ->get();            
+                ->where('konfirmasi', 'ditangguhkan')
+                ->count();
+            $cutiDiterima = DB::table('pengajuan')
+                ->where('konfirmasi', 'diterima')
+                ->count();
+            $cutiDitolak = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditolak')
+                ->count();
 
-        } elseif ($role === 'user' && $jabatan !="direktur") {
-            $pegawai = DB::table('pegawai')
-                ->select('unit_kerja', DB::raw('count(*) as total'))
-                ->where('unit_kerja', $asal)
-                ->groupBy('unit_kerja')
-                ->get();
+            $chartCuti = DB::table('pengajuan')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->groupBy('month')
+                ->get()
+                ->pluck('count', 'month')
+                ->toArray();
 
-            $surat = DB::table('pengajuan')
+            break;
+
+        case 'kepala_rri':
+            $jumlahPegawai = DB::table('pegawai')
+                ->where('pegawai_unit_id', $user_unit_id)
+                ->count();
+            $jumlahPengajuan = DB::table('pengajuan')
                 ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-                ->where('pegawai.unit_kerja', $asal)
-                ->groupBy('pengajuan.konfirmasi')
-                ->get();
-        } elseif ($role === 'super_user') {
-            if ($asal === "jakarta") {
-                // Tampilkan semua pegawai
-                $pegawai = DB::table('pegawai')
-                    ->select('unit_kerja', DB::raw('count(*) as total'))
-                    ->groupBy('unit_kerja')
-                    ->get();
+                ->where('pegawai.pegawai_unit_id', $user_unit_id)
+                ->where('konfirmasi', 'ditangguhkan')
+                ->count();
+            $cutiDiterima = DB::table('pengajuan')
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDitolak = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditolak')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            break;
 
-                // Tampilkan semua pengajuan dan tambahkan filter untuk cuti sakit
-                $surat = DB::table('pengajuan')
-                    ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                    ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                    ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-                    ->groupBy('pengajuan.konfirmasi')
-                    ->get();
+        case 'sdm': // Logika sama dengan kepala_rri
+            $jumlahPegawai = DB::table('pegawai')
+                ->where('pegawai_unit_id', $user_unit_id)
+                ->count();
+            $jumlahPengajuan = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->where('pegawai.pegawai_unit_id', $user_unit_id)
+                ->where('konfirmasi', 'ditangguhkan')
+                ->count();
+            $cutiDiterima = DB::table('pengajuan')
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDitolak = DB::table('pengajuan')
+                ->where('konfirmasi', 'ditolak')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            break;
 
-                // Tambahkan query untuk menghitung cuti sakit
-                $cutiSakit = DB::table('pengajuan')
-                    ->where('jenis_cuti', 'sakit')
-                    ->count();
-            } else {
-                // Untuk super_user selain Jakarta, gunakan logika yang sama seperti user biasa
-                $pegawai = DB::table('pegawai')
-                    ->select('unit_kerja', DB::raw('count(*) as total'))
-                    ->where('unit_kerja', $asal)
-                    ->groupBy('unit_kerja')
-                    ->get();
-
-                $surat = DB::table('pengajuan')
-                    ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                    ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                    ->select('pengajuan.konfirmasi', DB::raw('count(*) as total'))
-                    ->where('pegawai.unit_kerja', $asal)
-                    ->groupBy('pengajuan.konfirmasi')
-                    ->get();
-
-                $cutiSakit = DB::table('pengajuan')
-                    ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
-                    ->select('pengajuan.*', 'pegawai.nama as nama_pekerja')
-                    ->where('pegawai.unit_kerja', $asal)
-                    ->where('jenis_cuti', 'sakit')
-                    ->count();
-            }
-        } else {
-            $pegawai = collect(); // Return an empty collection if the role is not recognized
-            $surat = collect(); // Return an empty collection if the role is not recognized
-            $cutiSakit = 0;
-        }
-
-        return view('home')
-            ->with('pegawai', $pegawai)
-            ->with('surat', $surat)
-            ->with('cutiSakit', $cutiSakit ?? 0);
+        default:
+            break;
     }
+
+    return view('home')
+        ->with('jumlahPegawai', $jumlahPegawai)
+        ->with('jumlahPengajuan', $jumlahPengajuan)
+        ->with('cutiDiterima', $cutiDiterima)
+        ->with('dataCuti', $chartCuti)
+        ->with('cutiDitolak', $cutiDitolak)
+        ->with('totalCutiTahunIni', isset($totalCutiTahunIni) ? $totalCutiTahunIni : 0)
+        ->with('totalCutiBulanIni', isset($totalCutiBulanIni) ? $totalCutiBulanIni : 0)
+        ->with('cutiDiterimaBulanIni', isset($cutiDiterimaBulanIni) ? $cutiDiterimaBulanIni : 0)
+        ->with('cutiDitolakBulanIni', isset($cutiDitolakBulanIni) ? $cutiDitolakBulanIni : 0);
+}
+
 
     public function hapusPengajuanPersonal($bid){
         DB::table("pengajuan")->where('bid','=',$bid)->delete();

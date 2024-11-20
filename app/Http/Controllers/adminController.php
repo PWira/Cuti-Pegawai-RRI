@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+
 use App\Models\User;
+use App\Models\Pegawai;
 
 class adminController extends Controller
 {
@@ -29,57 +31,93 @@ class adminController extends Controller
     public function getUserData(){
 
         $user = Auth::user();
-        $role = $user->role;
-        $asal = $user->asal;
-        $jabatan = $user->jabatan;
+        $id = $user->id;
+        $hak = $user->hak;
+        $roles = $user->roles;
 
-        return compact('role', 'asal', 'jabatan');
+        return compact('id', 'hak', 'roles');
     }
 
     public function createUser(Request $req)
     {
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $hak = $userData['hak'];
+        $roles = $userData['roles'];
 
         $name = strtolower(str_replace(' ', '_', $req->input('name')));
-        $role = strtolower(str_replace(' ', '_', $req->input('role')));
+        $userHak = strtolower(str_replace(' ', '_', $req->input('hak')));
+
+        $tahun_kerja = $req->tahun_kerja;
+        $bulan_kerja = $req->bulan_kerja;
+        $total_bulan_kerja = ($tahun_kerja * 12) + $bulan_kerja;
 
         $validator = Validator::make($req->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:50'],
+            'nip' => ['required', 'string', 'max:20', 'unique:pegawai,nip'],
+            'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'asal' => ['required', 'string'],
-            'jabatan' => ['required', 'string'],
-            'role' => ['required', 'string'],
+            'roles' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+        
         User::create([
             'name' => $name,
+            "user_nip" => $req->nip,
+            "user_unit_id" => $req->user_unit_id,
+            "user_jabatan" => $req->jabatan,
             'email' => $req->email,
             'password' => Hash::make($req->password),
-            'asal' => $req->asal,
-            'jabatan' => $req->jabatan,
-            'role' => $role,
+            'roles' => $req->roles,
+            'hak' => $userHak,
         ]);
+        // dd($req->all());
 
         return redirect('admin/user')->with('success', 'User created successfully.');
     }
 
-    public function daftarUser(Request $req){
-    
-        $user = Auth::user();
-        $role = $user->role;
+    public function inputUser()
+    {
+        $unit_kerja = DB::table('unit_kerja')->get();
+        return view('auth.createUser', compact('unit_kerja'));
+    }
 
-        if ($role === 'admin') {
-            $userlist = DB::table('users')->paginate(15);
+    public function daftarUser(Request $req)
+    {
+        $user = Auth::user();
+        $hak = $user->hak;
+
+        if ($hak === 'admin') {
+            $userlist = DB::table('users')
+            ->join('unit_kerja', 'users.user_unit_id', '=', 'unit_kerja.unit_id')
+            ->select(
+                'users.*', 
+                'unit_kerja.*',
+                )
+            ->paginate(15);
         } else {
-            $userlist = collect(); // Return an empty collection if the role is not recognized
+            $userlist = collect(); // Return an empty collection if the hak is not recognized
         }
 
         return view('auth.user', compact('userlist'));
     }
+
+    // public function daftarUser(Request $req){
+    
+    //     $user = Auth::user();
+    //     $hak = $user->hak;
+
+    //     if ($hak === 'admin') {
+    //         $userlist = DB::table('users')->paginate(15);
+    //     } else {
+    //         $userlist = collect(); // Return an empty collection if the hak is not recognized
+    //     }
+
+    //     return view('auth.user', compact('userlist'));
+    // }
 
     public function hapusUser($id){
         DB::table("users")->where('id','=',$id)->delete();
