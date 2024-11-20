@@ -612,6 +612,24 @@ class HomeController extends Controller
                 ->pluck('count', 'month')
                 ->toArray();
 
+            $totalCutiTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->count();
+            $totalCutiBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->count();
+            $cutiDiterimaBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'diterima')
+                ->count();
+            $cutiDitolakBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'ditolak')
+                ->count();
+
             break;
 
         case 'kepala_rri':
