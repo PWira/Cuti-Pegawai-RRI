@@ -692,6 +692,24 @@ class HomeController extends Controller
                 ->pluck('count', 'month')
                 ->toArray();
 
+            $visitorsCuti = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), 'pegawai.jabatan', DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->groupBy('month', 'pegawai.jabatan')
+                ->get()
+                ->groupBy('month')
+                ->map(function ($item) {
+                    return $item->pluck('count', 'jabatan')->toArray();
+                })
+                ->toArray();
+
             $totalCutiTahunIni = DB::table('pengajuan')
                 ->whereYear('mulai_cuti', '=', date('Y'))
                 ->whereExists(function ($query) use ($user_unit_id) {
@@ -774,6 +792,24 @@ class HomeController extends Controller
                 ->groupBy('month')
                 ->get()
                 ->pluck('count', 'month')
+                ->toArray();
+
+            $visitorsCuti = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), 'pegawai.jabatan', DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->groupBy('month', 'pegawai.jabatan')
+                ->get()
+                ->groupBy('month')
+                ->map(function ($item) {
+                    return $item->pluck('count', 'jabatan')->toArray();
+                })
                 ->toArray();
 
             $totalCutiTahunIni = DB::table('pengajuan')
