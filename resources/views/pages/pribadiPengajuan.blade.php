@@ -63,25 +63,13 @@
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
-                            <div class="text-end">
-                                <button id="searchToggle" class="btn btn-success col-md-2">Search <i class="bi bi-search"></i></button>
+                            <div class="search-container text-end">
+                                <input type="text" id="searchInput" class="form-control search-input" placeholder="Cari data..." style="display: none;">
+                                <button id="searchToggle" class="btn btn-success">Search <i class="bi bi-search"></i></button>
                             </div>
                             <br>
                             <table id="myTable" class="table table-bordered">
                                 <thead>
-                                    <tr>
-                                        <th style="width: 2%"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Nama Pekerja" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="NIP" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Jabatan" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Unit Kerja" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Masa Kerja" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Jenis Cuti" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Status" style="display: none;"></th>
-                                        <th><input type="text" class="form-control search-input" placeholder="Tanggal Diterima" style="display: none;"></th>
-                                        <th>
-                                        </th>
-                                    </tr>
                                     <tr>
                                         <th style="width: 2%">No</th>
                                         <th style="" class="sortable">Nama Pekerja</th>
@@ -205,134 +193,34 @@
     </div> <!--end::App Content-->
 </main> <!--end::App Main--> <!--begin::Footer-->
 <script>
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const table = document.getElementById('myTable');
-        const rows = table.querySelectorAll('tbody tr');
-        const searchInputs = document.querySelectorAll('.search-input');
-        const searchToggle = document.getElementById('searchToggle');
-        let searchVisible = false;
-
-        // Toggle to show/hide search inputs
-        searchToggle.addEventListener('click', function() {
-            searchVisible = !searchVisible;
-            searchInputs.forEach(input => {
-                input.style.display = searchVisible ? 'inline-block' : 'none';
-            });
-        });
-
-        // Function to filter table rows based on prefix matching
-        function updateTable() {
-            const filters = Array.from(searchInputs).map(input => input.value.toLowerCase().trim());
-
-            rows.forEach(row => {
-                const shouldShow = Array.from(row.children).slice(1, -1).every((cell, index) => {
-                    const cellText = cell.textContent.toLowerCase().trim();
-                    const filterValue = filters[index];
-
-                    if (filterValue) {
-                        // Use startsWith to ensure the search query matches from the beginning of the string
-                        return cellText.startsWith(filterValue);
-                    }
-                    return true;  // If no filter for this column, don't filter on it
-                });
-                row.style.display = shouldShow ? '' : 'none';
-            });
-        }
-
-        // Attach event listeners to search inputs for real-time filtering
-        searchInputs.forEach(input => {
-            input.addEventListener('input', updateTable);
-        });
-
-        // Sorting functionality (optional)
-        const headers = table.querySelectorAll('th.sortable');
-        headers.forEach((header, index) => {
-            header.addEventListener('click', () => {
-                const isAscending = header.classList.contains('asc');
-                const sortedRows = Array.from(rows).sort((a, b) => {
-                    const aValue = a.children[index].textContent.trim();
-                    const bValue = b.children[index].textContent.trim();
-                    return isAscending ? bValue.localeCompare(aValue) : aValue.localeCompare(bValue);
-                });
-
-                sortedRows.forEach(row => table.querySelector('tbody').appendChild(row));
-
-                headers.forEach(h => h.classList.remove('asc', 'desc'));
-                header.classList.toggle('asc', !isAscending);
-                header.classList.toggle('desc', isAscending);
-            });
-        });
-
-        const downloadButton = document.getElementById('downloadDoc');
-        const monthSelect = document.getElementById('monthSelect');
-        const yearInput = document.getElementById('yearInput');
-
-        // Set tahun default ke tahun sekarang
-        const currentYear = new Date().getFullYear();
-        yearInput.value = currentYear;
-
-        // Set min dan max untuk input tahun
-        yearInput.min = "2000"; // Sesuaikan dengan kebutuhan
-        yearInput.max = currentYear.toString();
-
-        if (downloadButton && monthSelect && yearInput) {
-            downloadButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const selectedMonth = monthSelect.value;
-                const selectedYear = yearInput.value;
-
-                if (selectedMonth && selectedYear) {
-                    if (selectedYear < 2000 || selectedYear > currentYear) {
-                        alert('Silakan masukkan tahun antara 2000 dan ' + currentYear);
-                    } else {
-                        window.location.href = `/generate-pdf?month=${selectedMonth}&year=${selectedYear}`;
-                    }
-                } else {
-                    alert('Silakan pilih bulan dan masukkan tahun sebelum mengunduh.');
-                }
-            });
-        }
-    });
-
     // document.addEventListener('DOMContentLoaded', function() {
     //     const table = document.getElementById('myTable');
     //     const rows = table.querySelectorAll('tbody tr');
-    //     const searchInputs = document.querySelectorAll('.search-input');
+    //     const searchInput = document.getElementById('searchInput');
     //     const searchToggle = document.getElementById('searchToggle');
     //     let searchVisible = false;
 
-    //     // Show/hide search inputs when the search button is clicked
+    //     // Toggle to show/hide search input
     //     searchToggle.addEventListener('click', function() {
     //         searchVisible = !searchVisible;
-    //         searchInputs.forEach(input => {
-    //             input.style.display = searchVisible ? 'inline-block' : 'none';
-    //         });
+    //         searchInput.style.display = searchVisible ? 'inline-block' : 'none';
     //     });
 
-    //     // Function to update the table based on search input
+    //     // Function to filter table rows based on partial matching
     //     function updateTable() {
-    //         const filters = Array.from(searchInputs).map(input => input.value.toLowerCase().trim());
+    //         const filter = searchInput.value.toLowerCase().trim();
 
     //         rows.forEach(row => {
-    //             const shouldShow = Array.from(row.children).slice(1, -1).every((cell, index) => {
+    //             const shouldShow = Array.from(row.children).slice(1, -1).some(cell => {
     //                 const cellText = cell.textContent.toLowerCase().trim();
-    //                 const filterValue = filters[index];
-
-    //                 if (filterValue) {
-    //                     // Use includes to allow partial matches, maintaining letter order
-    //                     return cellText.includes(filterValue);
-    //                 }
-    //                 return true;  // No filter for this column, so do not filter this column
+    //                 return cellText.includes(filter);
     //             });
     //             row.style.display = shouldShow ? '' : 'none';
     //         });
     //     }
 
-    //     // Add event listeners to the search inputs to filter the table as the user types
-    //     searchInputs.forEach(input => {
-    //         input.addEventListener('input', updateTable);
-    //     });
+    //     // Attach event listener to search input for real-time filtering
+    //     searchInput.addEventListener('input', updateTable);
 
     //     // Sorting functionality (optional)
     //     const headers = table.querySelectorAll('th.sortable');
@@ -352,6 +240,37 @@
     //             header.classList.toggle('desc', isAscending);
     //         });
     //     });
+
+    //     const downloadButton = document.getElementById('downloadDoc');
+    //     const monthSelect = document.getElementById('monthSelect');
+    //     const yearInput = document.getElementById('yearInput');
+
+    //     // Set tahun default ke tahun sekarang
+    //     const currentYear = new Date().getFullYear();
+    //     yearInput.value = currentYear;
+
+    //     // Set min dan max untuk input tahun
+    //     yearInput.min = "2000"; // Sesuaikan dengan kebutuhan
+    //     yearInput.max = currentYear.toString();
+
+    //     if (downloadButton && monthSelect && yearInput) {
+    //         downloadButton.addEventListener('click', function(e) {
+    //             e.preventDefault();
+    //             const selectedMonth = monthSelect.value;
+    //             const selectedYear = yearInput.value;
+
+    //             if (selectedMonth && selectedYear) {
+    //                 if (selectedYear < 2000 || selectedYear > currentYear) {
+    //                     alert('Silakan masukkan tahun antara 2000 dan ' + currentYear);
+    //                 } else {
+    //                     window.location.href = `/generate-pdf?month=${selectedMonth}&year=${selectedYear}`;
+    //                 }
+    //             } else {
+    //                 alert('Silakan pilih bulan dan masukkan tahun sebelum mengunduh.');
+    //             }
+    //         });
+    //     }
+    // });
 </script>
 @endauth
 @endsection

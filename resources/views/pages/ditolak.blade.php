@@ -36,7 +36,12 @@
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <div class="search-container text-end">
+                                <input type="text" id="searchInput" class="form-control search-input" placeholder="Cari data..." style="display: none;">
+                                <button id="searchToggle" class="btn btn-success">Search <i class="bi bi-search"></i></button>
+                            </div>
+                            <br>
+                            <table id="myTable" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 2%">No</th>

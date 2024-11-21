@@ -36,6 +36,11 @@
                             </div>
                         </div>
                         <div class="card-body"> 
+                            <div class="search-container text-end">
+                                <input type="text" id="searchInput" class="form-control search-input" placeholder="Cari data..." style="display: none;">
+                                <button id="searchToggle" class="btn btn-success">Search <i class="bi bi-search"></i></button>
+                            </div>
+                            <br>
                             <table id="myTable" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -54,7 +59,7 @@
                                     <tbody>
                                     @php $rowNumber = $blanko->firstItem(); @endphp
                                     @forelse ($blanko as $view)
-                                    @if ($view->konfirmasi==="ditangguhkan" && $view->jenis_cuti != 'cuti_sakit')
+                                    @if ($view->konfirmasi==="ditangguhkan")
                                     <tr class="align-middle">
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{ $view->nama_pekerja }}</td>
@@ -166,7 +171,7 @@
                                     <tr class="align-middle">
                                         @php $rowNumber = $blanko->firstItem(); @endphp
                                         @forelse ($blanko as $view)
-                                        @if ($view->konfirmasi==="sakit" && $view->jenis_cuti=='cuti_sakit')
+                                        @if ($view->konfirmasi==="sakit")
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
                                         <td>{{$view->nip}}</td>

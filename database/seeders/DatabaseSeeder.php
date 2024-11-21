@@ -226,7 +226,7 @@ class PengajuanSeeder extends Seeder
 
         foreach ($unitKerjaIds as $unitKerjaId) {
             $pegawaiIds = DB::table('pegawai')->where('pegawai_unit_id', $unitKerjaId)->pluck('pid')->toArray();
-            $userIds = DB::table('users')->pluck('id')->toArray();
+            // $userIds = DB::table('users')->pluck('id')->toArray();
 
             foreach ($jenisKonfirmasi as $konfirmasi) {
                 foreach ($jenisCuti as $cuti) {
@@ -276,10 +276,10 @@ class PengajuanSeeder extends Seeder
                             }
 
                             // Ensure user_id exists in the users table
-                            $userId = $userIds[array_rand($userIds)];
+                            // $userId = $userIds[array_rand($userIds)];
 
                             DB::table('pengajuan')->insert([
-                                'user_id' => $userId,
+                                'user_id' => 1,
                                 'pegawai_id' => $pegawaiId,
                                 'jenis_cuti' => $cuti,
                                 'mulai_cuti' => $startDate,

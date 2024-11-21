@@ -33,13 +33,15 @@
                         <div class="card-header text-bg-success">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 style="font-weight: bold" class="card-title">DATA PEGAWAI</h3>
-                                @if ($hak === 'super_user')
-                                {{-- <a href="{{ url('doc-pegawai') }}" class="btn btn-primary">Download DOC <i class="bi bi-file-text-fill"></i></a> --}}
-                                @endif
                             </div>
                         </div> <!-- /.card-header -->
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <div class="search-container text-end">
+                                <input type="text" id="searchInput" class="form-control search-input" placeholder="Cari data..." style="display: none;">
+                                <button id="searchToggle" class="btn btn-success">Search <i class="bi bi-search"></i></button>
+                            </div>
+                            <br>
+                            <table id="myTable" class="table table-bordered datatable">
                                 <thead>
                                     <tr>
                                         <th style="width: 2%">No</th>
@@ -50,9 +52,7 @@
                                         <th style="">Jabatan</th>
                                         <th style="">Unit Kerja</th>
                                         <th style="">Masa Kerja</th>
-                                        @if ($hak === 'admin' || $hak === 'super_user')
                                         <th style="">Selengkapnya</th>
-                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>

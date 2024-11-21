@@ -231,8 +231,6 @@ class HomeController extends Controller
                 $blanko = collect();
             }
 
-        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
-
         return view('pages.ditolak', compact('id', 'blanko', 'hak', 'roles'));
     }
 
@@ -274,25 +272,6 @@ class HomeController extends Controller
                 $blanko = collect(); // Return an empty collection if the hak is not recognized
             }
 
-        // if ($hak === 'admin') {
-        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-        // } elseif ($hak === 'user' || ($hak === 'super_user' && $user_unit_id !== 1)) {
-        //     $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
-        //         ->where('pengajuan.konfirmasi', 'diterima')
-        //         ->paginate(15);
-        // } elseif ($hak === 'super_user') {
-        //     $blanko = $query->where('pengajuan.konfirmasi', 'diterima')
-        //         ->where(function ($query) {
-        //             $query->where('pengajuan.konfirmasi', 'diterima')
-        //                 ->Where('pengajuan.jenis_cuti', 'cuti_sakit');
-        //         })
-        //         ->paginate(15);
-        // } else {
-        //     $blanko = collect(); // Return an empty collection if the hak is not recognized
-        // }
-
-        // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'diterima')->get();
-
         return view('pages.diterima', compact('id', 'blanko', 'hak', 'roles'));
     }
 
@@ -322,9 +301,9 @@ class HomeController extends Controller
                 'users.user_nip as oleh_nip',
             );
 
-        $blanko = $query->paginate(15);
+        $blanko = $query->where('pegawai.by_id', $user_unit_id)->paginate(15);
 
-        $konfirmasi = DB::table('pengajuan')->get();
+        $konfirmasi = DB::table('pengajuan')->where('konfirmasi')->where('pengajuan.user_id', $id)->get();
 
         return view('pages.pribadiPengajuan', compact('id', 'blanko', 'konfirmasi', 'hak', 'roles'));
     }
