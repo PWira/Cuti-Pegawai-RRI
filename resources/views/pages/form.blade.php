@@ -11,7 +11,7 @@
 <body>
     <div class="card card-info card-outline mb-4">
         <div class="card-header" style="text-align:center;">
-            <h3 class="">Surat Pengantar Cuti</h3>
+            <h3 class="">Pengajuan Cuti</h3>
         </div>
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -25,7 +25,7 @@
         <div class="letter-container">
             <form method="post" action="/kirim-pengajuan" class="needs-validation" enctype="multipart/form-data">
                 @csrf
-                <p>Yang bertanda tangan di bawah ini:</p>
+                <p>Pastikan Data Lengkap:</p>
                 <div class="card-body">
                     <div class="">
                         <label for="pegawai" class="form-label">Pilih Pegawai</label>

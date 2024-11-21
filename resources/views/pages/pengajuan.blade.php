@@ -54,7 +54,7 @@
                                     <tbody>
                                     @php $rowNumber = $blanko->firstItem(); @endphp
                                     @forelse ($blanko as $view)
-                                    @if ($view->konfirmasi==="ditangguhkan")
+                                    @if ($view->konfirmasi==="ditangguhkan" && $view->jenis_cuti != 'cuti_sakit')
                                     <tr class="align-middle">
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{ $view->nama_pekerja }}</td>
@@ -137,7 +137,7 @@
                             </div>
                             
 {{-- ====================================================  SAKIT  ====================================================== --}}
-@if ($hak !== "super_user" &&($hak === "admin" || $roles === "direktur"))
+@if ($roles === "direktur")
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
                     <div class="card-header text-bg-warning">
@@ -166,7 +166,7 @@
                                     <tr class="align-middle">
                                         @php $rowNumber = $blanko->firstItem(); @endphp
                                         @forelse ($blanko as $view)
-                                        @if ($view->konfirmasi==="sakit")
+                                        @if ($view->konfirmasi==="sakit" && $view->jenis_cuti=='cuti_sakit')
                                         <td>{{ $rowNumber++ }}</td>
                                         <td>{{$view->nama_pekerja}}</td>
                                         <td>{{$view->nip}}</td>

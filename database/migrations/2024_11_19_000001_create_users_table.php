@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             ->references('unit_id')
             ->on('unit_kerja');
             $table->string('user_jabatan', 50)->nullable();
-            $table->string('roles', 20)->nullable();
+            $table->enum('roles', ['admin', 'direktur', 'kepala_rri','sdm'])->nullable();
             $table->enum('hak', ['admin', 'super_user', 'user']);
             $table->rememberToken();
             $table->timestamps();

@@ -126,83 +126,66 @@
             const filterForm = document.getElementById('filter-form');
             filterForm.style.display = filterForm.style.display === 'none' ? 'block' : 'none';
         });
-
+        // Fungsi untuk mendapatkan akhir bulan setiap periode
         function getEndOfMonthDates(fromMonth, toMonth) {
             const dates = [];
             const fromDate = new Date(`${fromMonth}-01`);
             const toDate = new Date(`${toMonth}-01`);
-            const currentDate = fromDate;
+            const currentDate = new Date(fromDate);
             while (currentDate <= toDate) {
                 const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); // Akhir bulan
-                const adjustedDay = new Date(lastDay.setDate(lastDay.getDate() - 1)); // Kurangi satu hari
-                dates.push(adjustedDay.toISOString().split('T')[0]);
+                dates.push(lastDay.toISOString().split('T')[0]);
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
             return dates;
         }
-
-        function getFilteredData(dataCuti, fromMonth, toMonth) {
-            const data = [];
+    
+        // Fungsi untuk memfilter data cuti (sales_chart)
+        function getFilteredCutiData(dataCuti, fromMonth, toMonth) {
+            const filteredCutiData = [];
             const fromDate = new Date(`${fromMonth}-01`);
             const toDate = new Date(`${toMonth}-01`);
             const currentDate = new Date(fromDate);
             while (currentDate <= toDate) {
-                const yearMonth = currentDate.toISOString().split('T')[0].slice(0, 7);
-                data.push(dataCuti[yearMonth] || 0);
+                const yearMonth = currentDate.toISOString().slice(0, 7);
+                filteredCutiData.push(dataCuti[yearMonth] || 0);
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
-            return data;
+            console.log("Filtered Cuti Data:", filteredCutiData);
+            return filteredCutiData;
         }
-
-        function getMonthLabels(fromMonth, toMonth) {
-            const labels = [];
+    
+        // Fungsi untuk memfilter data jabatan (visitors_chart)
+        function getFilteredJabatanData(jabatanCuti, fromMonth, toMonth) {
+            const filteredJabatanData = [];
             const fromDate = new Date(`${fromMonth}-01`);
             const toDate = new Date(`${toMonth}-01`);
-            const currentDate = fromDate;
-            const monthNames = [
-                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-            ];
+            const currentDate = new Date(fromDate);
             while (currentDate <= toDate) {
-                labels.push(monthNames[currentDate.getMonth()]);
+                const yearMonth = currentDate.toISOString().slice(0, 7);
+                filteredJabatanData.push(jabatanCuti[yearMonth] || {});
                 currentDate.setMonth(currentDate.getMonth() + 1);
             }
-            return labels;
+            return filteredJabatanData;
         }
-
+    
+        // Fungsi untuk mendapatkan nilai maksimum
         function getMaxValue(data) {
             return Math.max(...data);
         }
-
-        const initialFromMonth = "2024-01";
-        const initialToMonth = "2024-12";
-        const initialData = getFilteredData(dataCuti, initialFromMonth, initialToMonth);
-        const maxValue = getMaxValue(initialData);
-
+    
+        // Opsi untuk sales chart
         const sales_chart_options = {
             series: [{
                 name: "Pegawai Cuti",
-                data: initialData, // Data dari database
+                data: getFilteredCutiData(dataCuti, "2024-01", "2024-12"),
             }],
             chart: {
                 height: 320,
                 type: "area",
-                toolbar: {
-                    show: false,
-                },
-            },
-            legend: {
-                show: false,
-            },
-            colors: ["#0d6efd"],
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                curve: "straight", // Garis lurus
             },
             xaxis: {
-                categories: getEndOfMonthDates(initialFromMonth, initialToMonth), // Default range
+                categories: getEndOfMonthDates("2024-01", "2024-12"),
                 labels: {
                     formatter: function(value) {
                         const date = new Date(value);
@@ -210,78 +193,139 @@
                     }
                 }
             },
-            yaxis: {
-                max: maxValue, // Atur maksimum sumbu y menjadi 9 kali lipat dari nilai tertinggi
-                labels: {
-                    formatter: function(value) {
-                        return value.toFixed(0); // Menghilangkan angka desimal
-                    }
-                }
-            },
-            tooltip: {
-                y: {
-                    formatter: function (value) {
-                        return value.toFixed(0); // Menghilangkan angka desimal
-                    }
-                }
-            },
-        };
-
-        const pie_chart_options = {
-            series: initialData, // Data dari database
-            chart: {
-                type: "donut",
-            },
-            labels: getMonthLabels(initialFromMonth, initialToMonth), // Label default
+            colors: ["#0d6efd"],
             dataLabels: {
                 enabled: false,
             },
+            stroke: {
+                curve: "smooth",
+            },
+        };
+    
+        // Opsi untuk visitors chart
+        const visitors_chart_options = {
+            series: [
+                {
+                    name: "Pranata Siaran Ahli Madya",
+                    data: getFilteredJabatanData(jabatanCuti, "2024-01", "2024-12").map(item => item["pranata_siaran_ahli_madya"] || 0),
+                },
+                {
+                    name: "Pranata Siaran Ahli Muda",
+                    data: getFilteredJabatanData(jabatanCuti, "2024-01", "2024-12").map(item => item["pranata_siaran_ahli_muda"] || 0),
+                },
+                {
+                    name: "Teknisi Siaran Ahli Madya",
+                    data: getFilteredJabatanData(jabatanCuti, "2024-01", "2024-12").map(item => item["teknisi_siaran_ahli_madya"] || 0),
+                },
+                {
+                    name: "Teknisi Siaran Ahli Muda",
+                    data: getFilteredJabatanData(jabatanCuti, "2024-01", "2024-12").map(item => item["teknisi_siaran_ahli_muda"] || 0),
+                },
+            ],
+            chart: {
+                height: 320,
+                type: "bar",
+            },
+            xaxis: {
+                categories: getEndOfMonthDates("2024-01", "2024-12",),
+                labels: {
+                    formatter: function(value) {
+                        const date = new Date(value);
+                        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    }
+                }
+            },
+            colors: ["#0d6efd", "#20c997", "#ffc107", "#e83e8c"],
+            dataLabels: {
+                enabled: false,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: "55%",
+                    endingShape: "rounded",
+                },
+            },
+        };
+    
+        // Opsi untuk pie chart
+        const currentMonth = new Date().toISOString().slice(0, 7); // Ambil bulan saat ini
+        
+        const pie_chart_options = {
+            series: Object.values(jabatanCuti[currentMonth] || {}),
+            chart: {
+                type: "donut",
+                height: 320,
+            },
+            labels: Object.keys(jabatanCuti[currentMonth] || {}).map(key => key.replace(/_/g, ' ')),
             colors: [
                 "#1E88E5", "#43A047", "#FFA726", "#E53935", "#8E24AA", "#00ACC1",
                 "#FFD600", "#886342", "#00BFA5", "#F4511E", "#7CB342", "#5E35B1"
             ],
-            tooltip: {
-                y: {
-                    formatter: function (value) {
-                        return value.toFixed(0); // Menghilangkan angka desimal
-                    }
-                }
+            dataLabels: {
+                enabled: false,
             },
         };
-
+    
+        // Render charts
         const sales_chart = new ApexCharts(document.querySelector("#sales-chart"), sales_chart_options);
+        const visitors_chart = new ApexCharts(document.querySelector("#visitors-chart"), visitors_chart_options);
         const pie_chart = new ApexCharts(document.querySelector("#pie-chart"), pie_chart_options);
-
+    
         sales_chart.render();
+        visitors_chart.render();
         pie_chart.render();
-
+    
+        // Fungsi untuk memperbarui semua chart berdasarkan filter
         function updateChart() {
-            const fromMonth = document.getElementById('from-month').value;
-            const toMonth = document.getElementById('to-month').value;
+            const fromMonth = document.getElementById("from-month").value;
+            const toMonth = document.getElementById("to-month").value;
+    
             if (fromMonth && toMonth) {
                 const newCategories = getEndOfMonthDates(fromMonth, toMonth);
-                const newData = getFilteredData(dataCuti, fromMonth, toMonth);
-                const newLabels = getMonthLabels(fromMonth, toMonth);
-                const newMaxValue = getMaxValue(newData);
-
+    
+                // Perbarui sales_chart
+                const newSalesData = getFilteredCutiData(dataCuti, fromMonth, toMonth);
                 sales_chart.updateOptions({
+                    series: [{ data: newSalesData }],
                     xaxis: {
-                        categories: newCategories
+                        categories: newCategories,
+                        labels: {
+                            formatter: function(value) {
+                                const date = new Date(value);
+                                return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                            }
+                        }
                     },
-                    series: [{
-                        data: newData
-                    }],
-                    yaxis: {
-                        max: newMaxValue,  // Atur maksimum sumbu y menjadi 9 kali lipat dari nilai tertinggi
-                    }
                 });
-
+    
+                // Perbarui visitors_chart
+                const newVisitorsData = getFilteredJabatanData(jabatanCuti, fromMonth, toMonth);
+                visitors_chart.updateOptions({
+                    series: [
+                        { name: "Pranata Siaran Ahli Madya", data: newVisitorsData.map(item => item["pranata_siaran_ahli_madya"] || 0) },
+                        { name: "Pranata Siaran Ahli Muda", data: newVisitorsData.map(item => item["pranata_siaran_ahli_muda"] || 0) },
+                        { name: "Teknisi Siaran Ahli Madya", data: newVisitorsData.map(item => item["teknisi_siaran_ahli_madya"] || 0) },
+                        { name: "Teknisi Siaran Ahli Muda", data: newVisitorsData.map(item => item["teknisi_siaran_ahli_muda"] || 0) },
+                    ],
+                    xaxis: {
+                        categories: newCategories,
+                        labels: {
+                            formatter: function(value) {
+                                const date = new Date(value);
+                                return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                            }
+                        }
+                    },
+                });
+    
+                // Perbarui pie_chart
+                const pieData = jabatanCuti[currentMonth] || {};
                 pie_chart.updateOptions({
-                    series: newData,
-                    labels: newLabels
+                    series: Object.values(pieData),
+                    labels: Object.keys(pieData),
                 });
 
-                // Update title
                 const dateRangeTitle = document.getElementById('date-range-title');
                 const fromDate = new Date(`${fromMonth}-01`);
                 const toDate = new Date(`${toMonth}-01`);
@@ -290,8 +334,8 @@
                 dateRangeTitle.innerHTML = `<strong>Cuti: 1 ${fromDateString} - ${toDate.getDate()} ${toDateString}</strong>`;
             }
         }
-
     </script>
+    
 
     <!--end::JavaScript-->
     {{-- <script>

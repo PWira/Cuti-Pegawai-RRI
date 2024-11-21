@@ -178,24 +178,17 @@ class HomeController extends Controller
                 'users.user_nip as oleh_nip',
             );
 
-            switch (true) {
-                case $hak === 'admin':
-                    $blanko = $query->paginate(15);
-                    break;
-            
-                case $hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1):
-                    $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)->paginate(15);
-                    break;
-            
-                case $hak === 'user' && $roles === 'direktur':
-                    $blanko = $query->where('konfirmasi', 'sakit')->paginate(15);
-                    break;
-            
-                default:
-                    $blanko = collect(); // Return an empty collection if no case matches
-                    break;
-            }            
-
+            if ($hak === 'admin') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'ditangguhkan')->paginate(15);
+            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+                $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
+                ->where('pengajuan.konfirmasi', 'ditangguhkan')
+                ->paginate(15);
+            } elseif ($hak === 'user' && $roles === 'direktur') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'sakit')->paginate(15);
+            } else {
+                $blanko = collect();
+            }     
 
         return view('pages.pengajuan', compact('blanko', 'hak', 'roles'));
     }
@@ -226,15 +219,17 @@ class HomeController extends Controller
                 'users.user_nip as oleh_nip',
             );
 
-        if ($hak === 'admin') {
-            $blanko = $query->paginate(15);
-        } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
-            $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)->paginate(15);
-        } elseif ($hak === 'user' && $roles === 'direktur') {
-            $blanko = $query->where('jenis_cuti', 'cuti_sakit')->paginate(15);
-        } else {
-            $blanko = collect(); // Return an empty collection if the hak is not recognized
-        }
+            if ($hak === 'admin') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')->paginate(15);
+            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+                $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
+                ->where('pengajuan.konfirmasi', 'ditolak')
+                ->paginate(15);
+            } elseif ($hak === 'user' && $roles === 'direktur') {
+                $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')->paginate(15);
+            } else {
+                $blanko = collect();
+            }
 
         // $konfirmasi = DB::table('pengajuan')->where('konfirmasi', 'ditolak')->get();
 
@@ -566,10 +561,27 @@ class HomeController extends Controller
                 ->get()
                 ->pluck('count', 'month')
                 ->toArray();
+        
+            // Fetch data for the visitors chart
+            $visitorsCuti = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), 'pegawai.jabatan', DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->groupBy('month', 'pegawai.jabatan')
+                ->get()
+                ->groupBy('month')
+                ->map(function ($item) {
+                    return $item->pluck('count', 'jabatan')->toArray();
+                })
+                ->toArray();
 
             // Calculate the additional statistics
             $totalCutiTahunIni = DB::table('pengajuan')
                 ->whereYear('mulai_cuti', '=', date('Y'))
+                ->count();
+            $cutiDiterimaTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->where('konfirmasi', 'diterima')
                 ->count();
             $totalCutiBulanIni = DB::table('pengajuan')
                 ->whereYear('mulai_cuti', '=', date('Y'))
@@ -579,11 +591,6 @@ class HomeController extends Controller
                 ->whereYear('mulai_cuti', '=', date('Y'))
                 ->whereMonth('mulai_cuti', '=', date('m'))
                 ->where('konfirmasi', 'diterima')
-                ->count();
-            $cutiDitolakBulanIni = DB::table('pengajuan')
-                ->whereYear('mulai_cuti', '=', date('Y'))
-                ->whereMonth('mulai_cuti', '=', date('m'))
-                ->where('konfirmasi', 'ditolak')
                 ->count();
             break;
 
@@ -611,9 +618,26 @@ class HomeController extends Controller
                 ->get()
                 ->pluck('count', 'month')
                 ->toArray();
+        
+            // Fetch data for the visitors chart
+            $visitorsCuti = DB::table('pengajuan')
+                ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), 'pegawai.jabatan', DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->groupBy('month', 'pegawai.jabatan')
+                ->get()
+                ->groupBy('month')
+                ->map(function ($item) {
+                    return $item->pluck('count', 'jabatan')->toArray();
+                })
+                ->toArray();
 
             $totalCutiTahunIni = DB::table('pengajuan')
                 ->whereYear('mulai_cuti', '=', date('Y'))
+                ->count();
+            $cutiDiterimaTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->where('konfirmasi', 'diterima')
                 ->count();
             $totalCutiBulanIni = DB::table('pengajuan')
                 ->whereYear('mulai_cuti', '=', date('Y'))
@@ -624,12 +648,6 @@ class HomeController extends Controller
                 ->whereMonth('mulai_cuti', '=', date('m'))
                 ->where('konfirmasi', 'diterima')
                 ->count();
-            $cutiDitolakBulanIni = DB::table('pengajuan')
-                ->whereYear('mulai_cuti', '=', date('Y'))
-                ->whereMonth('mulai_cuti', '=', date('m'))
-                ->where('konfirmasi', 'ditolak')
-                ->count();
-
             break;
 
         case 'kepala_rri':
@@ -652,6 +670,61 @@ class HomeController extends Controller
                 ->count();
             $cutiDitolak = DB::table('pengajuan')
                 ->where('konfirmasi', 'ditolak')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+
+            $chartCuti = DB::table('pengajuan')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->groupBy('month')
+                ->get()
+                ->pluck('count', 'month')
+                ->toArray();
+
+            $totalCutiTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDiterimaTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $totalCutiBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDiterimaBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'diterima')
                 ->whereExists(function ($query) use ($user_unit_id) {
                     $query->select(DB::raw(1))
                           ->from('pegawai')
@@ -688,6 +761,61 @@ class HomeController extends Controller
                           ->where('pegawai.pegawai_unit_id', $user_unit_id);
                 })
                 ->count();
+
+            $chartCuti = DB::table('pengajuan')
+                ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), DB::raw('count(*) as count'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->groupBy('month')
+                ->get()
+                ->pluck('count', 'month')
+                ->toArray();
+
+            $totalCutiTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDiterimaTahunIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $totalCutiBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
+            $cutiDiterimaBulanIni = DB::table('pengajuan')
+                ->whereYear('mulai_cuti', '=', date('Y'))
+                ->whereMonth('mulai_cuti', '=', date('m'))
+                ->where('konfirmasi', 'diterima')
+                ->whereExists(function ($query) use ($user_unit_id) {
+                    $query->select(DB::raw(1))
+                          ->from('pegawai')
+                          ->whereColumn('pegawai.pid', 'pengajuan.pegawai_id')
+                          ->where('pegawai.pegawai_unit_id', $user_unit_id);
+                })
+                ->count();
             break;
 
         default:
@@ -699,11 +827,12 @@ class HomeController extends Controller
         ->with('jumlahPengajuan', $jumlahPengajuan)
         ->with('cutiDiterima', $cutiDiterima)
         ->with('dataCuti', $chartCuti)
+        ->with('jabatanCuti', $visitorsCuti)
         ->with('cutiDitolak', $cutiDitolak)
         ->with('totalCutiTahunIni', isset($totalCutiTahunIni) ? $totalCutiTahunIni : 0)
+        ->with('cutiDiterimaTahunIni', isset($cutiDiterimaTahunIni) ? $cutiDiterimaTahunIni : 0)
         ->with('totalCutiBulanIni', isset($totalCutiBulanIni) ? $totalCutiBulanIni : 0)
-        ->with('cutiDiterimaBulanIni', isset($cutiDiterimaBulanIni) ? $cutiDiterimaBulanIni : 0)
-        ->with('cutiDitolakBulanIni', isset($cutiDitolakBulanIni) ? $cutiDitolakBulanIni : 0);
+        ->with('cutiDiterimaBulanIni', isset($cutiDiterimaBulanIni) ? $cutiDiterimaBulanIni : 0);
 }
 
 
