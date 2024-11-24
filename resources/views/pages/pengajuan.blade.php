@@ -29,6 +29,7 @@
         <div class="container-fluid"> <!--begin::Row-->
             <div class="row">
                 <div class="">
+@if ($roles !== "direktur")
                     <div class="card mb-4"> <!-- AWALAN TABLE -->
                         <div class="card-header text-bg-warning">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -142,7 +143,7 @@
                             </div>
                             
 {{-- ====================================================  SAKIT  ====================================================== --}}
-@if ($roles === "direktur")
+@elseif ($roles === "direktur")
 
                 <div class="card mb-4"> <!-- AWALAN TABLE -->
                     <div class="card-header text-bg-warning">

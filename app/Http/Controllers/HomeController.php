@@ -301,7 +301,7 @@ class HomeController extends Controller
                 'users.user_nip as oleh_nip',
             );
 
-        $blanko = $query->where('pegawai.by_id', $user_unit_id)->paginate(15);
+        $blanko = $query->where('pengajuan.user_id', $id)->paginate(15);
 
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi')->where('pengajuan.user_id', $id)->get();
 

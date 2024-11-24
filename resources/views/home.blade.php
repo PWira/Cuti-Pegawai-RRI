@@ -246,11 +246,11 @@
                                 <!-- Data akan ditampilkan di sini -->
                             </tbody>
                         </table>
-                        {{-- <div class="text-center">
+                        <div class="text-center">
                             <button class="btn btn-link" id="show-more-btn" onclick="toggleData()">
                                 <span id="toggle-icon">+</span>
                             </button>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
 
@@ -264,22 +264,12 @@
         const filterForm = document.getElementById('filter-form');
         filterForm.style.display = filterForm.style.display === 'none' ? 'block' : 'none';
     });
-    
-    
+
     var dataCuti = @json($dataCuti);
     var jabatanCuti = @json($jabatanCuti);
     var pegawaiCuti = @json($pegawaiCuti);
     var currentData = [];
     var isExpanded = false;
-
-    const tbody = document.querySelector('#pie-chart-table tbody');
-    const rows = tbody.querySelectorAll('tr');
-
-    // rows.forEach((row, index) => {
-    //     if (index < 20) {
-    //         row.classList.toggle('d-none');
-    //     }
-    // });
 
     function updatePieChartTable(jabatan, month) {
         const tbody = document.querySelector('#pie-chart-table tbody');
@@ -290,7 +280,7 @@
         currentData.sort((a, b) => b.count - a.count);
 
         // Tampilkan hanya 5 data pertama secara default
-        currentData.slice(0,19).forEach((item, index) => {
+        currentData.slice(0, 5).forEach((item, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${index + 1}</td>
@@ -302,55 +292,59 @@
             tbody.appendChild(row);
         });
 
-        // // Tambahkan data lebih banyak dengan kelas 'd-none'
-        // currentData.slice(0).forEach((item, index) => {
-        //     const row = document.createElement('tr');
-        //     row.classList.add('d-none');
-        //     row.innerHTML = `
-        //         <td>${index + 1}</td>
-        //         <td>${item.nama}</td>
-        //         <td>${item.nip}</td>
-        //         <td>${item.unit_kerja}</td>
-        //         <td>${item.count}</td>
-        //     `;
-        //     tbody.appendChild(row);
-        // });
+        // Tambahkan data lebih banyak dengan kelas 'd-none'
+        currentData.slice(5).forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.classList.add('d-none');
+            row.innerHTML = `
+                <td>${index + 6}</td>
+                <td>${item.nama}</td>
+                <td>${item.nip}</td>
+                <td>${item.unit_kerja}</td>
+                <td>${item.count}</td>
+            `;
+            tbody.appendChild(row);
+        });
 
-        // isExpanded = false;
-        // document.getElementById('toggle-icon').textContent = '+';
+        isExpanded = false;
+        document.getElementById('toggle-icon').textContent = '+';
     }
 
-    // function toggleData() {
-    //     const tbody = document.querySelector('#pie-chart-table tbody');
-    //     const rows = tbody.querySelectorAll('tr');
-    //     const toggleIcon = document.getElementById('toggle-icon');
+    function toggleData() {
+        const tbody = document.querySelector('#pie-chart-table tbody');
+        const rows = tbody.querySelectorAll('tr');
+        const toggleIcon = document.getElementById('toggle-icon');
 
-    //     rows.forEach((row, index) => {
-    //         if (index >= 5) {
-    //             row.classList.toggle('d-none');
-    //         }
-    //     });
+        rows.forEach((row, index) => {
+            if (index >= 5) {
+                row.classList.toggle('d-none');
+            }
+        });
 
-    //     isExpanded = !isExpanded;
-    //     toggleIcon.textContent = isExpanded ? '-' : '+';
-    // }
+        isExpanded = !isExpanded;
+        toggleIcon.textContent = isExpanded ? '-' : '+';
+    }
 
     function loadInitialData() {
         const tbody = document.querySelector('#pie-chart-table tbody');
         tbody.innerHTML = '';
-        let allData = [];
+        const currentMonth = new Date().toISOString().slice(0, 7); // Get the current month
+        let allData = pegawaiCuti[currentMonth] || [];
 
-        Object.keys(jabatanCuti).forEach(month => {
-            Object.keys(jabatanCuti[month]).forEach(jabatan => {
-                const data = pegawaiCuti[month]?.[jabatan] || [];
-                allData = allData.concat(data);
-            });
-        });
+        // Check if allData is an array
+        if (!Array.isArray(allData)) {
+            // If allData is not an array, transform it into an array
+            allData = Object.values(allData).flat();
+        }
 
-        // Urutkan data berdasarkan jumlah cuti diterima terbanyak
+        // Add a log to verify the data structure
+        console.log('allData:', allData);
+
+        // Sort data by the number of leave days accepted
         allData.sort((a, b) => b.count - a.count);
 
-        allData.slice(0,19).forEach((item, index) => {
+        // Display only the first 5 items by default
+        allData.slice(0, 5).forEach((item, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${index + 1}</td>
@@ -362,23 +356,23 @@
             tbody.appendChild(row);
         });
 
-        // // Tambahkan data lebih banyak dengan kelas 'd-none'
-        // allData.slice(0).forEach((item, index) => {
-        //     const row = document.createElement('tr');
-        //     row.classList.add('d-none');
-        //     row.innerHTML = `
-        //         <td>${index + 1}</td>
-        //         <td>${item.nama}</td>
-        //         <td>${item.nip}</td>
-        //         <td>${item.unit_kerja}</td>
-        //         <td>${item.count}</td>
-        //     `;
-        //     tbody.appendChild(row);
-        // });
+        // Add more data with the class 'd-none'
+        allData.slice(5).forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.classList.add('d-none');
+            row.innerHTML = `
+                <td>${index + 6}</td>
+                <td>${item.nama}</td>
+                <td>${item.nip}</td>
+                <td>${item.unit_kerja}</td>
+                <td>${item.count}</td>
+            `;
+            tbody.appendChild(row);
+        });
 
-        // currentData = allData;
-        // isExpanded = false;
-        // document.getElementById('toggle-icon').textContent = '+';
+        currentData = allData;
+        isExpanded = false;
+        document.getElementById('toggle-icon').textContent = '+';
     }
 
     document.addEventListener('DOMContentLoaded', loadInitialData);

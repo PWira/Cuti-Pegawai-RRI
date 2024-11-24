@@ -256,38 +256,37 @@
         },
     };
 
-    // Opsi untuk pie chart
     const currentMonth = new Date().toISOString().slice(0, 7); // Ambil bulan saat ini
 
-    if (!jabatanCuti[currentMonth]) {
-        console.log(`No data available for the current month: ${currentMonth}`);
-    }
+    // if (!jabatanCuti[currentMonth]) {
+    //     console.log(`No data available for the current month: ${currentMonth}`);
+    // }
     
-    console.log('Jabatan Cuti Data:', jabatanCuti);
-        console.log('Current Month Data:', jabatanCuti[currentMonth]);
+    // console.log('Jabatan Cuti Data:', jabatanCuti);
+    //     console.log('Current Month Data:', jabatanCuti[currentMonth]);
 
-        const pie_chart_options = {
-            series: Object.values(jabatanCuti[currentMonth] || {}),
-            chart: {
-                type: "donut",
-                height: 320,
-                events: {
-                    dataPointSelection: (event, chartContext, config) => {
-                        const selectedLabel = config.w.globals.labels[config.dataPointIndex];
-                        const selectedJabatan = selectedLabel.replace(/ /g, '_');
-                        updatePieChartTable(selectedJabatan, currentMonth);
-                    }
+    const pie_chart_options = {
+        series: Object.values(jabatanCuti[currentMonth] || {}),
+        chart: {
+            type: "donut",
+            height: 320,
+            events: {
+                dataPointSelection: (event, chartContext, config) => {
+                    const selectedLabel = config.w.globals.labels[config.dataPointIndex];
+                    const selectedJabatan = selectedLabel.replace(/ /g, '_');
+                    updatePieChartTable(selectedJabatan, currentMonth);
                 }
-            },
-            labels: Object.keys(jabatanCuti[currentMonth] || {}).map(key => key.replace(/_/g, ' ')),
-            colors: [
-                "#1E88E5", "#43A047", "#FFA726", "#E53935", "#8E24AA", "#00ACC1",
-                "#FFD600", "#886342", "#00BFA5", "#F4511E", "#7CB342", "#5E35B1"
-            ],
-            dataLabels: {
-                enabled: false,
-            },
-        };
+            }
+        },
+        labels: Object.keys(jabatanCuti[currentMonth] || {}).map(key => key.replace(/_/g, ' ')),
+        colors: [
+            "#1E88E5", "#43A047", "#FFA726", "#E53935", "#8E24AA", "#00ACC1",
+            "#FFD600", "#886342", "#00BFA5", "#F4511E", "#7CB342", "#5E35B1"
+        ],
+        dataLabels: {
+            enabled: false,
+        },
+    };
 
     // Render charts
     const sales_chart = new ApexCharts(document.querySelector("#sales-chart"), sales_chart_options);

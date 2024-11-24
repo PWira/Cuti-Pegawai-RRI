@@ -82,98 +82,103 @@
                                         <th style="" class="sortable">Tanggal Diterima</th>
                                         <th style="">Selengkapnya</th>
                                     </tr>
-                                </thead>                                
-                                    <tbody>
-                                        <tr class="align-middle">
-                                            @php $rowNumber = 1; @endphp
-                                            @forelse ($blanko as $view)
-                                            @php $cekstatus = $view->konfirmasi @endphp
-                                            @if($view->oleh_user === $name && $view->oleh_nip === $user_nip && $view->oleh_jabatan === $user_jabatan)
-                                            <td>{{ $rowNumber++ }}</td>
-                                            <td>{{$view->nama_pekerja}}</td>
-                                            <td>{{$view->nip}}</td>
-                                            <td>{{ format_jabatan($view->jabatan) }}</td>
-                                            <td>{{ucfirst($view->nama_unit_kerja)}}</td>
-                                            <td>
-                                                @php
-                                                    $years = floor($view->masa_kerja / 12);
-                                                    $months = $view->masa_kerja % 12;
-                                                @endphp
-                                                {{ $years }} tahun {{ $months }} bulan
-                                            </td>
-                                            <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
-                                            <td>
-                                            @if ($cekstatus === "ditangguhkan")
-                                                <span class="text-warning">{{ucwords($view->konfirmasi)}}</span>
-                                            @elseif ($cekstatus === "sakit")
-                                                <span class="text-success">{{ucwords($view->konfirmasi)}}</span>
-                                            @elseif ($cekstatus === "diterima")
-                                                <span class="text-info">{{ucwords($view->konfirmasi)}}</span>
-                                            @elseif ($cekstatus === "ditolak")
-                                                <span class="text-danger">{{ucwords($view->konfirmasi)}}</span>
-                                            @endif
-                                            </td>
-                                            <td>{{ \Carbon\Carbon::parse($view->updated_at)->locale('id')->translatedFormat('d F Y') }}</td>
-                                            <td class="text-center">
-                                                @if ($cekstatus === "ditangguhkan")
-                                                <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
-                                            @elseif ($cekstatus === "sakit")
-                                                <a href="{{$view->sakit_ditangguhkan}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
-                                            @elseif ($cekstatus === "diterima")
-                                                <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
-                                            @elseif ($cekstatus === "ditolak")
-                                                <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
-                                            @endif
-                                                <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="100">
-                                                <div class="collapse" id="collapse{{ $view->bid }}">
-                                                    <div class="card card-body">
-                                                        <div class="d-flex content-between">
-                                                            <div class="col-md-3">
-                                                                <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }}</p>
-                                                                <p>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} </p>
-                                                                <p>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
-                                                                <p>Alamat Selama Cuti: {{ $view->tujuan_cuti }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <p>Mulai Cuti: {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                                <p>Selesai Cuti: {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
-                                                                <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) + 1 }} hari</p>
-                                                                <p>Alasan: {{ $view->alasan }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <p>Keterangan Cuti (untuk rekpitulasi) : {{ $view->keterangan }}</p>
-                                                            </div>
+                                </thead>
+                                <tbody>
+                                    @php $rowNumber = 1; @endphp
+                                    @forelse ($blanko as $view)
+                                    @php $cekstatus = $view->konfirmasi @endphp
+                                    <tr class="align-middle">
+                                        <td>{{ $rowNumber++ }}</td>
+                                        <td>{{$view->nama_pekerja}}</td>
+                                        <td>{{$view->nip}}</td>
+                                        <td>{{ format_jabatan($view->jabatan) }}</td>
+                                        <td>{{ucfirst($view->nama_unit_kerja)}}</td>
+                                        <td>
+                                            @php
+                                                $years = floor($view->masa_kerja / 12);
+                                                $months = $view->masa_kerja % 12;
+                                            @endphp
+                                            {{ $years }} tahun {{ $months }} bulan
+                                        </td>
+                                        <td>{{ format_jenis_cuti($view->jenis_cuti) }}</td>
+                                        <td>
+                                            @switch($cekstatus)
+                                                @case("ditangguhkan")
+                                                    <span class="text-warning">{{ucwords($view->konfirmasi)}}</span>
+                                                    @break
+                                                @case("sakit")
+                                                    <span class="text-success">{{ucwords($view->konfirmasi)}}</span>
+                                                    @break
+                                                @case("diterima")
+                                                    <span class="text-info">{{ucwords($view->konfirmasi)}}</span>
+                                                    @break
+                                                @case("ditolak")
+                                                    <span class="text-danger">{{ucwords($view->konfirmasi)}}</span>
+                                                    @break
+                                                @default
+                                                    <span>{{ucwords($view->konfirmasi)}}</span>
+                                            @endswitch
+                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($view->updated_at)->locale('id')->translatedFormat('d F Y') }}</td>
+                                        <td class="text-center">
+                                            @switch($cekstatus)
+                                                @case("ditangguhkan")
+                                                    <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
+                                                    @break
+                                                @case("sakit")
+                                                    <a href="{{$view->sakit_ditangguhkan}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
+                                                    @break
+                                                @case("diterima")
+                                                    <a href="{{$view->blanko_diterima}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
+                                                    @break
+                                                @case("ditolak")
+                                                    <a href="{{$view->blanko_ditolak}}" target="_blank" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
+                                                    @break
+                                                @default
+                                                    <a href="#" class="btn btn-primary">Blanko<i class="bi bi-file-text-fill"></i></a>
+                                            @endswitch
+                                            <a href="#" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->bid }}" aria-expanded="false" aria-controls="collapse{{ $view->bid }}" class="btn btn-secondary">Detail <i class="bi bi-arrow-down"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="100">
+                                            <div class="collapse" id="collapse{{ $view->bid }}">
+                                                <div class="card card-body">
+                                                    <div class="d-flex content-between">
+                                                        <div class="col-md-3">
+                                                            <p>Dibuat Oleh: {{ ucwords(str_replace('_', ' ', $view->oleh_user)) }}</p>
+                                                            <p>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} </p>
+                                                            <p>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
+                                                            <p>Alamat Selama Cuti: {{ $view->tujuan_cuti }}</p>
                                                         </div>
-                                                        </span>
-                                                        <span class="d-flex justify-content-between">
+                                                        <div class="col-md-3">
+                                                            <p>Mulai Cuti: {{ \Carbon\Carbon::parse($view->mulai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                            <p>Selesai Cuti: {{ \Carbon\Carbon::parse($view->selesai_cuti)->locale('id')->translatedFormat('d F Y') }}</p>
+                                                            <p>Lamanya Cuti: {{ abs(\Carbon\Carbon::parse($view->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($view->mulai_cuti))) + 1 }} hari</p>
+                                                            <p>Alasan: {{ $view->alasan }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <p>Keterangan Cuti (untuk rekpitulasi) : {{ $view->keterangan }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="d-flex justify-content-between">
                                                         <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal<i class="bi bi-file-text-fill"></i></a>
                                                         @if($cekstatus =="ditangguhkan")
                                                             <a class="btn btn-danger" onclick="confirmDeletePersonal({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        {{-- @elseif($cekstatus =="diterima")
-                                                        <span>
-                                                            <textarea class="form-control" id="alasan" name="alasan" rows="2" required maxlength="50"></textarea>
-                                                            <small id="alasan-help" class="form-text text-muted">Maksimum 50 karakter</small>
-                                                            <small id="alasan-warning" class="form-text text-danger d-none">Batas maksimun karakter</small>
-                                                            <a class="btn btn-danger" onclick="confirmDeletePersonal({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a>
-                                                        </span> --}}
                                                         @endif
-                                                        </span>
-                                                    </div>
+                                                    </span>
                                                 </div>
-                                            </td>
-                                        @endif
-                                        </tr>
-                                        @empty
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
                                     {{-- <tr class="text-center">
                                         <td colspan="100">No data available</td>
                                     </tr> --}}
                                     @endforelse
                                 </tbody>
                             </table>
+                            
                             </div> <!-- /.card-body -->
                             <div class="card-footer clearfix">
                                 {{ $blanko->render('layouts/pagination') }}
