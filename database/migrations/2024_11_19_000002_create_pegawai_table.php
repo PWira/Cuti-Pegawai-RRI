@@ -17,7 +17,7 @@ class CreatePegawaiTable extends Migration
             $table->string('nip', 20)->unique();
             $table->enum('jk',['laki_laki','perempuan']);
             $table->integer('umur')->length(2);
-            $table->string('jabatan', 40);
+            $table->string('jabatan', 50);
             $table->unsignedBigInteger('pegawai_unit_id');
             $table->foreign('pegawai_unit_id')->references('unit_id')->on('unit_kerja');
             $table->integer('masa_kerja')->length(5);

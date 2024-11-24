@@ -13,6 +13,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous"><!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script>
+        function toggleAdditionalData() {
+            var additionalRows = document.querySelectorAll('.additional-data');
+            var toggleIcon = document.getElementById('toggle-icon');
+    
+            additionalRows.forEach(function(row) {
+                row.classList.toggle('d-none');
+            });
+    
+            if (toggleIcon.textContent === '+') {
+                toggleIcon.textContent = '-';
+            } else {
+                toggleIcon.textContent = '+';
+            }
+        }
+    </script>
+    
+    <style>
+        .d-none {
+            display: none;
+        }
+    </style>
 </head>
 
 <main class="app-main"> <!--begin::App Content Header-->
@@ -82,16 +104,11 @@
                     <a href="{{ url('table-ditolak') }}" class="small-box-footer link-light">Selengkapnya</a>
                 </div>
             </div> <!-- /.col -->
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="card-title font-weight-bold">Chart Cuti Diterima</h5>
                         <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button>
-                            {{-- <div class="btn-group"> <button type="button" class="btn btn-tool dropdown-toggle" data-bs-toggle="dropdown"> <i class="bi bi-wrench"></i> </button>
-                                <div class="dropdown-menu dropdown-menu-end" role="menu"> <a href="#" class="dropdown-item">Action</a> <a href="#" class="dropdown-item">Another action</a> <a href="#" class="dropdown-item">
-                                        Something else here
-                                    </a> <a class="dropdown-divider"></a> <a href="#" class="dropdown-item">Separated link</a> </div>
-                            </div> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> --}}
                         </div>
                     </div> <!-- /.card-header -->
                     <div class="card-body"> <!--begin::Row-->
@@ -151,8 +168,6 @@
                         </div> <!--end::Row-->
                     </div> <!-- /.card-footer -->
                 </div> <!-- /.card -->
-            </div> <!-- /.col -->
-            <div class="col-md-7">
                 <div class="card mb-4">
                     <div class="card-header border-0">
                         <div class="d-flex justify-content-between">
@@ -169,6 +184,29 @@
                             </span> </div> --}}
                     </div>
                 </div> <!-- /.card -->
+
+                {{-- <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Pegawai Cuti (Visitor Chart)</h3>
+                        <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button></div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="visitor-chart-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>NIP</th>
+                                    <th>Unit Kerja</th>
+                                    <th>Jumlah Cuti Diterima</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data akan ditampilkan di sini -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div> --}}
             </div> <!-- /.col -->
             <div class="col-md-5">
                 <div class="card mb-4">
@@ -188,6 +226,34 @@
                             </div> <!-- /.col -->
                     </div>
                 </div> <!-- /.card -->
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">Pegawai Cuti Terbanyak Bulan Ini</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered" id="pie-chart-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>NIP</th>
+                                    <th>Unit Kerja</th>
+                                    <th>Jumlah Cuti Diterima</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data akan ditampilkan di sini -->
+                            </tbody>
+                        </table>
+                        {{-- <div class="text-center">
+                            <button class="btn btn-link" id="show-more-btn" onclick="toggleData()">
+                                <span id="toggle-icon">+</span>
+                            </button>
+                        </div> --}}
+                    </div>
+                </div>
+
             </div> <!-- /.col -->
       </div> <!--end::Container-->
     </div> <!--end::App Content-->
@@ -198,8 +264,154 @@
         const filterForm = document.getElementById('filter-form');
         filterForm.style.display = filterForm.style.display === 'none' ? 'block' : 'none';
     });
+    
+    
     var dataCuti = @json($dataCuti);
     var jabatanCuti = @json($jabatanCuti);
+    var pegawaiCuti = @json($pegawaiCuti);
+    var currentData = [];
+    var isExpanded = false;
+
+    const tbody = document.querySelector('#pie-chart-table tbody');
+    const rows = tbody.querySelectorAll('tr');
+
+    // rows.forEach((row, index) => {
+    //     if (index < 20) {
+    //         row.classList.toggle('d-none');
+    //     }
+    // });
+
+    function updatePieChartTable(jabatan, month) {
+        const tbody = document.querySelector('#pie-chart-table tbody');
+        tbody.innerHTML = '';
+        currentData = pegawaiCuti[month]?.[jabatan] || [];
+
+        // Urutkan data berdasarkan jumlah cuti diterima terbanyak
+        currentData.sort((a, b) => b.count - a.count);
+
+        // Tampilkan hanya 5 data pertama secara default
+        currentData.slice(0,19).forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.nama}</td>
+                <td>${item.nip}</td>
+                <td>${item.unit_kerja}</td>
+                <td>${item.count}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // // Tambahkan data lebih banyak dengan kelas 'd-none'
+        // currentData.slice(0).forEach((item, index) => {
+        //     const row = document.createElement('tr');
+        //     row.classList.add('d-none');
+        //     row.innerHTML = `
+        //         <td>${index + 1}</td>
+        //         <td>${item.nama}</td>
+        //         <td>${item.nip}</td>
+        //         <td>${item.unit_kerja}</td>
+        //         <td>${item.count}</td>
+        //     `;
+        //     tbody.appendChild(row);
+        // });
+
+        // isExpanded = false;
+        // document.getElementById('toggle-icon').textContent = '+';
+    }
+
+    // function toggleData() {
+    //     const tbody = document.querySelector('#pie-chart-table tbody');
+    //     const rows = tbody.querySelectorAll('tr');
+    //     const toggleIcon = document.getElementById('toggle-icon');
+
+    //     rows.forEach((row, index) => {
+    //         if (index >= 5) {
+    //             row.classList.toggle('d-none');
+    //         }
+    //     });
+
+    //     isExpanded = !isExpanded;
+    //     toggleIcon.textContent = isExpanded ? '-' : '+';
+    // }
+
+    function loadInitialData() {
+        const tbody = document.querySelector('#pie-chart-table tbody');
+        tbody.innerHTML = '';
+        let allData = [];
+
+        Object.keys(jabatanCuti).forEach(month => {
+            Object.keys(jabatanCuti[month]).forEach(jabatan => {
+                const data = pegawaiCuti[month]?.[jabatan] || [];
+                allData = allData.concat(data);
+            });
+        });
+
+        // Urutkan data berdasarkan jumlah cuti diterima terbanyak
+        allData.sort((a, b) => b.count - a.count);
+
+        allData.slice(0,19).forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.nama}</td>
+                <td>${item.nip}</td>
+                <td>${item.unit_kerja}</td>
+                <td>${item.count}</td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // // Tambahkan data lebih banyak dengan kelas 'd-none'
+        // allData.slice(0).forEach((item, index) => {
+        //     const row = document.createElement('tr');
+        //     row.classList.add('d-none');
+        //     row.innerHTML = `
+        //         <td>${index + 1}</td>
+        //         <td>${item.nama}</td>
+        //         <td>${item.nip}</td>
+        //         <td>${item.unit_kerja}</td>
+        //         <td>${item.count}</td>
+        //     `;
+        //     tbody.appendChild(row);
+        // });
+
+        // currentData = allData;
+        // isExpanded = false;
+        // document.getElementById('toggle-icon').textContent = '+';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadInitialData);
+
+    // function updateVisitorChartTable(jabatan, month) {
+    //     console.log(`Updating table for ${jabatan} in month ${month}`);
+    //     const tbody = document.querySelector('#visitor-chart-table tbody');
+    //     tbody.innerHTML = '';
+    //     const data = pegawaiCuti[month]?.[jabatan] || [];
+    //     console.log(`Data for ${jabatan} in month ${month}:`, data);
+
+    //     if (data.length === 0) {
+    //         const row = document.createElement('tr');
+    //         row.innerHTML = `<td colspan="5" class="text-center">No data available for ${jabatan.replace(/_/g, ' ')} in ${month}</td>`;
+    //         tbody.appendChild(row);
+    //         return;
+    //     }
+
+    //     // Sort data by the number of leave days accepted
+    //     data.sort((a, b) => b.count - a.count);
+
+    //     data.forEach((item, index) => {
+    //         const row = document.createElement('tr');
+    //         row.innerHTML = `
+    //             <td>${index + 1}</td>
+    //             <td>${item.nama}</td>
+    //             <td>${item.nip}</td>
+    //             <td>${item.unit_kerja}</td>
+    //             <td>${item.count}</td>
+    //         `;
+    //         tbody.appendChild(row);
+    //     });
+    // }
 </script>
 
 @endsection
