@@ -40,11 +40,6 @@ class CreateNewUser implements CreatesNewUsers
                 'string',
                 'max:20',
             ],
-            'hak'=>[
-                'required',
-                'string',
-                'max:20',
-            ],
             'password' => $this->passwordRules(),
         ])->validate();
 
@@ -53,7 +48,6 @@ class CreateNewUser implements CreatesNewUsers
             'user_nip' => $input['user_nip'],
             'email' => $input['email'],
             'roles' => $input['roles'],
-            'hak' => $input['hak'],
             'password' => Hash::make($input['password']),
         ]);
     }

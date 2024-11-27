@@ -13,7 +13,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('unit_kerja', function (Blueprint $table) {
-            $table->id('unit_id');  // Pastikan menggunakan id('unit_id') bukan bigIncrements atau tipe lain
+            $table->id('unit_id'); 
             $table->string('unit_kerja', 50);
             $table->timestamps();
         });

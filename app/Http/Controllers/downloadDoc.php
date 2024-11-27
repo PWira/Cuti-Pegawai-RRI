@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengajuan;
+use App\Models\UnitKerja;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,17 +26,22 @@ class downloadDoc extends Controller
 
         $user = Auth::user();
         $id = $user->id;
-        $role = $user->role;
-        $asal = $user->asal;
+        $nip = $user->user_nip;
+        $user_unit_id = $user->user_unit_id;
+        $userUnitKerja = UnitKerja::find($user->user_unit_id);
         $roles = $user->roles;
 
-        return compact('id', 'role', 'asal', 'roles');
+        return compact('userUnitKerja', 'id', 'nip', 'roles','user_unit_id', 'userUnitKerja');
     }
 
     public function generatePDF(Request $req)
     {
         $userData = $this->getUserData();
-        $asal = $userData['asal'];
+        $id = $userData['id'];
+        $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
+        $user_nip = $userData['nip'];
+        $roles = $userData['roles'];
 
         $month = $req->query('month');
         $year = $req->query('year');
@@ -49,18 +55,22 @@ class downloadDoc extends Controller
         $query = DB::table('pengajuan')
             ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
             ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
             ->select(
                 'pengajuan.*',
-                'pegawai.nama as nama_pegawai',
+                'pegawai.nama as nama_pekerja',
                 'pegawai.nip',
+                'pegawai.by_id',
                 'pegawai.jabatan',
-                'pegawai.unit_kerja as unit_kerja',
+                'pegawai.pegawai_unit_id',
                 'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
                 'users.name as oleh_user',
-                'users.roles as oleh_roles',
-                'users.asal as oleh_asal'
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
             )
-            ->where('unit_kerja', $asal)
+            ->where('pegawai.pegawai_unit_id', $user_unit_id)
+            // ->where('pegawai.by_id', $id)
             ->where('pengajuan.konfirmasi', 'diterima')
             ->whereRaw('MONTH(pengajuan.updated_at) = ?', [$month])
             ->whereRaw('YEAR(pengajuan.updated_at) = ?', [$year])
@@ -171,15 +181,20 @@ class downloadDoc extends Controller
 
         $query = DB::table('pengajuan')
             ->join('pegawai', 'pengajuan.pegawai_id', '=', 'pegawai.pid')
+            ->join('users', 'pengajuan.user_id', '=', 'users.id')
+            ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
             ->select(
-                'pegawai.nama as nama_pegawai', 
-                'pegawai.nip as nip', 
-                'pegawai.jabatan as jabatan', 
-                'pegawai.unit_kerja as unit_kerja', 
-                'pegawai.masa_kerja as masa_kerja', 
-                'pengajuan.jenis_cuti as jenis_cuti', 
-                'pengajuan.created_at as created_at', 
-                'pengajuan.konfirmasi as konfirmasi');
+                'pengajuan.*',
+                'pegawai.nama as nama_pekerja',
+                'pegawai.nip',
+                'pegawai.jabatan',
+                'pegawai.pegawai_unit_id',
+                'pegawai.masa_kerja',
+                'unit_kerja.unit_kerja as nama_unit_kerja',
+                'users.name as oleh_user',
+                'users.user_jabatan as oleh_jabatan',
+                'users.user_nip as oleh_nip',
+            );
 
         if ($status !== null) {
             $query->where('konfirmasi', $status);

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Pegawai;
+use App\Models\UnitKerja;
 
 class adminController extends Controller
 {
@@ -32,21 +33,18 @@ class adminController extends Controller
 
         $user = Auth::user();
         $id = $user->id;
-        $hak = $user->hak;
         $roles = $user->roles;
+        $userUnitKerja = UnitKerja::find($user->user_unit_id);
 
-        return compact('id', 'hak', 'roles');
+        return compact('id', 'roles', 'userUnitKerja');
     }
 
     public function createUser(Request $req)
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $roles = $userData['roles'];
-
-        $name = strtolower(str_replace(' ', '_', $req->input('name')));
-        $userHak = strtolower(str_replace(' ', '_', $req->input('hak')));
+        $userUnitKerja = $userData['userUnitKerja'];
 
         $tahun_kerja = $req->tahun_kerja;
         $bulan_kerja = $req->bulan_kerja;
@@ -65,14 +63,13 @@ class adminController extends Controller
         }
         
         User::create([
-            'name' => $name,
+            'name' => $req->name,
             "user_nip" => $req->nip,
             "user_unit_id" => $req->user_unit_id,
             "user_jabatan" => $req->jabatan,
             'email' => $req->email,
             'password' => Hash::make($req->password),
             'roles' => $req->roles,
-            'hak' => $userHak,
         ]);
         // dd($req->all());
 
@@ -81,16 +78,23 @@ class adminController extends Controller
 
     public function inputUser()
     {
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $roles = $userData['roles'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $unit_kerja = DB::table('unit_kerja')->get();
-        return view('auth.createUser', compact('unit_kerja'));
+
+        return view('auth.createUser', compact('userUnitKerja','unit_kerja'));
     }
 
     public function daftarUser(Request $req)
     {
-        $user = Auth::user();
-        $hak = $user->hak;
+        $userData = $this->getUserData();
+        $id = $userData['id'];
+        $roles = $userData['roles'];
+        $userUnitKerja = $userData['userUnitKerja'];
 
-        if ($hak === 'admin') {
+        if ($roles === 'admin') {
             $userlist = DB::table('users')
             ->join('unit_kerja', 'users.user_unit_id', '=', 'unit_kerja.unit_id')
             ->select(
@@ -99,25 +103,11 @@ class adminController extends Controller
                 )
             ->paginate(15);
         } else {
-            $userlist = collect(); // Return an empty collection if the hak is not recognized
+            $userlist = collect();
         }
 
-        return view('auth.user', compact('userlist'));
+        return view('auth.user', compact('userUnitKerja','userlist'));
     }
-
-    // public function daftarUser(Request $req){
-    
-    //     $user = Auth::user();
-    //     $hak = $user->hak;
-
-    //     if ($hak === 'admin') {
-    //         $userlist = DB::table('users')->paginate(15);
-    //     } else {
-    //         $userlist = collect(); // Return an empty collection if the hak is not recognized
-    //     }
-
-    //     return view('auth.user', compact('userlist'));
-    // }
 
     public function hapusUser($id){
         DB::table("users")->where('id','=',$id)->delete();

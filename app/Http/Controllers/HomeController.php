@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Pegawai;
+use App\Models\UnitKerja;
 
 class HomeController extends Controller
 {
@@ -32,20 +33,20 @@ class HomeController extends Controller
 
         $user = Auth::user();
         $id = $user->id;
-        $hak = $user->hak;
         $nip = $user->user_nip;
         $user_unit_id = $user->user_unit_id;
+        $userUnitKerja = UnitKerja::find($user->user_unit_id);
         $roles = $user->roles;
 
-        return compact('id', 'hak', 'nip', 'roles','user_unit_id');
+        return compact('userUnitKerja', 'id', 'nip', 'roles','user_unit_id', 'userUnitKerja');
     }
 
     public function daftarPegawai(Request $req){
 
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -65,7 +66,7 @@ class HomeController extends Controller
             "pegawai_unit_id" => $req->pegawai_unit_id,
             "masa_kerja" => $total_bulan_kerja,
             "created_at" => now()
-        ]);
+        ])->orderBy('pengajuan.created_at', 'asc');;
     
         return redirect('pegawai')->with('success', 'Data pegawai berhasil dimasukan.');
     }
@@ -74,8 +75,8 @@ class HomeController extends Controller
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -85,15 +86,15 @@ class HomeController extends Controller
             ->select('unit_id', 'unit_kerja')
             ->get();
 
-        return view('pages.pegawai', compact('id', 'hak', 'roles', 'unit_kerja'));
+        return view('pages.pegawai', compact('userUnitKerja', 'id', 'roles', 'unit_kerja'));
     }
 
     public function pegawai()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -106,23 +107,23 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.created_at', 'asc');;
 
-        if ($hak === 'admin') {
+        if ($roles === 'admin' || $roles === 'direktur') {
             $blanko = $query->paginate(15);
-        } elseif ($hak === 'user' || $hak === 'super_user') {
+        } elseif ($roles === 'kepala_rri' || $roles === 'sdm') {
             $blanko = $query->where('pegawai_unit_id', $user_unit_id)->paginate(15);
         } else {
-            $blanko = collect(); // Return an empty collection if the hak is not recognized
+            $blanko = collect(); 
         }
 
-        return view('pages.tabel_pegawai', compact('id', 'blanko', 'hak', 'roles'));
+        return view('pages.tabel_pegawai', compact('userUnitKerja', 'id', 'blanko', 'roles'));
     }
 
     public function editPegawai($pid)
     {
         $pegawai = Pegawai::findOrFail($pid);
-        return view('pages.edit_pegawai', compact('pegawai'));
+        return view('pages.edit_pegawai', compact('userUnitKerja', 'pegawai'));
     }
 
     public function updatePegawai(Request $req, $pid)
@@ -156,8 +157,8 @@ class HomeController extends Controller
     public function pengajuanCuti()
     {
         $userData = $this->getUserData();
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -176,29 +177,32 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.created_at', 'asc');;
 
-            if ($hak === 'admin') {
-                $blanko = $query->where('pengajuan.konfirmasi', 'ditangguhkan')->paginate(15);
-            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+            if ($roles === 'admin') {
+                $blanko = $query
+                ->where('pengajuan.konfirmasi', 'ditangguhkan')
+                ->orWhere('pengajuan.konfirmasi', 'sakit')
+                ->paginate(15);
+            } elseif (($roles === 'sdm' || $roles === 'kepala_rri')) {
                 $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
                 ->where('pengajuan.konfirmasi', 'ditangguhkan')
                 ->paginate(15);
-            } elseif ($hak === 'user' && $roles === 'direktur') {
+            } elseif ( $roles === 'direktur') {
                 $blanko = $query->where('pengajuan.konfirmasi', 'sakit')->paginate(15);
             } else {
                 $blanko = collect();
             }     
 
-        return view('pages.pengajuan', compact('blanko', 'hak', 'roles'));
+        return view('pages.pengajuan', compact('userUnitKerja', 'blanko', 'roles'));
     }
 
     public function cutiDitolak()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -217,29 +221,27 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.created_at', 'asc');;
 
-            if ($hak === 'admin') {
+            if ($roles === 'admin' || $roles === 'direktur') {
                 $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')->paginate(15);
-            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+            } elseif (($roles === 'sdm' || $roles === 'kepala_rri')) {
                 $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
                 ->where('pengajuan.konfirmasi', 'ditolak')
                 ->paginate(15);
-            } elseif ($hak === 'user' && $roles === 'direktur') {
-                $blanko = $query->where('pengajuan.konfirmasi', 'ditolak')->paginate(15);
             } else {
                 $blanko = collect();
             }
 
-        return view('pages.ditolak', compact('id', 'blanko', 'hak', 'roles'));
+        return view('pages.ditolak', compact('userUnitKerja', 'id', 'blanko', 'roles'));
     }
 
     public function cutiDiterima()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -258,29 +260,27 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.created_at', 'asc');;
 
-            if ($hak === 'admin') {
+            if ($roles === 'admin' || $roles === 'direktur') {
                 $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
-            } elseif ($hak === 'super_user' || ($hak === 'user' && $user_unit_id !== 1)) {
+            } elseif ($roles === 'sdm' || $roles === 'kepala_rri') {
                 $blanko = $query->where('pegawai.pegawai_unit_id', $user_unit_id)
                 ->where('pengajuan.konfirmasi', 'diterima')
                 ->paginate(15);
-            } elseif ($hak === 'user' && $roles === 'direktur') {
-                $blanko = $query->where('pengajuan.konfirmasi', 'diterima')->paginate(15);
             } else {
-                $blanko = collect(); // Return an empty collection if the hak is not recognized
+                $blanko = collect();
             }
 
-        return view('pages.diterima', compact('id', 'blanko', 'hak', 'roles'));
+        return view('pages.diterima', compact('userUnitKerja', 'id', 'blanko', 'roles'));
     }
 
     public function pengajuanSaya()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -299,48 +299,43 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.created_at', 'asc');;
 
         $blanko = $query->where('pengajuan.user_id', $id)->paginate(15);
 
         $konfirmasi = DB::table('pengajuan')->where('konfirmasi')->where('pengajuan.user_id', $id)->get();
 
-        return view('pages.pribadiPengajuan', compact('id', 'blanko', 'konfirmasi', 'hak', 'roles'));
+        return view('pages.pribadiPengajuan', compact('userUnitKerja', 'id', 'blanko', 'konfirmasi', 'roles'));
     }
 
     public function form()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
-        if ($hak === 'admin') {
-            $blanko = DB::table('pegawai')
-                ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
-                ->select('pegawai.*', 'unit_kerja.unit_kerja')
-                ->paginate(15);
-        } elseif ($hak === 'user' || $hak === 'super_user') {
+        if ($roles === 'sdm') {
             $blanko = DB::table('pegawai')
                 ->join('unit_kerja', 'pegawai.pegawai_unit_id', '=', 'unit_kerja.unit_id')
                 ->select('pegawai.*', 'unit_kerja.unit_kerja')
                 ->where('pegawai_unit_id', $user_unit_id)
-                ->paginate(15);
+                ->paginate(15)->orderBy('pengajuan.created_at', 'asc');;
         } else {
-            $blanko = collect(); // Return an empty collection if the hak is not recognized
+            $blanko = collect();
         }
 
-        return view('pages.form', compact('id', 'blanko', 'hak', 'roles'));
+        return view('pages.form', compact('userUnitKerja', 'id', 'blanko', 'roles'));
     }
 
     public function rekapitulasi()
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -357,19 +352,19 @@ class HomeController extends Controller
                 'users.name as oleh_user',
                 'users.user_jabatan as oleh_jabatan',
                 'users.user_nip as oleh_nip',
-            );
+            )->orderBy('pengajuan.updated_at', 'asc');;
 
         $blanko = $query->where('pegawai_unit_id', $user_unit_id)->paginate(15);
 
-        return view('download.rekapitulasi', compact('id', 'blanko' ,'hak','roles'));
+        return view('download.rekapitulasi', compact('userUnitKerja', 'id', 'blanko', 'roles'));
     }
 
     public function kirimPengajuan(Request $req)
     {
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -433,8 +428,8 @@ class HomeController extends Controller
     public function responSakit(Request $req){
 
         $userData = $this->getUserData();
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -468,8 +463,8 @@ class HomeController extends Controller
 
         $userData = $this->getUserData();
         $id = $userData['id'];
-        $hak = $userData['hak'];
         $user_unit_id = $userData['user_unit_id'];
+        $userUnitKerja = $userData['userUnitKerja'];
         $user_nip = $userData['nip'];
         $roles = $userData['roles'];
 
@@ -509,8 +504,8 @@ class HomeController extends Controller
 {
     $userData = $this->getUserData();
     $id = $userData['id'];
-    $hak = $userData['hak'];
     $user_unit_id = $userData['user_unit_id'];
+    $userUnitKerja = $userData['userUnitKerja'];
     $user_nip = $userData['nip'];
     $roles = $userData['roles'];
 
@@ -684,7 +679,7 @@ class HomeController extends Controller
                 })
                 ->count();
 
-            $chartCuti = DB::table('pengajuan')
+                $chartCuti = DB::table('pengajuan')
                 ->select(DB::raw('DATE_FORMAT(mulai_cuti, "%Y-%m") as month'), DB::raw('count(*) as count'))
                 ->where('konfirmasi', 'diterima')
                 ->whereExists(function ($query) use ($user_unit_id) {
@@ -906,7 +901,7 @@ class HomeController extends Controller
             break;
     }
 
-    return view('home')
+    return view('home', compact('userUnitKerja', ))
         ->with('jumlahPegawai', $jumlahPegawai)
         ->with('jumlahPengajuan', $jumlahPengajuan)
         ->with('cutiDiterima', $cutiDiterima)

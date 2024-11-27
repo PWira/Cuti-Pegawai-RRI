@@ -8,7 +8,7 @@
                     <p>Dashboard</p>
                 </a> 
                 </li>  
-                @if ($hak==='admin')
+                @if ($roles ==='admin')
                 <hr style="color: aliceblue">
                 <li class="nav-item"> <a href="#" class="nav-link"><i class="nav-icon fas fa-user-secret"></i>
                     <p class="text-danger">
@@ -23,7 +23,7 @@
                 </li>
                 @endif
                 <hr class="" style="color: aliceblue">
-                @if ($hak ==='super_user')
+                @if ($roles  ==='sdm')
                 <li class="nav-item"> <a href="{{url('data-pegawai')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                     <p>Isi Data Pegawai</p>
                 </a> </li> 
@@ -41,7 +41,7 @@
                     </ul>
                 </li>
                 <hr style="color: aliceblue">
-                @if ($hak ==='super_user')
+                @if ($roles ==='sdm')
                 <li class="nav-item"> <a href="{{url('form')}}" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
                     <p>Form Pengajuan</p>
                 </a> </li>

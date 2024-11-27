@@ -53,13 +53,12 @@ class KeymasterUserSeeder extends Seeder
         // Membuat user admin
         User::create([
             'name' => 'Keymaster',
-            'user_nip' => '101',
+            'user_nip' => '404',
             'user_unit_id' => '1',
             'user_jabatan' => '',
             'email' => 'k@m.null',
             'password' => Hash::make('adminkey135'),
             'roles' => 'admin',
-            'hak' => 'admin',
         ]);
 
         $nama = [
@@ -92,7 +91,6 @@ class KeymasterUserSeeder extends Seeder
             'email' => $email,
             'password' => Hash::make('12345678'),
             'roles' => 'direktur',
-            'hak' => 'user',
         ]);
 
         foreach ($unitKerjaIds as $unitKerjaId) {
@@ -107,7 +105,6 @@ class KeymasterUserSeeder extends Seeder
                 'email' => $email,
                 'password' => Hash::make('12345678'),
                 'roles' => 'kepala_rri',
-                'hak' => 'user',
             ]);
 
             // Membuat sdm untuk setiap unit_kerja
@@ -121,7 +118,6 @@ class KeymasterUserSeeder extends Seeder
                 'email' => $email,
                 'password' => Hash::make('12345678'),
                 'roles' => 'sdm',
-                'hak' => 'super_user',
             ]);
         }
     }

@@ -73,7 +73,7 @@
                                             @endphp
                                             {{ $years }} tahun {{ $months }} bulan
                                         </td>
-                                        @if ($hak === "super_user" || $hak ==="admin")
+                                        @if ($roles === "sdm" || $roles ==="admin")
                                             <td>
                                                 <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $view->pid }}" aria-expanded="false" aria-controls="collapse{{ $view->pid }}">
                                                     Selengkapnya <i class="bi bi-arrow-down"></i>
@@ -88,7 +88,7 @@
                                                             <br>Jabatan : {{strtoupper(str_replace('_', ' ', $view->oleh_jabatan))}} 
                                                             <br>NIP : {{ucwords(str_replace('_', ' ', $view->oleh_nip))}}</p>
                                                         <p class="d-flex justify-content-between">
-                                                            @if ($hak === "super_user")
+                                                            @if ($roles === "sdm")
                                                                 <a href="{{ route('edit-pegawai', $view->pid) }}" class="btn btn-primary">Edit</a>
                                                                 <a class="btn btn-danger" onclick="pegawaiDelete({{$view->pid}})">HAPUS <i class="bi bi-trash"></i></a>
                                                             @endif

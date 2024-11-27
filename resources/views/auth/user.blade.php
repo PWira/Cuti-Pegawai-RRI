@@ -43,7 +43,7 @@
                                         <th style="">E-mail</th>
                                         <th style="">NIP</th>
                                         <th style="">Unit Kerja</th>
-                                        <th style="">Hak</th>
+                                        <th style="">Roles</th>
                                         <th style="">jabatan</th>
                                         <th style="">Akun dibuat</th>
                                         <th style="">ADMIN CONTROL</th>
@@ -58,8 +58,8 @@
                                         <td>{{$view->email}}</td>
                                         <td>{{ucwords($view->user_nip)}}</td>
                                         <td>{{ucwords($view->unit_kerja)}}</td>
-                                        <td>{{ ucwords(str_replace('_', ' ', $view->hak)) }}</td>
-                                        <td>{{ strtoupper(format_jabatan($view->user_jabatan)) }}</td>
+                                        <td>{{ strtoupper(str_replace('_', ' ', $view->roles)) }}</td>
+                                        <td>{{ (format_jabatan($view->user_jabatan)) }}</td>
                                         <td>{{$view->created_at}}</td>
                                         <td><a class="btn btn-danger" onclick="userDelete({{$view->id}})">HAPUS <i class="bi bi-trash"></i></a></td>
                                         </tr>

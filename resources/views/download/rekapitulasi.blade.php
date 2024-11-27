@@ -51,7 +51,7 @@
         @foreach ($blanko as $index => $data)
         <tr>
             <td>{{ $index + 1 }}</td>
-            <td>{{ $data->nama_pegawai }}</td>
+            <td>{{ $data->nama_pekerja }}</td>
             <td>{{ abs(\Carbon\Carbon::parse($data->selesai_cuti)->diffInDays(\Carbon\Carbon::parse($data->mulai_cuti)))+1 }} hari</td>
             <td>{{ \Carbon\Carbon::parse($data->mulai_cuti)->format('d-m-Y') }} - {{ \Carbon\Carbon::parse($data->selesai_cuti)->format('d-m-Y') }}</td>
             <td>{{ ucwords($data->tujuan_cuti) }}</td>

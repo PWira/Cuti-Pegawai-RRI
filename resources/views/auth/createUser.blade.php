@@ -25,7 +25,7 @@
         @csrf
               <div class="card-body">
                   <div class="row g-2">
-                        <div class="">
+                        <div class="col-md-6">
                             <label for="name" class="form-label">Nama Lengkap</label>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Nama Lengkap" required>
                             <div class="valid-feedback"></div>
@@ -33,6 +33,16 @@
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
                             <input type="text" class="form-control" name="email" id="email" placeholder="contoh@email.com" required>
+                            <div class="valid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
+                            <div class="valid-feedback"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password_confirmation" placeholder="Retype password">
                             <div class="valid-feedback"></div>
                         </div>
                         <div class="col-md-6">
@@ -52,24 +62,6 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="hak" class="form-label">Hak Akses Website</label>
-                            <input type="text" class="form-control @error('hak') is-invalid @enderror" id="hak" name="hak" placeholder="Hak akses disesuaikan dengan Roles" value="" readonly required>
-                            <div class="valid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="Password">
-                            <div class="valid-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" name="password_confirmation" placeholder="Retype password">
-                            <div class="valid-feedback"></div>
-                        </div>
-                        {{-- <p></p>
-                        <hr class="" style="color: gray">
-                        <p>Catatan : Data Pegawai dibawah ini juga digunakan untuk rekapitulasi, pastikan data yang dimasukkan sesuai dengan data yang ada.</p> --}}
-                        <div class="col-md-6">
                             <label for="jabatan" class="form-label">Jabatan</label>
                             <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Nama Jabatan Lengkap">
                             <div class="valid-feedback"></div>
@@ -86,6 +78,9 @@
                             </select>
                             <div class="valid-feedback"></div>
                         </div>
+                        {{-- <p></p>
+                        <hr class="" style="color: gray">
+                        <p>Catatan : Data Pegawai dibawah ini juga digunakan untuk rekapitulasi, pastikan data yang dimasukkan sesuai dengan data yang ada.</p> --}}
                   </div>
               </div>
               <div class="card-footer" style="text-align: center">
@@ -111,20 +106,4 @@
       });
   </script>    
 </body>
-  <script>
-    function setRole() {
-        var roles = document.getElementById("roles");
-        var hak = document.getElementById("hak");
-
-        if(roles.value === "admin"){
-          hak.value = "Admin";
-        }else if (roles.value === "direktur" || roles.value === "kepala_rri") {
-            hak.value = "User";
-        } else if (roles.value === "sdm") {
-            hak.value = "Super User";
-        } else {
-            hak.value = "User";
-        }
-    }
-  </script>
 @endsection

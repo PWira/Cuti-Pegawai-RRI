@@ -100,25 +100,19 @@
                                                     <p>Alasan: {{ $view->alasan }}</p>
                                                     </div>
                                                     </div>
-                                                    @if ($hak === "user" && $roles === "kepala_rri")
+                                                    @if ($roles === "kepala_rri")
                                                     <p class="d-flex justify-content-between">
                                                         <span>
                                                             @if ($view->jenis_cuti!="cuti_sakit")
                                                                 <input class="btn btn-primary" type="file" id="blankoInput_{{ $view->bid }}" accept="application/pdf" required>
                                                                 <button class="btn btn-success" onclick="return confirmResponCuti('diterima', {{ $view->bid }})">Diterima <i class="bi bi-check"></i></button>
                                                                 <button class="btn btn-danger" onclick="return confirmResponCuti('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button>
-                                                                {{-- <button class="btn btn-success" onclick="responCuti('diterima', {{ $view->bid }})">Diterima <i class="bi bi-check"></i></button>
-                                                                <button class="btn btn-danger" onclick="responCuti('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                             @elseif ($view->jenis_cuti=="cuti_sakit")
                                                                 <input class="btn btn-primary" type="file" id="fileSakit_{{ $view->bid }}" accept="application/pdf" required>
                                                                 <button class="btn btn-success" onclick="return confirmSakitCuti('sakit', {{ $view->bid }})">Dikonfirmasi <i class="bi bi-check"></i></button>
                                                                 <button class="btn btn-danger" onclick="return confirmSakitCuti('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button>
-                                                                {{-- <button class="btn btn-success" onclick="responSakit('sakit', {{ $view->bid }})">Dikonfirmasi <i class="bi bi-check"></i></button>
-                                                                <button class="btn btn-danger" onclick="responSakit('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                             @endif
                                                         </span>
-                                                    {{-- @elseif($hak === "super_user" || $hak === "admin")
-                                                        <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a> --}}
                                                         @endif
                                                     </p>
                                                 </div>
@@ -213,16 +207,12 @@
                                                     </div>
                                                     <p class="d-flex justify-content-between">
                                                         <a href="{{$view->blanko_ditangguhkan}}" target="_blank" class="btn btn-secondary">Lihat Blanko Pengajuan Awal<i class="bi bi-file-text-fill"></i></a>
-                                                    @if ($hak === "user" && $roles === "direktur")
+                                                    @if ($roles === "direktur")
                                                         <span>
                                                             <input class="btn btn-primary" type="file" id="fileBalasanSakit_{{ $view->bid }}" accept="application/pdf" required>
                                                             <button class="btn btn-success" onclick="return confirmBalasanSakitCuti('diterima', {{ $view->bid }})">Diterima <i class="bi bi-check"></i></button>
                                                             <button class="btn btn-danger" onclick="return confirmBalasanSakitCuti('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button>
-                                                            {{-- <button class="btn btn-info" onclick="balasanSakit('diterima', {{ $view->bid }})">Diterima <i class="bi bi-check"></i></button>
-                                                            <button class="btn btn-danger" onclick="balasanSakit('ditolak', {{ $view->bid }})">Ditolak <i class="bi bi-x"></i></button> --}}
                                                         </span>
-                                                    {{-- @elseif ($hak === "super_user" || $hak === "admin")
-                                                        <a class="btn btn-danger" onclick="confirmDelete({{$view->bid}})">HAPUS <i class="bi bi-trash"></i></a> --}}
                                                     @endif
                                                     </p>
                                                 </div>
