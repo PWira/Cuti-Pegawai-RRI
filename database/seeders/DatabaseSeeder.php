@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
     public function run(){
         $this->call(UnitKerjaSeeder::class);
         $this->call(KeymasterUserSeeder::class);
-        $this->call(PegawaiSeeder::class);
-        $this->call(PengajuanSeeder::class);
+        // $this->call(PegawaiSeeder::class); --> Uncomment this to simulate pegawai table
+        // $this->call(PengajuanSeeder::class); --> Uncomment this to simulate pengajuan table
     }
 }
 
@@ -61,93 +61,95 @@ class KeymasterUserSeeder extends Seeder
             'roles' => 'admin',
         ]);
 
-        $nama = [
-            'Andi',
-            'Dewi',
-            'Budi',
-            'Siti',
-            'Rudi',
-            'Lina',
-            'Toni',
-            'Rina',
-            'Agus',
-            'Sri'
-        ];
+        // Uncomment code bellow to simulate other users account
 
-        $unitKerjaIds = DB::table('unit_kerja')->pluck('unit_id')->toArray();
-        $jakartaUnitId = 1; // Unit ID untuk Jakarta
-        $usedEmails = [];
-        $usedNips = [];
+        // $nama = [
+        //     'Andi',
+        //     'Dewi',
+        //     'Budi',
+        //     'Siti',
+        //     'Rudi',
+        //     'Lina',
+        //     'Toni',
+        //     'Rina',
+        //     'Agus',
+        //     'Sri'
+        // ];
 
-        // Membuat direktur yang berlokasi di Jakarta
-        $email = $this->generateUniqueEmail($nama, $usedEmails);
-        $nip = $this->generateUniqueNip($usedNips);
+        // $unitKerjaIds = DB::table('unit_kerja')->pluck('unit_id')->toArray();
+        // $jakartaUnitId = 1; // Unit ID untuk Jakarta
+        // $usedEmails = [];
+        // $usedNips = [];
 
-        User::create([
-            'name' => $nama[array_rand($nama)],
-            'user_nip' => $nip,
-            'user_unit_id' => $jakartaUnitId,
-            'user_jabatan' => 'Direktur LPP RRI',
-            'email' => $email,
-            'password' => Hash::make('12345678'),
-            'roles' => 'direktur',
-        ]);
+        // // Membuat direktur yang berlokasi di Jakarta
+        // $email = $this->generateUniqueEmail($nama, $usedEmails);
+        // $nip = $this->generateUniqueNip($usedNips);
 
-        foreach ($unitKerjaIds as $unitKerjaId) {
-            // Membuat kepala_rri untuk setiap unit_kerja
-            $email = $this->generateUniqueEmail($nama, $usedEmails);
-            $nip = $this->generateUniqueNip($usedNips);
-            User::create([
-                'name' => $nama[array_rand($nama)],
-                'user_nip' => $nip,
-                'user_unit_id' => $unitKerjaId,
-                'user_jabatan' => 'Kepala LPP RRI',
-                'email' => $email,
-                'password' => Hash::make('12345678'),
-                'roles' => 'kepala_rri',
-            ]);
+        // User::create([
+        //     'name' => $nama[array_rand($nama)],
+        //     'user_nip' => $nip,
+        //     'user_unit_id' => $jakartaUnitId,
+        //     'user_jabatan' => 'Direktur LPP RRI',
+        //     'email' => $email,
+        //     'password' => Hash::make('12345678'),
+        //     'roles' => 'direktur',
+        // ]);
 
-            // Membuat sdm untuk setiap unit_kerja
-            $email = $this->generateUniqueEmail($nama, $usedEmails);
-            $nip = $this->generateUniqueNip($usedNips);
-            User::create([
-                'name' => $nama[array_rand($nama)],
-                'user_nip' => $nip,
-                'user_unit_id' => $unitKerjaId,
-                'user_jabatan' => 'Pengelola Data Kepegawaian',
-                'email' => $email,
-                'password' => Hash::make('12345678'),
-                'roles' => 'sdm',
-            ]);
-        }
+        // foreach ($unitKerjaIds as $unitKerjaId) {
+        //     // Membuat kepala_rri untuk setiap unit_kerja
+        //     $email = $this->generateUniqueEmail($nama, $usedEmails);
+        //     $nip = $this->generateUniqueNip($usedNips);
+        //     User::create([
+        //         'name' => $nama[array_rand($nama)],
+        //         'user_nip' => $nip,
+        //         'user_unit_id' => $unitKerjaId,
+        //         'user_jabatan' => 'Kepala LPP RRI',
+        //         'email' => $email,
+        //         'password' => Hash::make('12345678'),
+        //         'roles' => 'kepala_rri',
+        //     ]);
+
+        //     // Membuat sdm untuk setiap unit_kerja
+        //     $email = $this->generateUniqueEmail($nama, $usedEmails);
+        //     $nip = $this->generateUniqueNip($usedNips);
+        //     User::create([
+        //         'name' => $nama[array_rand($nama)],
+        //         'user_nip' => $nip,
+        //         'user_unit_id' => $unitKerjaId,
+        //         'user_jabatan' => 'Pengelola Data Kepegawaian',
+        //         'email' => $email,
+        //         'password' => Hash::make('12345678'),
+        //         'roles' => 'sdm',
+        //     ]);
+        // }
     }
 
-    private function generateUniqueNip(&$usedNips)
-    {
-        do {
-            $nip = str_pad(rand(0, 999999999999), 12, '0', STR_PAD_LEFT);
-        } while (in_array($nip, $usedNips));
+    // private function generateUniqueNip(&$usedNips)
+    // {
+    //     do {
+    //         $nip = str_pad(rand(0, 999999999999), 12, '0', STR_PAD_LEFT);
+    //     } while (in_array($nip, $usedNips));
 
-        $usedNips[] = $nip;
-        return $nip;
-    }
+    //     $usedNips[] = $nip;
+    //     return $nip;
+    // }
 
-    /**
-     * Generate a unique email address.
-     *
-     * @param array $nama
-     * @param array $usedEmails
-     * @return string
-     */
-    private function generateUniqueEmail($nama, &$usedEmails)
-    {
-        do {
-            $email = $nama[array_rand($nama)] . rand(0, 999) . '@email.com';
-        } while (in_array($email, $usedEmails));
+    // /**
+    //  * Generate a unique email address.
+    //  *
+    //  * @param array $nama
+    //  * @param array $usedEmails
+    //  * @return string
+    //  */
+    // private function generateUniqueEmail($nama, &$usedEmails)
+    // {
+    //     do {
+    //         $email = $nama[array_rand($nama)] . rand(0, 999) . '@email.com';
+    //     } while (in_array($email, $usedEmails));
 
-        $usedEmails[] = $email;
-        return $email;
-    }
+    //     $usedEmails[] = $email;
+    //     return $email;
+    // }
 }
 
 class PegawaiSeeder extends Seeder
